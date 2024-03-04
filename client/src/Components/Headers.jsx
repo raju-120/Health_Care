@@ -24,7 +24,7 @@ export default function Headers() {
   </Fragment>
 
   const anotherMenu = <Fragment>
-          <ul className='flex gap-8 item-center text-white'>
+          <ul className='flex gap-8 item-center text-zinc-200 uppercase text-xl'>
             <Link to='/sign-in'>
                 <li className='hover:text-gray-300 uppercase'>Sign In</li>
               </Link>
@@ -40,14 +40,17 @@ export default function Headers() {
     <header className='bg-slate-600'>
         <div className='h-30 flex justify-between z-50 text-white lg:py-2 lg:px-20 px-5  py-5'>
           <div className='flex flex-col items-center '>
+            
             <img src={logo} alt="" className='lg:h-16 lg:w-16 h-14 w-14 rounded-lg'/>
             <h1>
               <span className='text-lime-600 text-lg'>Personal </span>
               <span className='text-green-500 text-lg'>HealthCare</span>
             </h1>
+
           </div>
           <div className='lg:flex md:flex lg:flex-1  items-center justify-center font-normal hidden'>
-            <ul className='flex gap-8 item-center text-white uppercase'>
+           
+            <ul className='flex gap-8 item-center text-zinc-200 uppercase text-lg'>
               <Link to='/'>
                 <li className='hover:text-gray-300'>Home</li>
               </Link>
@@ -58,7 +61,9 @@ export default function Headers() {
                 <li className='hover:text-gray-300'>About</li>
               </Link>
             </ul>
+
           </div>
+
           <div className='lg:flex md:flex font-normal items-center hidden'>
             {anotherMenu}
           </div>
