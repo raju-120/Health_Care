@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from '../assets/sign.avif';
 import {useDispatch, useSelector} from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from "../redux/user/userSlice";
+import OAuth from "../Components/OAuth";
 
 export default function SignIn() {
   const [formData, setFormData] = useState([]);
@@ -74,6 +75,7 @@ export default function SignIn() {
               className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-75 disabled:opacity-65'>
                 {loading ? 'Loading...' : 'Sign Up'}
             </button>
+            <OAuth></OAuth>
             </form>
             <p className='text-lg mt-2'>Have not register? Please
               <span className='text-green-500 ml-2 font-semibold uppercase'>

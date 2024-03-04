@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../assets/sign.avif';
+import OAuth from "../Components/OAuth";
 
 
 export default function SignUp() {
@@ -79,11 +80,13 @@ export default function SignUp() {
               className='border p-3 rounded-lg' 
             />
 
+
             <button 
               disabled={loading}
               className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-75 disabled:opacity-65'>
                 {loading ? 'Loading...' : 'Sign Up'}
             </button>
+            <OAuth/>
             </form>
             <p className='text-lg mt-2'>already register? Please
               <span className='text-green-500 ml-2 font-semibold uppercase'>
