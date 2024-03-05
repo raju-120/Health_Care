@@ -18,9 +18,13 @@ export default function App() {
       <Route path='/service' element={<Services />}/>
       <Route path='/sign-in' element={<SignIn />}/>
       <Route path='/sign-up' element={<SignUp />}/>
+      
+      {/* Private Route Section */}
+      
       <Route element={<PrivateRoute />}>
         <Route path='/profile' element={<Profile />}/>
       </Route>
+
     </Routes>
     </BrowserRouter>
   )
