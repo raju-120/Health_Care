@@ -3,8 +3,12 @@ import logo from '../assets/logo.jpg';
 import { Link } from 'react-router-dom';
 import { FaTimes } from "react-icons/fa";
 import { CiMenuFries } from "react-icons/ci";
+import {useSelector} from 'react-redux';
 
 export default function Headers() {
+
+  const {currentUser} = useSelector(state=>state.user);
+
   const menu =<Fragment>
     <div className='top-28 w-full left-0 right-0 bg-slate-900 lg:hidden block absolute'>
       
@@ -23,13 +27,13 @@ export default function Headers() {
     </div>
   </Fragment>
 
-  const anotherMenu = <Fragment>
+  /* const anotherMenu = <Fragment>
           <ul className='flex gap-8 item-center text-zinc-200 uppercase text-xl'>
             <Link to='/sign-in'>
                 <li className='hover:text-gray-300 uppercase'>Sign In</li>
               </Link>
           </ul>
-  </Fragment>
+  </Fragment> */
 
   const [click,setClick] = useState(false);
   const handleClick = () =>{
@@ -48,7 +52,7 @@ export default function Headers() {
             </h1>
 
           </div>
-          <div className='lg:flex md:flex lg:flex-1  items-center justify-center font-normal hidden'>
+          <div className='lg:flex md:flex lg:flex-1  items-center justify-center font-normal hidden mr-24'>
            
             <ul className='flex gap-8 item-center text-zinc-200 uppercase text-lg'>
               <Link to='/'>
@@ -65,7 +69,17 @@ export default function Headers() {
           </div>
 
           <div className='lg:flex md:flex font-normal items-center hidden'>
-            {anotherMenu}
+            <Link to='/profile'>
+              {
+                currentUser ? (
+                  <img src={currentUser?.avatar} className='w-16 h-16 rounded-full' alt='profile'/>
+                ) : (
+                  <ul className='flex gap-8 item-center text-zinc-200 uppercase text-xl'>
+                    <li className='hover:text-gray-700 uppercase'>Sign In</li>
+                  </ul>
+                )
+              }
+            </Link>
           </div>
           
           <div>
