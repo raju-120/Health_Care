@@ -12,10 +12,10 @@ export default function Profile() {
   const [filePerc,setFilePerc] = useState(0); 
   const [fileUploadError, setFileUploadError] = useState(null);
   
-  console.log(formData);
+  console.log(formData); /*
   console.log(file);
   console.log(filePerc);
-  console.log(fileUploadError);
+  console.log(fileUploadError); */
 
   const handleChange = (e) =>{
     setFormData({
@@ -49,7 +49,8 @@ export default function Profile() {
         })
     }
     )
-  }
+  };
+
 
   return (
     <div className='p-3 max-w-lg mx-auto'>
