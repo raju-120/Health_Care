@@ -6,13 +6,13 @@ export default function Footer() {
     <div className="bg-stone-500 rounded-sm">
         <div className="lg:p-16 p-5">
             
-            <div className='grid grid-cols-2'>
+            <div className='grid lg:grid-cols-2 md:grid-cols-1'>
                 <Link to='/'>
                     <div>
                         <img src={logo} alt="logo" className='w-16 h-16 rounded-full' />
                     </div>
                 </Link>
-                <div className='flex justify-between text-xl text-white'>
+                <div className='lg:flex lg:justify-between text-xl text-white'>
                     <div>
                         <p>Solution</p>
                         <p>Marketing</p>
@@ -42,7 +42,7 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
-            <div className=' divide-y bg-black'></div>
+            <div className=' divide-y divide-solid'></div>
             <div className='mt-10'>
                 <h1 className='text-center text-lg'>© 2024 Reea Digital Company, Inc. All rights reserved.</h1>
             </div>
