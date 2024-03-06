@@ -9,6 +9,7 @@ import Services from './Pages/Services';
 import PrivateRoute from './Components/PrivateRoute';
 import CreateAdvertising from './Pages/Advertising/CreateAdvertising';
 import Tips from './Pages/Tips';
+import Footer from './Components/Footer';
 
 export default function App() {
   return (
@@ -30,6 +31,8 @@ export default function App() {
       </Route>
 
     </Routes>
+    <Footer />
+
     </BrowserRouter>
   )
 }
