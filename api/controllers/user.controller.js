@@ -5,8 +5,9 @@ import bcryptjs from 'bcryptjs';
 export const test = (req, res) =>{
     res.json({
         message: 'Test is working'
-    })
+    });
 };
+
 
 
 export const updateUser = async (req, res, next) => {
