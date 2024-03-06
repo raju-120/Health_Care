@@ -6,16 +6,17 @@ import { signInFailure, signInStart, signInSuccess } from "../redux/user/userSli
 import OAuth from "../Components/OAuth";
 
 export default function SignIn() {
-  const [formData, setFormData] = useState([]);
+  const [formData, setFormData] = useState({});
   const {loading,error} = useSelector((state)=>state.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  console.log(formData);
 
   const handleChange = (e) =>{
     setFormData({
       ...formData,
       [e.target.id] : e.target.value,
-    })
+    });
   };
 
   const handleSubmit = async(e) =>{
@@ -31,9 +32,10 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      //console.log(data);
       if(data.success === false){
         dispatch(signInFailure(data.message));
-        return data;
+        return;
       }
       dispatch(signInSuccess(data));
       navigate('/');
@@ -71,9 +73,8 @@ export default function SignIn() {
             />
 
             <button 
-              disabled={loading}
               className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-75 disabled:opacity-65'>
-                {loading ? 'Loading...' : 'Sign Up'}
+                Sign In
             </button>
             <OAuth></OAuth>
             </form>
@@ -89,5 +90,5 @@ export default function SignIn() {
         </div>
       </div>
     </div>
-  )
+  );
 }

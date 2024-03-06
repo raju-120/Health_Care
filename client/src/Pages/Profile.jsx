@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import app from '../firebase/firebase';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
+import { signOutUserFailure, signOutUserStart, signOutUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice';
+import {useNavigate} from 'react-router-dom';
+
 
 export default function Profile() {
   
@@ -11,6 +14,9 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [filePerc,setFilePerc] = useState(0); 
   const [fileUploadError, setFileUploadError] = useState(null);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   
   console.log(formData); /*
   console.log(file);
@@ -51,12 +57,50 @@ export default function Profile() {
     )
   };
 
+  const handleSubmit = async(e) =>{
+    e.preventDefault();
+    try{
+      dispatch(updateUserStart());
+      const result = await fetch(`/api/user/update/${currentUser._id}`,{
+        method:'POST',
+        headers: {
+          'Content-type' : 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      const data = await result.json();
+      if(data.success === false){
+        dispatch(updateUserFailure(data.message))
+        return;
+      }
+      dispatch(updateUserSuccess(data))
+      setUpdateSuccess(true);
+    }catch(error){
+      console.log(error);
+    }
+  };
+
+  const handleSingOut = async() =>{
+    try{
+      dispatch(signOutUserStart());
+      const res = await fetch('/api/auth/signout');
+      const data = await res.json();
+      if(data.success === false){
+        dispatch(signOutUserFailure(data.message));
+        return;
+      }
+      dispatch(signOutUserSuccess(data));
+      navigate('/sign-in');
+    }catch(error){
+      dispatch(signOutUserFailure(error));
+    }
+  }
 
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl front-semibold text-center my-7'>Profile</h1>
       
-      <form  className='flex flex-col gap-4'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input 
           onChange={(e) => setFile(e.target.files[0])}
           ref={fileRef}
@@ -101,7 +145,8 @@ export default function Profile() {
           placeholder='email' 
           id='email' 
           className='border p-3 rounded-lg'
-          readOnly 
+          
+          onChange={handleChange}
         />
 
         <input 
@@ -116,6 +161,30 @@ export default function Profile() {
           >  Update
         </button>
       </form>
+      <p className='text-green-700 mt-5'>{updateSuccess? 'User is updated successfully': ''}</p>
+      
+      <div className='flex justify-between'>
+        
+        <div>
+          <button 
+            className='bg-red-500 text-white rounded-lg p-3 uppercase hover:opacity-50 disabled:opacity-70' 
+            >delete user
+          </button>
+        </div>
+
+        <div>
+          <button 
+            onClick={handleSingOut}
+            className='bg-green-500 text-white rounded-lg p-3 uppercase hover:opacity-50 disabled:opacity-70' 
+            >sign out
+          </button>
+        </div>
+
+      </div>
+
+      <div className='text'>
+        <button className='text-slate-500 text-center'>Advertising your Health-Care center</button>
+      </div>
     </div>
   )
 }
