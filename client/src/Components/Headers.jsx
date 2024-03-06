@@ -16,8 +16,14 @@ export default function Headers() {
         <Link to='/'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>Home</li>
         </Link>
-        <Link to='/service'>
+        <Link to='/profile'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>Profile</li>
+        </Link>
+        <Link to='/tips'>
+          <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>Tips</li>
+        </Link>
+        <Link to='/service'>
+          <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>Services</li>
         </Link>
         <Link to='/about'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>About</li>
@@ -42,10 +48,10 @@ export default function Headers() {
 
   return (
     <header className='bg-slate-600'>
-        <div className='h-30 flex justify-between z-50 text-white lg:py-2 lg:px-20 px-5  py-5'>
+        <div className='h-30 flex justify-between z-80 text-white lg:py-2 lg:px-20 px-5  py-5'>
           <div className='flex flex-col items-center '>
             
-            <img src={logo} alt="" className='lg:h-16 lg:w-16 h-14 w-14 rounded-lg'/>
+            <img src={logo} alt="logo" className='lg:h-16 lg:w-16 h-14 w-14 lg:ml-20 mr-20 rounded-lg'/>
             <h1>
               <span className='text-lime-600 text-lg'>Personal </span>
               <span className='text-green-500 text-lg'>HealthCare</span>
@@ -60,6 +66,9 @@ export default function Headers() {
               </Link>
               <Link to='/service'>
                 <li className='hover:text-gray-300'>Service</li>
+              </Link>
+              <Link to='/tips'>
+                <li className='hover:text-gray-300'>Tips</li>
               </Link>
               <Link to='/about'>
                 <li className='hover:text-gray-300'>About</li>

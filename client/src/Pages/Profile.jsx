@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import app from '../firebase/firebase';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import { signOutUserFailure, signOutUserStart, signOutUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 
 export default function Profile() {
@@ -97,7 +97,7 @@ export default function Profile() {
   }
 
   return (
-    <div className='p-3 max-w-lg mx-auto'>
+    <div className='p-3 max-w-lg mx-auto mb-24'>
       <h1 className='text-3xl front-semibold text-center my-7'>Profile</h1>
       
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
@@ -181,10 +181,12 @@ export default function Profile() {
         </div>
 
       </div>
-
-      <div className='text'>
-        <button className='text-slate-500 text-center'>Advertising your Health-Care center</button>
-      </div>
+      <Link to='/create-advertising'>
+        <div className='w-full text-center my-10  bg-slate-500 p-2 rounded-xl'>
+          <button type='button' className='text-white text-lg hover:opacity-40 opacity-90'>Advertising your Health-Care center</button>
+        </div>
+      </Link>
+      
     </div>
   )
 }
