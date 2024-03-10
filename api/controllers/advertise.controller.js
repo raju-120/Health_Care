@@ -1,17 +1,16 @@
-import Advertising from "../models/advertise.model.js";
+import Advertise from "../models/advertise.model.js";
 
-export const tested = (req,res) =>{
+export const tested = (req, res) =>{
     res.json({
-        message: 'Advertising Sending Successfully.'
+        message: 'Test is working',
     })
-}; 
+}
 
-export const createAdvertise = async(req,res,next) =>{
+export const createAdvertise = async(req,res, next) =>{
     try{
-        const advertise = await Advertising.create(req.body);
-        res.status(200).json(advertise);
-
+        const advertised = await Advertise.create(req.body);
+        res.status(200).json(advertised);
     }catch(error){
-        next(error)
+        next(error);
     }
 }

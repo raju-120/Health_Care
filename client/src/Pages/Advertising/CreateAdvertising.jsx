@@ -1,33 +1,39 @@
-import { useState } from "react";
+import {useState} from 'react';
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
 import app from "../../firebase/firebase";
+import {useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 
 
 
 export default function CreateAdvertising() {
-
-  const [formData,setFormData] = useState({
-        imageUrls: [],
-        name : '',
-        address : '',
-        phone: ''
+  const {currentUser} = useSelector(state =>state.user);
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    phone: '',
+    avatar: [],
   });
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const[loading, setLoading]= useState(false);
   const [imageUploadError,setImageUploadError] = useState(false);
+  const [error,setError] = useState(false);
+  const navigate = useNavigate();
   
-  console.log(formData);
-  //console.log(files);
-
+  console.log(formData)
+  console.log(files);
+  
 
   const handleChange = (e) =>{
     setFormData({
-      ...formData, [e.target.id] : e.target.value,
+      ...formData,
+      [e.target.id] : e.target.value,
     })
   };
 
   const handleImageUpload = () =>{
-    if(files.length >0 && files.length + formData.imageUrls.length <2){
+    if(files.length >0 && files.length + formData.avatar.length <2){
      
       setUploading(true);
       setImageUploadError(false);
@@ -39,10 +45,10 @@ export default function CreateAdvertising() {
       Promise.all(promises).then((urls) =>{
         setFormData({
           ...formData, 
-          imageUrls: formData.imageUrls.concat(urls)
+          avatar: formData.avatar.concat(urls),
         });
         setImageUploadError(false);
-        setUploading(false);
+        setUploading(false); 
       }).catch((err) =>{
         setImageUploadError('Image upload failed (2 Mb max) ');
         setUploading(false);
@@ -50,15 +56,15 @@ export default function CreateAdvertising() {
     } else{
       setImageUploadError('You can only upload 1 image for Advertising.');
       setUploading(false);
-    }
+    };
   };
 
   const storeImage = async(file) =>{
     return new Promise((resolve, reject) =>{
-      const storage = getStorage(app);
-      const fileName =  file.name;
-      const storageRef = ref(storage,fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
+      const storage = getStorage(app) ;
+      const fileName = file.name;
+      const storageRef = ref( storage , fileName );
+      const uploadTask = uploadBytesResumable(storageRef , file);
 
       uploadTask.on(
         'state_changed',
@@ -77,15 +83,41 @@ export default function CreateAdvertising() {
       )
 
     })
-  }
+  };
 
-  const handleSubmit = (e) =>{
+  const handleSubmit = async(e) =>{
     e.preventDefault();
-    console.log(formData);
+    try{
+      setLoading(true);
+      setError(false);
+    
+      const res = await fetch('/api/advertise/create-advertise',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          userRef: currentUser._id
+        }),
+      });
+      const data = await res.json();
+      setLoading(false)
+      if(data.success === false){
+        setError(data.message);
+        console.log(data);
+      }
+      navigate(`/advertise/${data._id}`)
+    }catch(error){
+      setError(error.message);
+      setLoading(false);
+    }
   }
-
+  
+  
   return (
-    <main className="p-3 max-w-4xl mx-auto">
+    <div>
+      <main className="p-3 max-w-4xl mx-auto">
         <h2 className="text-3xl font-semibold text-center my-7">Create Your Health-Care Advertising </h2>
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
             <div className="flex flex-col gap-4 flex-1">
@@ -102,12 +134,12 @@ export default function CreateAdvertising() {
                 />
                 
                 <input 
-                    type="text" 
-                    id="address" 
-                    placeholder="Address" 
-                    className="border p-3 rounded-lg"  
-                    required
-                    onChange={handleChange}
+                  type="text" 
+                  id="address" 
+                  placeholder="Address" 
+                  className="border p-3 rounded-lg" 
+                  required
+                  onChange={handleChange} 
                 />
 
                 <input 
@@ -132,18 +164,18 @@ export default function CreateAdvertising() {
                       multiple 
                       className="p-3 border border-gray-200 rounded w-full" 
                     />
-
+                    {imageUploadError && <p className="text-red-500">{imageUploadError}</p>}
                   </div>
 
                   <div className="m-6">
                     <button
+                      disabled={uploading}
                       onClick={handleImageUpload}
                       type="button"
                       className="p-3 bg-green-600 text-white border border-green-700 rounded uppercase
                                 hover:shadow-lg disabled:opacity-80"
-                      >Image Upload
+                      >{uploading ? 'Image Uploading...' : 'Image Upload'}
                     </button>
-                    {imageUploadError && <p className="text-red-500">{imageUploadError}</p>}
                   </div>
 
                 </div>
@@ -153,15 +185,15 @@ export default function CreateAdvertising() {
                 
               
               <button
-                disabled={uploading} 
+                disabled={loading || uploading}
                 className="p-3 text-white bg-slate-700 
                   rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
               >
-                  {uploading ? 'Uploading...' : 'Create Advertising'}
+                  {loading ? 'Loading...' : 'Create Advertising'}
               </button>
             </div>
         </form>
-        {}
-    </main>
+      </main>
+    </div>
   )
 }

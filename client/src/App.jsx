@@ -7,9 +7,9 @@ import SignUp from './Pages/SignUp';
 import Headers from './Components/Headers';
 import Services from './Pages/Services';
 import PrivateRoute from './Components/PrivateRoute';
-import CreateAdvertising from './Pages/Advertising/CreateAdvertising';
 import Tips from './Pages/Tips';
 import Footer from './Components/Footer';
+import CreateAdvertising from './Pages/Advertising/CreateAdvertising';
 
 export default function App() {
   return (
@@ -27,7 +27,7 @@ export default function App() {
       
       <Route element={<PrivateRoute />}>
         <Route path='/profile' element={<Profile />}/>
-        <Route path='/create-advertising' element={<CreateAdvertising />} />
+        <Route path='/create-advertising' element={ <CreateAdvertising /> }/>
       </Route>
 
     </Routes>

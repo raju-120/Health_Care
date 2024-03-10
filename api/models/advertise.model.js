@@ -1,15 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
 const advertiseSchema = new Schema({
-    healthcarename: {
+    name: {
         type: String,
         required: true,
         unique: true,
     },
     address: {
         type: String,
-        required: true,
-        unique: true,
+        required:  true,
     },
     phone: {
         type: Number,
@@ -17,14 +16,15 @@ const advertiseSchema = new Schema({
         unique: true,
     },
     avatar: {
-        type: String,
+        type: Array,
+        required: true,
+        unique : true,
     },
-    userRef:{
+    userRef: {
         type: String,
         required: true,
     }
 },{timestamps: true});
 
-const Advertising = mongoose.model('Advertise', advertiseSchema);
-
-export default Advertising;
+const Advertise = mongoose.model('Advertise', advertiseSchema);
+export default Advertise;
