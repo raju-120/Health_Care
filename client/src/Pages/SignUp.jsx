@@ -49,11 +49,11 @@ export default function SignUp() {
     <div>
       <div className="max-w-full py-5">
         <h1 className="text-4xl font-semibold text-center my-10 uppercase">Sign UP</h1>
-        <div className="flex justify-around">
-          <div className="ml-20">
+        <div className="lg:flex justify-around">
+          <div className="lg:ml-20">
             <img src={logo} alt="login-image" className="shadow-2xl rounded-xl " />
           </div>
-          <div className="w-2/5 my-24">
+          <div className="lg:w-2/5 my-24">
             <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
 
             <input 
@@ -88,13 +88,20 @@ export default function SignUp() {
             </button>
             <OAuth/>
             </form>
-            <p className='text-lg mt-2'>already register? Please
+            <p className='ml-2 text-lg mt-2'>Already register? Please
               <span className='text-green-500 ml-2 font-semibold uppercase'>
               <Link to="/sign-in">
                 Log In
               </Link>
               </span>
             </p>
+            
+            <p className='ml-2 text-lg mt-2'> Are you a Doctor? Please 
+                <Link to='/doctors-sign-up'>
+                  <span className='text-blue-500 ml-2 font-semibold uppercase'>Click Here</span>
+                </Link>
+            </p>
+            
             {error && <p className="text-red-500">{error}</p>}
           </div>
         </div>
