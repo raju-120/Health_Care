@@ -56,7 +56,7 @@ export default function CreateAdvertising() {
     } else{
       setImageUploadError('You can only upload 1 image for Advertising.');
       setUploading(false);
-    };
+    }
   };
 
   const storeImage = async(file) =>{
@@ -161,7 +161,6 @@ export default function CreateAdvertising() {
                       type="file" 
                       id="images" 
                       accept='image/*' 
-                      multiple 
                       className="p-3 border border-gray-200 rounded w-full" 
                     />
                     {imageUploadError && <p className="text-red-500">{imageUploadError}</p>}
@@ -193,6 +192,7 @@ export default function CreateAdvertising() {
               </button>
             </div>
         </form>
+        {error && <p className='text-red-500'>{error}</p>}
       </main>
     </div>
   )

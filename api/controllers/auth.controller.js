@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs"; 
 import { errorHandler } from "../utills/error.js";
 import  jwt  from "jsonwebtoken";
+import Doctor from "../models/doctor.model.js";
 
 export const signup = async (req,res, next) =>{
     const {username, email,password} = req.body;
@@ -15,6 +16,47 @@ export const signup = async (req,res, next) =>{
     }
 };
 
+export const doctors_signup = async(req, res, next) =>{
+    const 
+    {
+        username,
+        email,
+        bmdc,
+        specialty,
+        qualification,
+        designation,
+        institute,
+        department,
+        phone,
+        appointmentnumber,
+        address,
+        avatar,
+        password,
+    } = req.body;
+
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+    const newDoctor = new Doctor({
+        username,
+        email,
+        bmdc,
+        specialty,
+        qualification,
+        designation,
+        institute,
+        department,
+        phone,
+        appointmentnumber,
+        address,
+        avatar,
+        password: hashedPassword});
+
+    try{
+        await newDoctor.save();
+        res.status(200).json({message: 'Doctor user created successfully.'});
+    }catch(error){
+        next(error);
+    }
+};
 
 export const signin = async(req,res,next) =>{
     

@@ -1,48 +1,91 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import DoctorsLogo from '../assets/absec.jpg';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import app from "../firebase/firebase";
 
 
 export default function DoctorsSIgnUp() {
 
-  const [formData, setFormData] = useState([]);
+  const [formData, setFormData] = useState({
+    avatar: [],
+  });
+  const [files, setFiles] = useState([]);
+  const [upload, setUpload] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState(false);
+  const [loading, setLoading]= useState(false);
   const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  
+  console.log(formData);
+  console.log(files);
 
   const handleChange = (e) =>{
     setFormData({
       ...formData,
       [e.target.id] : e.target.value,
+    });
+  };
+
+  const handleImageUpload = () =>{
+    if(files.length >0 && files.length + formData.avatar.length < 2) {
+     
+      setUpload(true);
+      setImageUploadError(false);
+      const promises = [];
+
+      for (let i = 0 ; i< files.length ; i++){
+        promises.push(storeImage(files[i]));
+      }
+      Promise.all(promises).then((urls) =>{
+        setFormData({
+          ...formData, 
+          avatar: formData.avatar.concat(urls) 
+        }); 
+        setUpload(false);
+        setImageUploadError(false);
+      }).catch((err) =>{
+        setImageUploadError('Image upload failed(2MB max image)')
+        setUpload(false);
+        console.log(err);
+      })
+    } else{
+      setImageUploadError('You can upload only one image');
+      setUpload(false);
+    }
+  };
+
+  const storeImage = async(file) =>{
+    return new Promise((resolve, reject) =>{
+      const storage = getStorage(app) ;
+      const fileName = file.name;
+      const storageRef = ref( storage , fileName );
+      const uploadTask = uploadBytesResumable(storageRef , file);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) =>{
+          const progress = (snapshot.bytesTransferred /snapshot.totalBytes) * 100;
+          console.log((`Upload is ${progress}% done.`))
+        },
+        (error) =>{
+          reject(error);
+        },
+        () =>{
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>{
+            resolve(downloadURL);
+          })
+        }
+      )
+
     })
   };
 
+
+
   const handleSubmit = async(e) =>{
     e.preventDefault();
-    try{
-      setLoading(true);
-      const res = await fetch('/api/auth/signup',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if(data.success === false){
-        setLoading(false);
-        setError(data.message);
-        return data;
-      }
-      setLoading(false);
-      setError(null);
-      navigate('/sign-in');
-    } catch(error){
-      setLoading(false);
-      setError(error.message);
-    }
-  }
+    console.log(formData)
+  };
 
 
   return (
@@ -63,6 +106,26 @@ export default function DoctorsSIgnUp() {
               onChange={handleChange}
               className='border p-4 rounded-lg' 
             />
+
+            <input 
+              type="email" 
+              id="email" 
+              placeholder='email' 
+              onChange={handleChange}
+              className='border p-3 rounded-lg' 
+            />
+
+            <input 
+              type="text" 
+              id="bmdc" 
+              maxLength='9'
+              minLength='7'
+              placeholder='Bangladesh Medical & Dental Council License Number' 
+              onChange={handleChange}
+              className='border p-3 rounded-lg' 
+            />
+
+
 
             <input 
               type="text" 
@@ -114,7 +177,7 @@ export default function DoctorsSIgnUp() {
 
             <input 
               type="number" 
-              id="appointment" 
+              id="appointmentnumber" 
               placeholder='Appointment Number' 
               onChange={handleChange}
               className='border p-3 rounded-lg' 
@@ -128,21 +191,31 @@ export default function DoctorsSIgnUp() {
               className='border p-3 rounded-lg' 
             />
 
-            <input 
-              type="file" 
-              id="image" 
-              placeholder='Address' 
-              onChange={handleChange}
-              className='border p-3 rounded-lg' 
-            />
+            <div className="flex">
+              
+              <div>
+                <input 
+                  type="file" 
+                  onChange={(e) => setFiles(e.target.files)}
+                  id="image" 
+                  accept="image/*"
+                  className='border p-3 rounded-lg' 
+                />
+              </div>
 
-            <input 
-              type="email" 
-              id="email" 
-              placeholder='email' 
-              onChange={handleChange}
-              className='border p-3 rounded-lg' 
-            />
+              <div className="mx-2 bg-green-500 rounded-xl ">
+                <button 
+                  disabled={upload}
+                  onClick={handleImageUpload}
+                  className="text-center p-3 text-lg text-white"
+                    >
+                      {upload ? 'Uploading....' : 'Image Upload'}
+                    </button>
+              </div>
+            </div>
+            {imageUploadError && <p className="text-red-500">{imageUploadError}</p>} 
+            
+
 
             <input 
               type="password" 
@@ -154,9 +227,8 @@ export default function DoctorsSIgnUp() {
 
 
             <button 
-              disabled={loading}
               className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-75 disabled:opacity-65'>
-                {loading ? 'Loading...' : 'Sign Up'}
+                Doctor Sign Up
             </button>
             
             </form>
@@ -168,7 +240,7 @@ export default function DoctorsSIgnUp() {
                 </Link>
             </p>
             
-            {error && <p className="text-red-500">{error}</p>}
+            {/* {error && <p className="text-red-500">{error}</p>} */}
           </div>
         </div>
       </div>

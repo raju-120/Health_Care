@@ -6,10 +6,10 @@ export default function MainLayout() {
   return (
     <div>
         <div className="container max-w-auto flex">
-            <div className="p-16 bg-zinc-300">
+            <div className="p-6 bg-zinc-300">
                 <LeftSide />
             </div>
-            <div className="ml-[200px]">
+            <div className="ml-[100px]">
                 <CenterSide />
             </div>
         </div>
