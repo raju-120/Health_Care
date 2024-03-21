@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DoctorsLogo from '../assets/absec.jpg';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import app from "../firebase/firebase";
@@ -8,16 +8,29 @@ import app from "../firebase/firebase";
 export default function DoctorsSIgnUp() {
 
   const [formData, setFormData] = useState({
-    avatar: [],
+    username:'',
+    email:'',
+    bmdc:'',
+    specialty:'',
+    qualification: '',
+    designation:'',
+    institute:'',
+    department:'',
+    phone: '',
+    appointmentnumber:'',
+    address:'',
+    avatar: [], 
+    password:''
   });
   const [files, setFiles] = useState([]);
   const [upload, setUpload] = useState(false);
   const [imageUploadError, setImageUploadError] = useState(false);
   const [loading, setLoading]= useState(false);
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
   
   console.log(formData);
-  console.log(files);
+  
 
   const handleChange = (e) =>{
     setFormData({
@@ -26,8 +39,9 @@ export default function DoctorsSIgnUp() {
     });
   };
 
+
   const handleImageUpload = () =>{
-    if(files.length >0 && files.length + formData.avatar.length < 2) {
+    if(files.length >0 && files.length ) {
      
       setUpload(true);
       setImageUploadError(false);
@@ -80,11 +94,33 @@ export default function DoctorsSIgnUp() {
     })
   };
 
-
-
   const handleSubmit = async(e) =>{
     e.preventDefault();
-    console.log(formData)
+    try{
+      setLoading(true); 
+      const res = await fetch('/api/auth/doctorsignup' , 
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if(data.success === false){
+        setLoading(false);
+        setError(data.message) 
+        //console.log(data.message);
+      }
+      setLoading(false);
+      setError(null);
+      navigate('/doctor-signin') 
+    }catch(error){
+      setLoading(false);
+      setError(error.message); 
+      //console.log(error.message);
+    }
   };
 
 
@@ -124,29 +160,95 @@ export default function DoctorsSIgnUp() {
               onChange={handleChange}
               className='border p-3 rounded-lg' 
             />
+                            
 
-
-
-            <input 
+            {/* <input 
               type="text" 
               id="specialty" 
               placeholder='Specialty' 
               onChange={handleChange}
               className='border p-3 rounded-lg' 
-            />
+            /> */}
 
-            <input 
-              type="text" 
-              id="qualifications" 
-              placeholder='Qualification' 
-              onChange={handleChange}
-              className='border p-3 rounded-lg' 
-            />
+            <select id="specialty" onChange={handleChange} className="text-sm select select-bordered w-full">
+              <option defaultValue>Please select your Specialty</option>
+                <option>Anesthesiology (Pain) Specialist</option>
+                <option>Breast Specialist</option>
+                <option>Cancer Surgery Specialist</option>
+                <option>Cardiology Specialist</option>
+                <option>Chest & Asthma Specialist</option>
+                <option>Child Specialist</option>
+                <option>Colorectal Surgery (Female) Specialist</option>
+                <option>Dental Specialist</option>
+                <option>Endocrinology (Diabetes & Hormone) Specialist</option>
+                <option>ENT Specialist</option>
+                <option>Eye Specialist</option>
+                <option>Neuro-opthalmologist</option>
+                <option>Pediatric Hematologist</option>
+                <option>Infertility Specialist</option>
+                <option>Kidney Specialist</option>
+                <option>Liver Specialist</option>
+                <option>Medicine Specialist</option>
+                <option>Neurology Specialist</option>
+                <option> Neurosurgery Specialist </option>
+                <option>Orthopedic Specialist</option>
+                <option>Pediatric Orthopedic Surgeon</option>
+                <option>Physiotherapy Specialist</option>
+                <option>Sex Specialist</option>
+                <option>Skin Specialist</option>
+                <option>Urology Specialist</option>
+            </select>
 
-            <input 
+
+            <select id="designation" onChange={handleChange} className="text-sm select select-bordered w-full">
+              <option defaultValue>Please select your Designation</option>
+                <option>Professor</option>
+                <option>Assistant Professor</option>
+                <option>Consultant</option>
+            </select>
+
+            {/* <input 
               type="text" 
               id="designation" 
               placeholder='Designation' 
+              onChange={handleChange}
+              className='border p-3 rounded-lg' 
+            /> */}
+
+            
+
+            {/* <input 
+              type="text" 
+              id="department" 
+              placeholder='Department' 
+              onChange={handleChange}
+              className='border p-3 rounded-lg' 
+            /> */}
+
+            <select id="department" onChange={handleChange} className="text-sm select select-bordered w-full">
+              <option defaultValue>Please select your Department</option>
+                <option>Medicine & Nephrology</option>
+                <option>Cardiology</option>
+                <option>Respiratory / Pulmonology Medicine</option>
+                <option>Psychiatry</option>
+                <option>General Surgery</option>
+                <option>Orthopedic Surgery (Knee)</option>
+                <option>Spine Surgery</option>
+                <option>Neuro Surgery</option>
+                <option>Orthopedic Surgery</option>
+                <option>Urology</option>
+                <option>Gynaecology & Obstetrics</option>
+                <option>Skin & Dermatology</option>
+                <option>E.N.T</option>
+                <option>Neurology</option>
+                <option>Dental</option>
+                <option>Neurology</option>
+            </select>
+
+            <input 
+              type="text" 
+              id="qualification" 
+              placeholder='Qualification' 
               onChange={handleChange}
               className='border p-3 rounded-lg' 
             />
@@ -158,14 +260,7 @@ export default function DoctorsSIgnUp() {
               onChange={handleChange}
               className='border p-3 rounded-lg' 
             />
-
-            <input 
-              type="text" 
-              id="department" 
-              placeholder='Department' 
-              onChange={handleChange}
-              className='border p-3 rounded-lg' 
-            />
+            
 
             <input 
               type="number" 
@@ -176,7 +271,7 @@ export default function DoctorsSIgnUp() {
             />
 
             <input 
-              type="number" 
+              type="text" 
               id="appointmentnumber" 
               placeholder='Appointment Number' 
               onChange={handleChange}
@@ -190,7 +285,7 @@ export default function DoctorsSIgnUp() {
               onChange={handleChange}
               className='border p-3 rounded-lg' 
             />
-
+ 
             <div className="flex">
               
               <div>
@@ -213,7 +308,7 @@ export default function DoctorsSIgnUp() {
                     </button>
               </div>
             </div>
-            {imageUploadError && <p className="text-red-500">{imageUploadError}</p>} 
+            {imageUploadError && <p className="text-red-500">{imageUploadError}</p>}  
             
 
 
@@ -227,8 +322,9 @@ export default function DoctorsSIgnUp() {
 
 
             <button 
+              disabled={loading || upload}
               className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-75 disabled:opacity-65'>
-                Doctor Sign Up
+                {loading ? 'Signing up..' : 'Doctor Sign Up'}
             </button>
             
             </form>
@@ -240,7 +336,7 @@ export default function DoctorsSIgnUp() {
                 </Link>
             </p>
             
-            {/* {error && <p className="text-red-500">{error}</p>} */}
+            {error && <p className="text-red-500">{error}</p>} 
           </div>
         </div>
       </div>

@@ -11,6 +11,7 @@ import Tips from './Pages/Tips';
 import Footer from './Components/Footer';
 import CreateAdvertising from './Pages/Advertising/CreateAdvertising';
 import DoctorsSIgnUp from './Pages/DoctorsSIgnUp';
+import DoctorsSignin from './Pages/DoctorsSignin';
 
 
 export default function App() {
@@ -21,10 +22,14 @@ export default function App() {
       <Route path='/' element={<Home />}/>
       <Route path='/about' element={<About />}/>
       <Route path='/service' element={<Services />}/>
-      <Route path='/sign-in' element={<SignIn />}/>
-      <Route path='/doctors-sign-up' element={<DoctorsSIgnUp />}/>
-      <Route path='/sign-up' element={<SignUp />}/>
       <Route path='/tips' element={<Tips />}/>
+      
+      {/* Sign In & Sign Up Sections */}
+
+      <Route path='/sign-in' element={<SignIn />}/>
+      <Route path='/sign-up' element={<SignUp />}/>
+      <Route path='/doctors-sign-up' element={<DoctorsSIgnUp />}/>
+      <Route path='/doctor-signin' element={ <DoctorsSignin /> } />
       
       {/* Private Route Section */}
       

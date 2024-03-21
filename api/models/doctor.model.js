@@ -4,7 +4,6 @@ const doctorSchema = new Schema({
     username:{
         type: String,
         required: true,
-        unique: true,
     },
     email:{
         type: String,
@@ -41,22 +40,21 @@ const doctorSchema = new Schema({
         required: true,
     },
     appointmentnumber:{
-        type: Number,
+        type: String,
         required: true,
     },
     address: {
         type: String,
         required: true,
-    },
+    }, 
     password:{
         type: String,
         required: true,
     },
     avatar:{
-        type: String,
+        type: Array,
         required: true,
-        default: "https://www.pngitem.com/pimgs/m/193-1937755_feature-doctor-login-hd-png-download.png"
-    }
+    } 
 },{timestamps: true});
 
 const Doctor = mongoose.model('Doctor', doctorSchema);

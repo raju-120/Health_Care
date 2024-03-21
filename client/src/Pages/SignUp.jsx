@@ -34,7 +34,7 @@ export default function SignUp() {
       if(data.success === false){
         setLoading(false);
         setError(data.message);
-        return data;
+        //return data;
       }
       setLoading(false);
       setError(null);
@@ -106,6 +106,7 @@ export default function SignUp() {
           </div>
         </div>
       </div>
+      
     </div>
   )
 }

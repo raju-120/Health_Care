@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import userRouter from './routes/user.router.js';
 import authRouter from './routes/auth.router.js';
 import advertiseRouter from './routes/advertising.router.js';
+import designationListRouter from './routes/lists.router.js';
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.get('/test', (req, res) =>{
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter );
 app.use("/api/advertise", advertiseRouter);
+app.use("/app/designation", designationListRouter);
 
 app.use((err,req,res,next) =>{
     const statusCode = err.statusCode || 500;
