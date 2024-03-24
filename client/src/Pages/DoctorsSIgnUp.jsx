@@ -141,6 +141,7 @@ export default function DoctorsSIgnUp() {
               placeholder='username' 
               onChange={handleChange}
               className='border p-4 rounded-lg' 
+              defaultValue="Dr. "
             />
 
             <input 
@@ -331,7 +332,7 @@ export default function DoctorsSIgnUp() {
             
             
             <p className='text-lg mt-2'> Already register as a Doctor? Please 
-                <Link to='/doctors-sign-up'>
+                <Link to='/doctor-signin'>
                   <span className='text-blue-500 ml-2 font-semibold uppercase'>Log-In</span>
                 </Link>
             </p>
