@@ -19,6 +19,13 @@ export default function App() {
     <BrowserRouter>
     <Headers />
     <Routes>
+
+    <Route path='/sign-in' element={<SignIn />}/>
+    <Route path='/sign-up' element={<SignUp />}/>
+    <Route path='/doctors-sign-up' element={<DoctorsSIgnUp />}/>
+    <Route path='/doctor-signin' element={ <DoctorsSignin /> } />
+
+    <Route element={<PrivateRoute />}>
       <Route path='/' element={<Home />}/>
       <Route path='/about' element={<About />}/>
       <Route path='/service' element={<Services />}/>
@@ -26,14 +33,12 @@ export default function App() {
       
       {/* Sign In & Sign Up Sections */}
 
-      <Route path='/sign-in' element={<SignIn />}/>
-      <Route path='/sign-up' element={<SignUp />}/>
-      <Route path='/doctors-sign-up' element={<DoctorsSIgnUp />}/>
-      <Route path='/doctor-signin' element={ <DoctorsSignin /> } />
+      
+
       
       {/* Private Route Section */}
       
-      <Route element={<PrivateRoute />}>
+      
         <Route path='/profile' element={<Profile />}/>
         <Route path='/create-advertising' element={ <CreateAdvertising /> }/>
       </Route>

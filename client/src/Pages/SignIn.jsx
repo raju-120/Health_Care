@@ -79,6 +79,14 @@ export default function SignIn() {
             </button>
             <OAuth></OAuth>
             </form>
+
+            
+            <p className='ml-2 text-lg mt-4 '>
+            <Link to="/doctor-signin">
+                <span className="text-blue-500 text-xl hover:bg-slate-300 p-2 rounded-lg">Doctors Sign-In</span>
+              </Link>
+            </p>
+
             <p className='ml-2 text-lg mt-2'>Have not register? Please
               <span className='text-green-500 ml-2 font-semibold uppercase'>
               <Link to="/sign-up">
@@ -86,6 +94,10 @@ export default function SignIn() {
               </Link>
               </span>
             </p>
+            
+
+
+            
            {error && <p className="text-red-500">{error}</p>}
           </div>
         </div>

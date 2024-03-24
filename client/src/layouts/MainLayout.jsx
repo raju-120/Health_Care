@@ -2,6 +2,7 @@ import LeftSide from "../Components/LeftSide";
 import CenterSide from "../Components/CenterSide";
 
 
+
 export default function MainLayout() {
   return (
     <div>

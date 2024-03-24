@@ -2,7 +2,7 @@ import { useState } from 'react';
 import DoctorsLogo from '../assets/absec.jpg';
 import { useDispatch } from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 export default function DoctorsSignin() {
@@ -75,6 +75,23 @@ export default function DoctorsSignin() {
             </button>
 
           </form>
+
+          <p className='ml-2 text-lg mb-3'>have not register as a Doctor? Please
+            <span className='text-slate-500 ml-2 font-semibold uppercase'>
+            <Link to="/doctors-sign-up">
+              Doctor Sign-Up
+            </Link>
+            </span>
+          </p>
+
+          <p className='ml-2 text-lg'>Register as a user? Please
+            <span className='text-green-500 ml-2 font-semibold uppercase'>
+            <Link to="/sign-in">
+              Sign-In
+            </Link>
+            </span>
+          </p>
+
         </div>
       </div>
     </div>

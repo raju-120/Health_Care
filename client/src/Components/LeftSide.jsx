@@ -1,6 +1,5 @@
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-import Doctors from '../Pages/Doctors/Doctors';
 import { Fragment, useState } from 'react';
 import { FaTimes } from "react-icons/fa";
 import { CiMenuFries } from "react-icons/ci";
@@ -39,17 +38,26 @@ export default function LeftSide() {
       <div className='lg:flex-col md:flex font-normal items-center hidden'>
         
         <Link to='/profile'>
-              <div className='flex p-2 hover:bg-slate-100 box-shadow shadow-[0_10px_50px_-15px_rgba(0,0,0,0.7)] rounded-lg'>
+              <div className='flex p-2 hover:bg-slate-400 box-shadow shadow-[0_10px_50px_-15px_rgba(0,0,0,0.7)] rounded-lg'>
                 <div>
-                  <img src={currentUser?.avatar} alt="user-avatar" className='w-20 h-20 rounded-full ' />
+                  <img src={currentUser?.avatar} alt="user-avatar" className='w-16 h-16 rounded-full ' />
                 </div>
                 <div>
                   <h1 className='text-xl font-serif font-semibold m-5 '>{currentUser?.username}</h1>
                 </div>
               </div>
         </Link>
+
         <Link>
-          <h1>Doctor</h1>
+          <div className="hover:bg-slate-400 p-5 mt-2 rounded">
+            <h1 className="text-xl font-serif font-semibold ">Doctors List</h1>
+          </div>
+        </Link>
+
+        <Link>
+          <div className="hover:bg-slate-400 p-5 mt-2 rounded">
+            <h1 className="text-xl font-serif font-semibold ">Hospital List</h1>
+          </div>
         </Link>
 
       </div>

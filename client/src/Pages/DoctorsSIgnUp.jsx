@@ -29,7 +29,7 @@ export default function DoctorsSIgnUp() {
   const [error, setError] = useState(false);
   const navigate = useNavigate();
   
-  console.log(formData);
+  //console.log(formData);
   
 
   const handleChange = (e) =>{
