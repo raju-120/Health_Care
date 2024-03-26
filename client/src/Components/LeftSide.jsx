@@ -19,7 +19,7 @@ export default function LeftSide() {
           </div>
         </div>
       </Link>
-      <Link to='#'>
+      <Link to='/doctorlists'>
         <h1 className='text-xl font-semibold ml-1'>Doctors List</h1>
       </Link>
     </div>
@@ -48,7 +48,7 @@ export default function LeftSide() {
               </div>
         </Link>
 
-        <Link>
+        <Link to='/doctorlists'>
           <div className="hover:bg-slate-400 p-5 mt-2 rounded">
             <h1 className="text-xl font-serif font-semibold ">Doctors List</h1>
           </div>
