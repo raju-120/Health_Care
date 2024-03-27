@@ -7,10 +7,10 @@ export default function MainLayout() {
   return (
     <div>
         <div className="container max-w-auto flex">
-            <div className="lg:p-6 bg-neutral-500 rounded-lg">
+            <div className="lg:p-6 h-16 lg:h-full bg-neutral-500">
                 <LeftSide />
             </div>
-            <div className="lg:ml-[100px] ml-[40px]">
+            <div className="mx-auto w-3/5">
                 <CenterSide />
             </div>
         </div>

@@ -8,19 +8,22 @@ export default function LeftSide() {
   const {currentUser} = useSelector(state => state.user);
 
   const menu =<Fragment>
-    <div className='top-30 w-3/5 left-14 right-0 bg-zinc-400 lg:hidden block absolute rounded'>
+    <div className='top-30 w-3/5 h-36 left-14 right-0 bg-zinc-400 lg:hidden block absolute rounded'>
       <Link to='/profile'>
         <div className='flex  box-shadow  rounded-lg mb-2 hover:bg-slate-200'>
           <div>
-            <img src={currentUser?.avatar} alt="user-avatar" className='lg:w-24 lg:h-24 rounded-full w-10 h-10 ' />
+            <img src={currentUser?.avatar} alt="user-avatar" className='lg:w-24 lg:h-24 ml-1 mt-1 rounded-full w-10 h-10 ' />
           </div>
           <div>
-            <h1 className='font-serif font-semibold'>{currentUser?.username}</h1>
+            <h1 className='font-serif p-2 font-semibold'>{currentUser?.username}</h1>
           </div>
         </div>
       </Link>
       <Link to='/doctorlists'>
-        <h1 className='text-xl font-semibold ml-1'>Doctors List</h1>
+        <h1 className='text-xl mb-3 font-semibold ml-1'>Doctors List</h1>
+      </Link>
+      <Link to='#'>
+        <h1 className='text-xl mb-3 font-semibold ml-1'>Hospitals List</h1>
       </Link>
     </div>
   </Fragment>

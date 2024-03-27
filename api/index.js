@@ -6,6 +6,9 @@ import authRouter from './routes/auth.router.js';
 import advertiseRouter from './routes/advertising.router.js';
 //import designationListRouter from './routes/lists.router.js';
 import doctorRouter from './routes/doctors.router.js';
+import postRouter from "./routes/post.route.js";
+
+
 dotenv.config();
 
 mongoose.connect(process.env.MONGO).then(() =>{
@@ -34,6 +37,7 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter );
 app.use("/api/advertise", advertiseRouter);
 app.use("/api/doctor", doctorRouter);
+app.use("/api/post", postRouter);
 
 app.use((err,req,res,next) =>{
     const statusCode = err.statusCode || 500;
