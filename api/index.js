@@ -21,6 +21,7 @@ mongoose.connect(process.env.MONGO).then(() =>{
 const app = express(); 
 
 app.use(express.json());
+//app.use(express.urlencoded({encoded: false}));
 
 app.listen(5000, () =>{
     console.log('Server is running on 5000');

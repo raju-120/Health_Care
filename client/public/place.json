@@ -1,0 +1,394 @@
+[
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : "Dhaka"
+    },
+    {
+      "name": "Ad-Din Hospital",
+      "address":"Moghbazar, Dhaka",
+      "number" : "9353391-3",
+      "branch" : "Dhaka,Keranigonj, Jessore, Kushtia, Khulna, Postogola"
+    },
+    {
+      "name": "Ahmed Medical Centre Ltd",
+      "address":"House # 71, Road # 15-A, (New), Dhanmondi C/A",
+      "number" : "8113628",
+      "branch" : "Dhanmondi"
+    },
+    {
+      "name": "Aichi Hospital",
+      "address":"House # 13, Eshakha Avenue Sector # 6, utttara Dhaka",
+      "number" : "8916290,8920165",
+      "branch" : "Uttara"
+    },
+    {
+      "name": "Al Anaiet Adhunik Hospital",
+      "address":"House # 36, Road # 3, Dhanmondi",
+      "number" : "8631619",
+      "branch" : "Dhanmondi"
+    },
+    {
+      "name": "Al- Helal Speacialist Hospital",
+      "address":"S150,Rokeya Sarani Senpara ParbataMirpur-10, Dhaka",
+      "number" : "9006820,9008181",
+      "branch" : "Mirpur-10"
+    },
+    {
+      "name": "Al Jebel-E-Nur Heart Ltd",
+      "address":"House # 21, Road # 9/A (New),Dhanmondi",
+      "number" : "8117031",
+      "branch" : "Dhanmondi"
+    },
+    {
+      "name": "Al- Rajhi Hospital",
+      "address":"12, Farmgate-1215, Dhaka",
+      "number" : "8119229,8121172,9117775",
+      "branch" : "Farmgate"
+    },
+    {
+      "name": "Al-Ahsraf General Hospital",
+      "address":"House # 24 Gareeb-e-Nawaz Avenue,Sector # 11,Uttara Dhaka",
+      "number" : "8952851-2",
+      "branch" : "Uttara"
+    },
+    {
+      "name": "Al-Biruni Hospital",
+      "address":"23/1, Khilzee Road, Shyamoli",
+      "number" : "8118905, 9115953",
+      "branch" : "Shamoli"
+    },
+    {
+      "name": "Al-Fateh Medical Sevices (Pvt) Ltd",
+      "address":"11, Farmgate over Bridge East Side",
+      "number" : "9120615",
+      "branch" : "Farmgate"
+    },
+    {
+      "name": "Al-Madina General Hospital (Pvt.) Ltd",
+      "address":"2/A, Golden Street, Ring Road, Shamoli, Dhaka",
+      "number" : "8118709",
+      "branch" : "Shamoli"
+    },
+    {
+      "name": "Al-Manar Hospital",
+      "address":"5/4, Block-F, Lalmatia Dhaka - 1207",
+      "number" : "9121387, 9121588",
+      "branch" : "Lalmatia"
+    },
+    {
+      "name": "Al-Markazul Islami Hospital",
+      "address":"21/17, Babar Road, Mohammadpur",
+      "number" : "8114980, 9129426",
+      "branch" : "Mohammadpur"
+    },
+    {
+      "name": "Al-Mohite General Hospital & Diagnostic Centre",
+      "address":"House # 11, Road # 2, Shamoli",
+      "number" : "9113831, 9114220 Ext 238",
+      "branch" : "Shamoli"
+    },
+    {
+      "name": "Kemal Ataturk Avenue",
+      "address":"Banani C/A, Dhaka - 1213",
+      "number" : "9893528-9",
+      "branch" : "Banani"
+    },
+    {
+      "name": "Evercare Hospital",
+      "address":"Plot 81, Block-E, Bashundhara Rd, Dhaka 1229",
+      "number" : "0255037242",
+      "branch" : "Bashundhara"
+    },
+    {
+      "name": "Arogya Niketan Hospital Ltd",
+      "address":"242-243, New Circular Road, Malibagh",
+      "number" : "9333730",
+      "branch" : "Malibag"
+    },
+    {
+      "name": "Aysha Memorial Specialized Hospital",
+      "address":"74/G, Arjatpara, Mohakhali, Dhaka",
+      "number" : "9122689, 9122690",
+      "branch" : "Mohakhali"
+    },
+    {
+      "name": "B.D.F. Hospital",
+      "address":"5/7, Humayaun Road, Block # D, Mohammadpur",
+      "number" : "8123730, 8116637",
+      "branch" : "Mohammadpur"
+    },
+    {
+      "name": "Bangabandhu Shiekh Mujib Medical University",
+      "address":"Shabagh, Dhaka",
+      "number" : "8614001-9, 8614545",
+      "branch" : "Shabagh"
+    },
+    {
+      "name": "Bangal Nursing Home Ltd",
+      "address":"Lake Circus, Kalabagan, Dhaka",
+      "number" : "9114824",
+      "branch" : "Kalabagan"
+    },
+    {
+      "name": "Bangkok Hospital",
+      "address":"Office, Bangladesh Lion Complex (4th Floor), 73, New Airport Road, Tejgaon",
+      "number" : "9139777, 9134982, 9113864",
+      "branch" : "Tejgaon"
+    },
+    {
+      "name": "Bangladesh Association For The Aged & Institute Of Gerecitric Medicine",
+      "address":"Agargaon, Sher-e-Bangla Nagar",
+      "number" : "9129814",
+      "branch" : "Agargaon"
+    },
+    {
+      "name": "Bangladesh Heart & Chest Hospital",
+      "address":"Road # 27 (Old), 16 (New), House # 47, Dhanmondi",
+      "number" : "9114266, 8123977",
+      "branch" : "Dhanmondi"
+    },
+    {
+      "name": "Bangladesh Medical College",
+      "address":"House # 35, Road # 14/A, Dhanmondi",
+      "number" : "9118202, 8115843",
+      "branch" : "Dhanmondi"
+    },
+    {
+      "name": "Bangladesh Telemedicine Services Ltd",
+      "address":"Comfort Tower, 167/B, Green Road, Dhanmondi",
+      "number" : "8124990 Ext 660, 284",
+      "branch" : "Dhanmondi"
+    },
+    {
+      "name": "Bari-Llizarov Orthopedic",
+      "address":"(Bio) Centre House # 77 (New) 831 (Old), Road # 9/A (New) 19 (Old), Dhanmondi R/A",
+      "number" : "9120309, 8117876",
+      "branch" : "Dhanmondi"
+    },
+    {
+      "name": "Bari-Llizarov Orthopedic",
+      "address":"Centre House # 831, Road # 19 (Old), Dhanmondi R/A",
+      "number" : "9120309, 8117876",
+      "branch" : "Dhanmondi"
+    },
+    {
+      "name": "Bdm Hospital",
+      "address":"5/17, Humaund Road, Block # B, Mohammedpur",
+      "number" : "8113481",
+      "branch" : "Mohammadpur"
+    },
+    {
+      "name": "Bengal Nursing Home (Pvt.) Ltd",
+      "address":"70/C, Clke Circus kalabagan",
+      "number" : "8116007",
+      "branch" : "Kalabagan"
+    },
+    {
+      "name": "Birdem",
+      "address":"Shahbagh, Dhaka",
+      "number" : "8616641-50",
+      "branch" : "Shabagh"
+    },
+    {
+      "name": "Bnsb Dhaka",
+      "address":"Eye Hospital Mirpur-1, Dhaka",
+      "number" : "8014476",
+      "branch" : "Mirpur-1"
+    },
+    {
+      "name": "Brain & Maind Hospital Ltd",
+      "address":"149/A, Airport Road, Farmgate, Baityl Shoraf Mosque Complex",
+      "number" : "8120710",
+      "branch" : "Farmgate"
+    },
+    {
+      "name": "Brighton Hospital Ltd",
+      "address":"163, Sonargaon Road Hitirpool, Dhaka - 1205",
+      "number" : "8626901,9671186",
+      "branch" : "Dhanmondi"
+    },
+    {
+      "name": "Bumrungrad Hospital",
+      "address":"House- 154, Road- 11, Block- E, Banani, Dhaka",
+      "number" : "8855254",
+      "branch" : "Banani"
+    },
+    {
+      "name": "Cancer Home Cancer & Breast Clinic",
+      "address":"GP-Cha, 149/1, Mohakhali",
+      "number" : "8815244",
+      "branch" : "Mohakhali"
+    },
+    {
+      "name": "Care Madical Center Ltd",
+      "address":"41, Chamelibagh, Shantinagar",
+      "number" : "8318827, 9351190",
+      "branch" : "Shantinagar"
+    },
+    {
+      "name": "Central Hospital Ltd",
+      "address":"House # 2, Road # 5, Green Road, Dhanmondi",
+      "number" : "9660015-19",
+      "branch" : "Green Road"
+    },
+    {
+      "name": "Centre For Health And Development Medical Complex",
+      "address":"(Chd Medical Comple) House # 16, Road # 16, Sector # 4, Uttara Model Town",
+      "number" : "8920670",
+      "branch" : "Uttara"
+    },
+    {
+      "name": "Centre For The Rehabilitation Of The Paralysed (Crp)",
+      "address":"Post CRP Chapin, Savar",
+      "number" : "7710464-5, 7711766",
+      "branch" : "Savar"
+    },
+    {
+      "name": "Chandshi Medical Centre",
+      "address":"House # 9, Road # 27, Block # K, Banani",
+      "number" : "8821875, 9554571",
+      "branch" : "Banani"
+    },
+    {
+      "name": "China-Bangla Hospital (Jv) Ltd",
+      "address":"Plot # 1, Road # 7, Sector # 1, Uttara",
+      "number" : "8913674, 8913606",
+      "branch" : "Uttara"
+    },
+    {
+      "name": "Cholera Hospital (Icddrb)",
+      "address":"Dhaka, Mohkhali",
+      "number" : "871751-60,600171-8",
+      "branch" : "Mohakhali"
+    },
+    {
+      "name": "Christian Medical Hospital",
+      "address":"6/3, Nadda, Baridhara (North)",
+      "number" : "9886298, 8813375",
+      "branch" : "Nodda"
+    },
+    {
+      "name": "City Hospital (Pvt) Ltd",
+      "address":"69/1/1, Panthapath",
+      "number" : "8617852, 8623205",
+      "branch" : "panthapath"
+    },
+    {
+      "name": "CMH (Dhaka Cantonment)",
+      "address":"Dhaka Cantonment",
+      "number" : "882770",
+      "branch" : "Cantonment"
+    },
+    {
+      "name": "Crescent Gastroliver & General Hospital Ltd",
+      "address":"House- 60, Road- 8/A, Dhanmondi R/A, Dhaka",
+      "number" : "9116851",
+      "branch" : "Dhanmondi"
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    {
+      "name": "Shahid Suhrawardy Hospital",
+      "address":"Ser-e-Banglanagar, Collegegate",
+      "number" : "9122560-78",
+      "branch" : ""
+    },
+    
+  ]
+  
