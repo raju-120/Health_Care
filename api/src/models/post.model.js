@@ -14,7 +14,7 @@ const postsSchema = new Schema({
     },
     avatar: {
         type: String,
-        path: '/uploads'
+        required: true,
     },
 },{timestamps: true});
 
