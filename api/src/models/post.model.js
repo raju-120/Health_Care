@@ -14,7 +14,7 @@ const postsSchema = new Schema({
     },
     avatar: {
         type: String,
-        required: true,
+        //required: true,
     },
 },{timestamps: true});
 
