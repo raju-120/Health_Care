@@ -26,8 +26,11 @@ const dropPost = asyncHandler(async (req, res)=>{
         throw new ApiError(400, "All fields are required");
      }
     
-    //console.log(req.files?.avatar[0]?.path); 
-    const avatarLocalPath =req.files?.avatar[0]?.path;
+/*     const avatarLocalPath =req.files?.avatar[2]?.path; */
+    let avatarLocalPath;
+    if(req.files && Array.isArray(req.files.avatar) && req.files.avatar.length >0 ){
+        avatarLocalPath =req.files?.avatar[0]?.path;
+    }
     console.log("Avatar path name: ", avatarLocalPath);
 
     if(!avatarLocalPath) {
@@ -46,7 +49,7 @@ const dropPost = asyncHandler(async (req, res)=>{
         username,
         description,
         comment,
-        avatar: avatar.url
+        avatar: avatar.urls
     });
 
     if(!posting){

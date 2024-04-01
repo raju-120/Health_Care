@@ -16,6 +16,7 @@ app.use(cookieParser());
 
 
 //routes
+import authRouter from "./routes/auth.router.js";
 import userRouter from "./routes/user.routes.js";
 import dropPostRouter from "./routes/post.routes.js";
 
@@ -23,8 +24,8 @@ import dropPostRouter from "./routes/post.routes.js";
 
 
 app.use("/api/user",userRouter);
-/* app.use("/api/auth",);
-app.use("/api/advertise",); */
+app.use("/api/auth",authRouter);
+//app.use("/api/advertise",); 
 app.use("/api/posts", dropPostRouter);
 
 

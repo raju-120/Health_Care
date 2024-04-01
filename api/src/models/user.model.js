@@ -24,7 +24,7 @@ const userSchema = new Schema({
     }
 },{timestamps: true});
 
-userSchema.pre("save", async function(next) {
+/* userSchema.pre("save", async function(next) {
     if(!this.isModified("password")) return next();
 
     this.password = bcrypt.hash(this.password, 10);
@@ -55,7 +55,9 @@ return jwt.sign(
         expiresIn: process.env.REFRESH_TOKEN_EXPIRY
     }
 )
-} 
+}  */
 
-export const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+
+export default User;
 

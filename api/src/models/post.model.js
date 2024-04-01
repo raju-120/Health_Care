@@ -13,8 +13,8 @@ const postsSchema = new Schema({
         type: String,
     },
     avatar: {
-        type: String,
-        //required: true,
+        type: Array,
+        required: true,
     },
 },{timestamps: true});
 

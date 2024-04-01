@@ -8,7 +8,7 @@ const router = Router();
 router.route("/droped").post( upload.fields([
     {
         name: "avatar",
-        maxCount: 1
+        maxCount: 10
     }
 ]),dropPost);
 
