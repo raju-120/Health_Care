@@ -80,10 +80,11 @@ export default function Profile() {
     }
   };
 
+
   const handleSingOut = async() =>{
     try{
       dispatch(signOutUserStart());
-      const res = await fetch('/api/auth/signout');
+      const res = await fetch('http://localhost:5000/api/auth/signout');
       const data = await res.json();
       if(data.success === false){
         dispatch(signOutUserFailure(data.message));
@@ -94,7 +95,7 @@ export default function Profile() {
     }catch(error){
       dispatch(signOutUserFailure(error));
     }
-  }
+  };
 
   return (
     <div className='p-3 max-w-lg mx-auto mb-24'>

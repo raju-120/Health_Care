@@ -28,10 +28,15 @@ const dropPost = asyncHandler(async (req, res)=>{
     
 /*     const avatarLocalPath =req.files?.avatar[2]?.path; */
     let avatarLocalPath;
+    /* let avatarArray = [];
+
+    req.files?.avatar */
     if(req.files && Array.isArray(req.files.avatar) && req.files.avatar.length >0 ){
+        
         avatarLocalPath =req.files?.avatar[0]?.path;
+        console.log(req.files?.avatar);
     }
-    console.log("Avatar path name: ", avatarLocalPath);
+    //console.log("Avatar path name: ", avatarLocalPath);
 
     if(!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required");
@@ -49,7 +54,7 @@ const dropPost = asyncHandler(async (req, res)=>{
         username,
         description,
         comment,
-        avatar: avatar.urls
+        avatar: avatar.url
     });
 
     if(!posting){
