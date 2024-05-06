@@ -48,7 +48,7 @@ const doctorSchema = new Schema({
     address: {
         type: String,
         required: true,
-    }, 
+    },
     password:{
         type: String,
         required: true,
@@ -56,9 +56,6 @@ const doctorSchema = new Schema({
     avatar:{
         type: Array,
         required: true,
-    } ,
-    refreshToken: {
-        type: String,
     }
 },{timestamps: true});
 
@@ -74,7 +71,7 @@ doctorSchema.methods.isPasswordCorrect = async function (password)
 
 
 
-doctorSchema.methods.generateAccessToken = function() 
+doctorSchema.methods.generateAccessToken = function()
     {
         return jwt.sign({
             _id:  this._id,
@@ -88,7 +85,7 @@ doctorSchema.methods.generateAccessToken = function()
     };
 
 
-doctorSchema.methods.generateRefreshToken = function() 
+doctorSchema.methods.generateRefreshToken = function()
     {
         return jwt.sign(
             {
