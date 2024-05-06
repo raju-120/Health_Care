@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const doctorSchema = new Schema({
     username:{
@@ -68,11 +69,10 @@ doctorSchema.pre("save", async function(next) {
     this.password =await bcrypt.hash(this.password, 10);
     next();
 });
-
 doctorSchema.methods.isPasswordCorrect = async function (password)
-{
-    return await bcrypt.compare(password, this.password);
-};
+{  return await bcrypt.compare(password, this.password); };
+
+
 
 doctorSchema.methods.generateAccessToken = function() 
     {
@@ -86,6 +86,7 @@ doctorSchema.methods.generateAccessToken = function()
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         })
     };
+
 
 doctorSchema.methods.generateRefreshToken = function() 
     {

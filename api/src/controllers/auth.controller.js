@@ -24,12 +24,12 @@ const generateAccessAndRefreshTokens = async(userId) =>{
 
 const generateDocAccessAndRefreshTokens = async(docUserId) =>{
     try{
-        const user = await Doctor.findById(docUserId);
-        const accessToken = user.generateAccessToken();
-        const refreshToken = user.generateRefreshToken();
+        const docUser = await Doctor.findById(docUserId);
+        const accessToken = docUser.generateAccessToken();
+        const refreshToken = docUser.generateRefreshToken();
 
-        user.refreshToken = refreshToken;
-        await user.save({validateBeforeSave:  false});
+        docUser.refreshToken = refreshToken;
+        await docUser.save({validateBeforeSave:  false});
 
         return {accessToken, refreshToken};
     }catch(error){
@@ -236,7 +236,7 @@ const refreshAccessToken = asyncHandler(async (req, res) =>{
     }
 });
 
-/* const refreshDocAccessToken = asyncHandler(async (req, res) =>{
+const refreshDocAccessToken = asyncHandler(async (req, res) =>{
     const incomingRefreshToken = req.cookies.refreshToken ||
                                 req.body.refreshToken;
     
@@ -280,7 +280,7 @@ const refreshAccessToken = asyncHandler(async (req, res) =>{
     } catch (error) {
         new ApiError(401, error?.message || "Invalid refresh token")
     }
-}); */
+}); 
 
 const doctorSignUp = asyncHandler(async(req, res) =>{
     const {username,email,bmdc,specialty,qualification,designation,institute,
@@ -346,7 +346,7 @@ const doctorSignIn = asyncHandler(async(req, res)=>{
         new ApiError(404, "User password won't matched!");
     };
 
-    //const {accessToken, refreshToken} = await generateDocAccessAndRefreshTokens(docUser._id);
+    const {accessToken, refreshToken} = await generateDocAccessAndRefreshTokens(docUser._id);
 
     const docLoggedIn = await Doctor.findById(docUser._id);
 
@@ -360,12 +360,22 @@ const doctorSignIn = asyncHandler(async(req, res)=>{
             .cookie("accessToken",  options)
             .cookie("refreshToken",  options)
             .json(
-                200,
-                docLoggedIn,
-                "Doctor's log in successfully."
+                new APIResponse(
+                    200,
+                    {
+                        doctor: docLoggedIn, accessToken, refreshToken
+                    },
+                    "Doctor logged in successfully"
+                )
             )
 
 });
+
+const doctorUpdate = asyncHandler( async(req, res, next) =>{
+    if(req.user.id !== req.params.id){
+        throw new ApiError(401, 'You can only update your own details!');
+    }
+} )  
 
 
 export {
