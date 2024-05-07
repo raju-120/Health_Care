@@ -5,10 +5,10 @@ const commentSchema = new Schema({
         type: String,
         required: true,
     },
-    comments:{
+    comment:{
         type: String,
         required: true
-    }
-});
+    },
+},{timestamps: true});
 
 export const Comments = mongoose.model('Comments', commentSchema);
