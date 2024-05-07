@@ -37,6 +37,98 @@ const generateDocAccessAndRefreshTokens = async(docUserId) =>{
     }
 };
 
+const refreshAccessToken = asyncHandler(async (req, res) =>{
+    const incomingRefreshToken = req.cookies.refreshToken ||
+                                req.body.refreshToken;
+
+    if(incomingRefreshToken){
+        throw new ApiError(401, "unauthorized access token");
+    };
+
+    try {
+            const decodedToken = jwt.verify(
+                incomingRefreshToken,
+                process.env.REFRESH_TOKEN_SECRET
+            )
+            const user = await User.findById(decodedToken?._id);
+
+            if(!user){
+                throw new ApiError(401, "Invalid refresh token")
+            };
+
+            if(incomingRefreshToken !== user?.refreshToken){
+                throw new ApiError(401, "Refresh token is expired!");
+            };
+
+            const options = {
+                httpOnly: true,
+                secure: true,
+                };
+
+            const {accessToken,newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
+
+            return res
+                .status(200)
+                .cookie("accessToken", accessToken, options)
+                .cookie("refreshToken", newRefreshToken, options)
+                .json(
+                new APIResponse(
+                    201,
+                    {accessToken, refreshToken: newRefreshToken},
+                    "Access TOken refreshed"
+                ));
+
+    } catch (error) {
+        new ApiError(401, error?.message || "Invalid refresh token")
+    }
+});
+
+const refreshDocAccessToken = asyncHandler(async (req, res) =>{
+    const incomingRefreshToken = req.cookies.refreshToken ||
+                                req.body.refreshToken;
+
+    if(incomingRefreshToken){
+        throw new ApiError(401, "unauthorized access token");
+    };
+
+    try {
+            const decodedToken = jwt.verify(
+                incomingRefreshToken,
+                process.env.REFRESH_TOKEN_SECRET
+            )
+            const user = await Doctor.findById(decodedToken?._id);
+
+            if(!user){
+                throw new ApiError(401, "Invalid refresh token")
+            };
+
+            if(incomingRefreshToken !== user?.refreshToken){
+                throw new ApiError(401, "Refresh token is expired!");
+            };
+
+            const options = {
+                httpOnly: true,
+                secure: true,
+                };
+
+            const {accessToken,newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
+
+            return res
+                .status(200)
+                .cookie("accessToken", accessToken, options)
+                .cookie("refreshToken", newRefreshToken, options)
+                .json(
+                new APIResponse(
+                    201,
+                    {accessToken, refreshToken: newRefreshToken},
+                    "Access TOken refreshed"
+                ));
+
+    } catch (error) {
+        new ApiError(401, error?.message || "Invalid refresh token")
+    }
+});
+
 
 const signup = asyncHandler(async(req, res) =>{
     const {username, email,password} = req.body;
@@ -303,103 +395,88 @@ const doctorSignIn = asyncHandler(async(req, res)=>{
 
 });
 
+const userUpdate = asyncHandler(  async (req, res) =>{
+        /* if(req.user?._id !== req.params?.id){
+            throw new ApiError(401, 'You can only update your own details!');
+        }; */
+
+        try{
+            const{  username, email,password,avatar } = req.body;
+            const hashedPassword = bcrypt.hashSync(password, 10);
+
+        const user =await User.findByIdAndUpdate(
+            req.user?._id,
+            {
+                $set: {
+                    username,
+                    email,
+                    password: hashedPassword,
+                    avatar
+                }
+            },
+            {new : true}
+        )
+
+        return res
+            .status(200)
+            .json(new APIResponse(200, user, 'Account details updated successfully.'))
+        }catch(error){
+            console.log('Something went wrong in update section: ', error.message);
+        }
+    }
+);
+
 const doctorUpdate = asyncHandler( async(req, res, next) =>{
-    if(req.user.id !== req.params.id){
+    /* if(req.doctor.id !== req.params.id){
         throw new ApiError(401, 'You can only update your own details!');
+    } */
+    console.log('Doctor id: ', req.doctor.id);
+    try{
+        const {
+            username,
+            email,
+            password,
+            avatar,
+            bmdc,
+            specialty,
+            qualification,
+            designation,
+            institute,
+            department,
+            phone,
+            appointmentnumber,
+            address
+        } = req.body;
+        const hashedPassword = bcrypt.hashSync(password, 10);
+
+        const doctorUserUpdate = await Doctor.findByIdAndUpdate(
+            req.doctor.id,
+            {
+                $set: {
+                    username,
+                    email,
+                    password: hashedPassword,
+                    avatar,
+                    bmdc,
+                    specialty,
+                    qualification,
+                    designation,
+                    institute,
+                    department,
+                    phone,
+                    appointmentnumber,
+                    address
+                }
+            },{new: true},
+        )
+
+        return res
+                .status(200)
+                .json(new APIResponse(200, doctorUserUpdate,"Doctor Details update successfully"))
+    }catch(error){
+        console.log('Something went wrong in doctor update section: ', error.message);
     }
 } );
-
-const refreshAccessToken = asyncHandler(async (req, res) =>{
-    const incomingRefreshToken = req.cookies.refreshToken ||
-                                req.body.refreshToken;
-
-    if(incomingRefreshToken){
-        throw new ApiError(401, "unauthorized access token");
-    };
-
-    try {
-            const decodedToken = jwt.verify(
-                incomingRefreshToken,
-                process.env.REFRESH_TOKEN_SECRET
-            )
-            const user = await User.findById(decodedToken?._id);
-
-            if(!user){
-                throw new ApiError(401, "Invalid refresh token")
-            };
-
-            if(incomingRefreshToken !== user?.refreshToken){
-                throw new ApiError(401, "Refresh token is expired!");
-            };
-
-            const options = {
-                httpOnly: true,
-                secure: true,
-                };
-
-            const {accessToken,newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
-
-            return res
-                .status(200)
-                .cookie("accessToken", accessToken, options)
-                .cookie("refreshToken", newRefreshToken, options)
-                .json(
-                new APIResponse(
-                    201,
-                    {accessToken, refreshToken: newRefreshToken},
-                    "Access TOken refreshed"
-                ));
-
-    } catch (error) {
-        new ApiError(401, error?.message || "Invalid refresh token")
-    }
-});
-
-const refreshDocAccessToken = asyncHandler(async (req, res) =>{
-    const incomingRefreshToken = req.cookies.refreshToken ||
-                                req.body.refreshToken;
-
-    if(incomingRefreshToken){
-        throw new ApiError(401, "unauthorized access token");
-    };
-
-    try {
-            const decodedToken = jwt.verify(
-                incomingRefreshToken,
-                process.env.REFRESH_TOKEN_SECRET
-            )
-            const user = await Doctor.findById(decodedToken?._id);
-
-            if(!user){
-                throw new ApiError(401, "Invalid refresh token")
-            };
-
-            if(incomingRefreshToken !== user?.refreshToken){
-                throw new ApiError(401, "Refresh token is expired!");
-            };
-
-            const options = {
-                httpOnly: true,
-                secure: true,
-                };
-
-            const {accessToken,newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
-
-            return res
-                .status(200)
-                .cookie("accessToken", accessToken, options)
-                .cookie("refreshToken", newRefreshToken, options)
-                .json(
-                new APIResponse(
-                    201,
-                    {accessToken, refreshToken: newRefreshToken},
-                    "Access TOken refreshed"
-                ));
-
-    } catch (error) {
-        new ApiError(401, error?.message || "Invalid refresh token")
-    }
-});
 
 
 export {
@@ -410,5 +487,8 @@ export {
         google,
         doctorSignUp,
         doctorSignIn,
+        userUpdate,
+        doctorUpdate,
         refreshAccessToken,
+        refreshDocAccessToken,
     };

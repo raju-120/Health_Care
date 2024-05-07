@@ -10,7 +10,7 @@ const postsSchema = new Schema({
         required: true,
     },
     comment:{
-        type: String,
+        type: Array,
     },
     avatar: {
         type: Array,

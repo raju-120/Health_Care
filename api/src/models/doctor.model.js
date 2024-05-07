@@ -16,6 +16,7 @@ const doctorSchema = new Schema({
         type: String,
         required: true,
         unique: true,
+        max: 7
     },
     specialty:{
         type: String,
