@@ -5,6 +5,10 @@ const commentSchema = new Schema({
         type: String,
         required: true,
     },
+    pId:{
+        type: String,
+        required: true,
+    },
     comment:{
         type: String,
         required: true
