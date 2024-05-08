@@ -7,7 +7,7 @@ import OAuth from "../Components/OAuth";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const {loading,error} = useSelector((state)=>state.user)
+  const {error} = useSelector((state)=>state.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   console.log(formData);
@@ -57,25 +57,25 @@ export default function SignIn() {
           <div className="lg:w-2/5 my-24">
             <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
 
-            <input 
-              type="email" 
-              id="email" 
-              placeholder='email' 
+            <input
+              type="email"
+              id="email"
+              placeholder='email'
               onChange={handleChange}
               className='border p-3 rounded-lg' 
             />
 
-            <input 
-              type="password" 
-              id="password" 
-              placeholder='password' 
+            <input
+              type="password"
+              id="password"
+              placeholder='password'
               onChange={handleChange}
-              className='border p-3 rounded-lg' 
+              className='border p-3 rounded-lg'
             />
 
             <button 
               className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-75 disabled:opacity-65'>
-                Sign In
+                Sign IN
             </button>
             <OAuth></OAuth>
             </form>

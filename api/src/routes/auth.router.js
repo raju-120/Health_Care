@@ -21,6 +21,7 @@ router.route('/docupdate/:id').post(docUpVerifyJwt,doctorUpdate);
 
 router.route('/signout').post(verifyJwt,logoutUser);
 router.route('/docsignout').post(docVerifyJwt,docLogoutUser);
+
 router.route('/refresh-token').post(refreshAccessToken);
 /* router.route('/refresh-doc-token').post(refreshDocAccessToken); */
 

@@ -7,23 +7,20 @@ import {Link, useNavigate} from 'react-router-dom';
 
 
 export default function Profile() {
-  
-  const {currentUser} = useSelector(state => state.user);
+
+  const {currentUser,loading} = useSelector(state => state.user);
   const fileRef = useRef(null);
   const [file,setFile] = useState(undefined);
   const [formData, setFormData] = useState({});
-  const [filePerc,setFilePerc] = useState(0); 
+  const [filePerc,setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log('Current User ID: ', `${currentUser?.data?._id}`) 
-  console.log(formData); /*
-  console.log(file);
-  console.log(filePerc);
-  console.log(fileUploadError); */
+  console.log('Current User ID: ', `${currentUser?.data?.user?._id}`) 
+  console.log(formData);
+ 
 
   const handleChange = (e) =>{
     setFormData({
@@ -64,8 +61,7 @@ export default function Profile() {
     e.preventDefault();
     try{
       dispatch(updateUserStart());
-      setLoading(true);
-      const result = await fetch(`/api/auth/update/${currentUser?.data?._id}`,{
+      const result = await fetch(`/api/auth/update/${currentUser?.data?.user?._id}`,{
         method:'POST',
         headers: {
           'Content-type' : 'application/json'
@@ -79,7 +75,6 @@ export default function Profile() {
       }
       dispatch(updateUserSuccess(data))
       setUpdateSuccess(true);
-      setLoading(false);
     }catch(error){
       console.log(error);
     }
@@ -87,25 +82,55 @@ export default function Profile() {
 
 
   const handleSingOut = async() =>{
-    try{
-      dispatch(signOutUserStart());
-      const res = await fetch('http://localhost:5000/api/auth/signout');
-      const data = await res.json();
-      if(data.success === false){
-        dispatch(signOutUserFailure(data.message));
-        return;
+    if( currentUser?.data?.user?.role === 'doctor' )
+      {
+      try{
+        dispatch(signOutUserStart());
+        const res = await fetch('/api/auth/docsignout',{
+          method:'POST',
+          headers: {
+            'Content-type' : 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        const data = await res.json();
+        console.log('Data log out doctor: ',data );
+        if(data.success === false){
+          dispatch(signOutUserFailure(data.message));
+          return;
+        }
+        dispatch(signOutUserSuccess(data.message));
+        navigate('/sign-in');
+      }catch(error){
+        dispatch(signOutUserFailure(error.message));
       }
-      dispatch(signOutUserSuccess(data));
-      navigate('/sign-in');
-    }catch(error){
-      dispatch(signOutUserFailure(error));
+    }else{
+        try{
+          dispatch(signOutUserStart());
+          const res = await fetch('/api/auth/docsignout',{
+            method:'POST',
+            headers: {
+              'Content-type' : 'application/json'
+            },
+            body: JSON.stringify(formData)
+          });
+          const data = await res.json();
+          if(data.success === false){
+            dispatch(signOutUserFailure(data.message));
+            return;
+          }
+          dispatch(signOutUserSuccess(data.message));
+          navigate('/sign-in');
+        }catch(error){
+          dispatch(signOutUserFailure(error.message));
+        }
     }
   };
 
   return (
     <div className='p-3 max-w-lg mx-auto mb-24'>
       <h1 className='text-3xl front-semibold text-center my-7'>Profile</h1>
-      
+
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input
           onChange={(e) => setFile(e.target.files[0])}
@@ -117,7 +142,7 @@ export default function Profile() {
 
          <img
             onClick={() => fileRef.current.click()}
-            src={currentUser?.data?.avatar}
+            src={currentUser?.data?.user?.avatar}
             alt="profile"
             className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2' 
         />
@@ -138,7 +163,7 @@ export default function Profile() {
 
         <input
           type="text"
-          defaultValue={currentUser?.data?.username}
+          defaultValue={currentUser?.data?.user?.username}
           placeholder='username'
           id='username'
           className='border p-3 rounded-lg'
@@ -147,7 +172,7 @@ export default function Profile() {
 
         <input
           type="email"
-          defaultValue={currentUser?.data?.email}
+          defaultValue={currentUser?.data?.user?.email}
           placeholder='email'
           id='email'
           className='border p-3 rounded-lg'
@@ -163,8 +188,8 @@ export default function Profile() {
           onChange={handleChange}
         />
 
-        <button disabled={loading} className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-70'
-          >  Update
+        <button disabled={loading} className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-100 disabled:opacity-40'
+          >  {loading ? 'Loading...' : 'Update'}
         </button>
       </form>
       <p className='text-green-700 mt-5'>{updateSuccess? 'User is updated successfully': ''}</p>

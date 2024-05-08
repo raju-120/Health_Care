@@ -5,17 +5,17 @@ import { FaTimes } from "react-icons/fa";
 import { CiMenuFries } from "react-icons/ci";
 
 export default function LeftSide() {
-  const {currentUser} = useSelector(state => state.user);
+  const {currentUser} = useSelector(state => state?.user);
 
   const menu =<Fragment>
     <div className='top-30 w-3/5 h-36 left-14 right-0 bg-zinc-400 lg:hidden block absolute rounded'>
       <Link to='/profile'>
         <div className='flex  box-shadow  rounded-lg mb-2 hover:bg-slate-200'>
           <div>
-            <img src={currentUser?.avatar} alt="user-avatar" className='lg:w-24 lg:h-24 ml-1 mt-1 rounded-full w-10 h-10 ' />
+            <img src={currentUser?.data?.user?.avatar} alt="user-avatar" className='lg:w-24 lg:h-24 ml-1 mt-1 rounded-full w-10 h-10 ' />
           </div>
           <div>
-            <h1 className='font-serif p-2 font-semibold'>{currentUser?.username}</h1>
+            <h1 className='font-serif p-2 font-semibold'>{currentUser?.data?.user?.username}</h1>
           </div>
         </div>
       </Link>
@@ -43,10 +43,10 @@ export default function LeftSide() {
         <Link to='/profile'>
               <div className='flex p-2 hover:bg-slate-400 box-shadow shadow-[0_10px_50px_-15px_rgba(0,0,0,0.7)] rounded-lg'>
                 <div>
-                  <img src={currentUser?.avatar} alt="user-avatar" className='w-16 h-16 rounded-full ' />
+                  <img src={currentUser?.data?.user?.avatar} alt="user-avatar" className='w-16 h-16 rounded-full ' />
                 </div>
                 <div>
-                  <h1 className='text-xl font-serif font-semibold m-5 '>{currentUser?.username}</h1>
+                  <h1 className='text-xl font-serif font-semibold m-5 '>{currentUser?.data?.user?.username}</h1>
                 </div>
               </div>
         </Link>

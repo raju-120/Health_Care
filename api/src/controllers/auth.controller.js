@@ -284,7 +284,7 @@ const logoutUser = asyncHandler (async(req, res) =>{
 
 const docLogoutUser = asyncHandler (async(req, res) =>{
     await Doctor.findByIdAndUpdate(
-        req.doctor._id,
+        req.user._id,
         {
             $unset: {
                 refreshToken: 1 //this will removes the field from doc
@@ -387,7 +387,7 @@ const doctorSignIn = asyncHandler(async(req, res)=>{
                 new APIResponse(
                     200,
                     {
-                        doctor: docLoggedIn, accessToken, refreshToken
+                        user: docLoggedIn, accessToken, refreshToken
                     },
                     "Doctor logged in successfully"
                 )

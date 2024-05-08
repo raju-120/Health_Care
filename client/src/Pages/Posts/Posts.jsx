@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 
 export default function Posts() {
 
-  const {currentUser} = useSelector(state => state.user);
+  const {currentUser} = useSelector(state => state?.user);
   const [formData, setFormData] = useState({});
   const fileRef = useRef(null);
 
@@ -56,7 +56,7 @@ export default function Posts() {
   const handleSubmit = async(e) =>{
     e.preventDefault();
 
-    const res = await fetch('http://localhost:5000/api/post/droppost',{
+    const res = await fetch('/api/post/droppost',{
       method: 'POST',
       headers: {
         'Content-Type' : 'application/json'
@@ -64,7 +64,7 @@ export default function Posts() {
       body: JSON.stringify(
         {
           ...formData,
-          userRef : currentUser._id,
+          userRef : currentUser?.data?.user?._id,
         }
       ),
     });
@@ -77,7 +77,7 @@ export default function Posts() {
         <div className='lg:p-5 border box-border rounded-lg bg-slate-100'>
             <div className="flex">
               <div className="mt-5 ">
-                <img src={currentUser.avatar} alt="user_photo" className="w-28 h-24 rounded-full" />
+                <img src={currentUser?.data?.user?.avatar} alt="user_photo" className="w-28 h-24 rounded-full" />
               </div>
               <div className="lg:mt-5 w-full ml-2">
                 <form onSubmit={handleSubmit}>
@@ -96,10 +96,10 @@ export default function Posts() {
                       type="file"
                       ref={fileRef}
                       accept="image/*"
-                      hidden 
+                      hidden
                     />
 
-                    <p 
+                    <p
                       onClick={() => fileRef.current.click()}
                       className="mt-2 ml-2 text-2xl text-green-500 hover:cursor-pointer"
                       >
@@ -107,7 +107,6 @@ export default function Posts() {
                     </p>
 
                     <button className="text-xl mt-5 w-full bg-slate-400 p-2 uppercase hover:opacity-30 rounded">Post</button>
-                
                 </form>
               </div>
             </div>

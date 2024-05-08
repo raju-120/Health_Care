@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux';
 
 export default function Headers() {
 
-  const {currentUser} = useSelector(state=>state.user);
+  const {currentUser} = useSelector(state=>state?.user);
 
   const menu =<Fragment>
     <div className='top-28 w-full left-0 right-0 bg-slate-900 lg:hidden block absolute'>
@@ -81,7 +81,7 @@ export default function Headers() {
             <Link to='/profile'>
               {
                 currentUser ? (
-                  <img src={currentUser?.avatar} className='w-16 h-16 rounded-full' alt='profile'/>
+                  <img src={currentUser?.data?.user?.avatar} className='w-16 h-16 rounded-full' alt='profile'/>
                 ) : (
                   <ul className='flex gap-8 item-center text-zinc-200 uppercase text-xl'>
                     <li className='hover:text-gray-700 uppercase'>Sign In</li>
