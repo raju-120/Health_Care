@@ -4,27 +4,15 @@ import { uploadOnCloudinary } from "../utils/fileUpload.js";
 import POST from "../models/post.model.js";
 import { APIResponse } from "../utils/ApiResponse.js";
 
-/* export const dropTest =(req, res) =>{
-    res.status(200).json({
-        message: "Posting method working"
-    });
-}; */
-
-
-export const dropTest = asyncHandler(async (req, res) =>{
-    res.status(201).json({
-        message: "Drop a post api working 2 for you"
-    });
-});
 
 const dropPost = asyncHandler(async (req, res)=>{
     const {username, description, comment} = req.body ;
-    
+/*     
     if([username,description,comment].some((field) =>
      field?.trim() === "")
      ){
         throw new ApiError(400, "All fields are required");
-     }
+     } */
     
 /*     const avatarLocalPath =req.files?.avatar[2]?.path; */
     let avatarLocalPath;

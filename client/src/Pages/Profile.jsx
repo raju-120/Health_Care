@@ -18,7 +18,7 @@ export default function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log('Current User ID: ', `${currentUser?.data?.user?._id}`) 
+  console.log('Current User ID: ', `${currentUser?.data?.user?.role}`) 
   console.log(formData);
  
 
@@ -107,7 +107,7 @@ export default function Profile() {
     }else{
         try{
           dispatch(signOutUserStart());
-          const res = await fetch('/api/auth/docsignout',{
+          const res = await fetch('/api/auth/signout',{
             method:'POST',
             headers: {
               'Content-type' : 'application/json'
