@@ -1,14 +1,17 @@
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { useEffect, useRef, useState } from "react";
+/* import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage"; */
+/* import app from "../../firebase/firebase"; */
+
+import { /* useEffect, */ useRef, useState } from "react";
 import { BsImageFill } from "react-icons/bs";
-import app from "../../firebase/firebase";
 import { useSelector } from "react-redux";
 
 export default function Posts() {
 
   const {currentUser} = useSelector(state => state.user);
-  const [formData, setFormData] = useState({}); 
+  const [formData, setFormData] = useState({});
   const fileRef = useRef(null);
+
+
   /* const [file,setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError ,setFileUploadError] = useState(null);
@@ -33,7 +36,7 @@ export default function Posts() {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage,fileName);
-    const uploadTask = uploadBytesResumable(storageRef,file); 
+    const uploadTask = uploadBytesResumable(storageRef,file);
 
     uploadTask.on('state_changed',
     (snapshot) =>{
@@ -67,7 +70,6 @@ export default function Posts() {
     });
     const data = await res.json();
     console.log(data);
-    
   }
 
   return (

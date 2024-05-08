@@ -201,7 +201,7 @@ const signin = asyncHandler(async(req, res) =>{
     };
 
     const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id);
-    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
     const options = {
         httpOnly: true,
@@ -221,8 +221,8 @@ const signin = asyncHandler(async(req, res) =>{
                     "user logged in successfully"
                 )
             )
-    
-});
+        }
+    );
 
 const google= asyncHandler(async( req, res) =>{
     try{
@@ -402,7 +402,6 @@ const userUpdate = asyncHandler(  async (req, res) =>{
 
         try{
             const{  username, email,password,avatar } = req.body;
-            const hashedPassword = bcrypt.hashSync(password, 10);
 
         const user =await User.findByIdAndUpdate(
             req.user?._id,
@@ -410,7 +409,7 @@ const userUpdate = asyncHandler(  async (req, res) =>{
                 $set: {
                     username,
                     email,
-                    password: hashedPassword,
+                    password,
                     avatar
                 }
             },
