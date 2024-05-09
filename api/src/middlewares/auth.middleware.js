@@ -34,21 +34,24 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
 
 export const docVerifyJwt = asyncHandler(async(req, _, next) => {
     try {
-        const token = req.cookies?.accessToken  || req.header("Authorization")?.replace("Bearer ", "") ;
+        console.log("body",req.body)
+        const token = req.body?.data?.accessToken;
+        // console.log("token",token)
 
-        if (!token) {
-            throw new ApiError(401, "Unauthorized request")
-        };
+        // if (!token) {
+        //     throw new ApiError(401, "Unauthorized request")
+        // };
 
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
         const user = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
+        console.log("user", user)
 
-        if (!user) {
-            throw new ApiError(401, "Invalid Access Token")
-        };
+        // if (!user) {
+        //     throw new ApiError(401, "Invalid Access Token")
+        // };
 
-        //console.log('I am here for req doc: ', req.user = user);
+        // //console.log('I am here for req doc: ', req.user = user);
         req.user = user;
         next();
     } catch (error) {

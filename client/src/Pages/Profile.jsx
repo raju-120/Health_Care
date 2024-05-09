@@ -82,8 +82,10 @@ export default function Profile() {
 
 
   const handleSingOut = async() =>{
+    console.log(currentUser)
     if( currentUser?.data?.user?.role === 'doctor' )
       {
+        console.log(formData)
       try{
         dispatch(signOutUserStart());
         const res = await fetch('/api/auth/docsignout',{
@@ -91,7 +93,7 @@ export default function Profile() {
           headers: {
             'Content-type' : 'application/json'
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(currentUser)
         });
         const data = await res.json();
         console.log('Data log out doctor: ',data );
@@ -105,6 +107,7 @@ export default function Profile() {
         dispatch(signOutUserFailure(error.message));
       }
     }else{
+      console.log(formData)
         try{
           dispatch(signOutUserStart());
           const res = await fetch('/api/auth/signout',{
@@ -115,6 +118,7 @@ export default function Profile() {
             body: JSON.stringify(formData)
           });
           const data = await res.json();
+          console.log(data)
           if(data.success === false){
             dispatch(signOutUserFailure(data.message));
             return;

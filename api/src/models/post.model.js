@@ -5,7 +5,7 @@ const postsSchema = new Schema({
         type: String,
         required: true
     },
-    description: {
+    descriptions: {
         type: String,
         required: true,
     },
@@ -14,7 +14,6 @@ const postsSchema = new Schema({
     },
     avatar: {
         type: Array,
-        required: true,
     },
 },{timestamps: true});
 

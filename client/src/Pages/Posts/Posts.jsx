@@ -56,7 +56,7 @@ export default function Posts() {
   const handleSubmit = async(e) =>{
     e.preventDefault();
 
-    const res = await fetch('/api/post/droppost',{
+    const res = await fetch('/api/posts/droped',{
       method: 'POST',
       headers: {
         'Content-Type' : 'application/json'
@@ -65,6 +65,8 @@ export default function Posts() {
         {
           ...formData,
           userRef : currentUser?.data?.user?._id,
+          username: currentUser?.data?.user?.username
+          
         }
       ),
     });
@@ -90,7 +92,7 @@ export default function Posts() {
                       className='w-full border p-3 rounded h-24' 
                     />
 
-                    <input 
+                    <input
                       onChange={handleChange}
                       id="avatar"
                       type="file"

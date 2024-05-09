@@ -6,7 +6,7 @@ import { APIResponse } from "../utils/ApiResponse.js";
 
 
 const dropPost = asyncHandler(async (req, res)=>{
-    const {username, description, comment} = req.body ;
+    const {username, descriptions, comment} = req.body ;
 /*     
     if([username,description,comment].some((field) =>
      field?.trim() === "")
@@ -19,39 +19,58 @@ const dropPost = asyncHandler(async (req, res)=>{
     /* let avatarArray = [];
 
     req.files?.avatar */
-    if(req.files && Array.isArray(req.files.avatar) && req.files.avatar.length >0 ){
+  if(req.files && Array.isArray(req.files.avatar) && req.files.avatar.length >0 ){
         
         avatarLocalPath =req.files?.avatar[0]?.path;
         console.log(req.files?.avatar);
-    }
+    } 
     //console.log("Avatar path name: ", avatarLocalPath);
 
-    if(!avatarLocalPath) {
+/*     if(!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required");
+    } */
+
+    let avatar;
+    
+    if(avatarLocalPath){
+
+        avatar = await uploadOnCloudinary(avatarLocalPath);
     }
+    // if(!avatar){
+    //     throw new ApiError(400, "Avatar file is required");
+    // };
 
-    const avatar = await uploadOnCloudinary(avatarLocalPath);
-    if(!avatar){
-        throw new ApiError(400, "Avatar file is required");
-    };
-
-    console.log("Avatar: ", avatar);
+    // console.log("Avatar: ", avatar);
 
 
-    const posting = await POST.create({
-        username,
-        description,
-        comment,
-        avatar: avatar.url
-    });
-
-    if(!posting){
-        throw new ApiError(500, "Somethings went wrong");
-    };
-
-    return res.status(201).json(
-        new APIResponse(200, posting, "Posting a post successfully.")
-    );
+    if(avatarLocalPath){
+        const posting = await POST.create({
+            username,
+            descriptions,
+            comment,
+            avatar: avatar.url
+        });
+        if(!posting){
+            throw new ApiError(500, "Somethings went wrong");
+        };
+    
+        return res.status(201).json(
+            new APIResponse(200, posting, "Posting a post successfully.")
+        );
+    }else{
+        const posting = await POST.create({
+            username,
+            descriptions,
+            comment,
+        });
+        if(!posting){
+            throw new ApiError(500, "Somethings went wrong");
+        };
+    
+        return res.status(201).json(
+            new APIResponse(200, posting, "Posting a post successfully.")
+        );
+    }
 
 });
 

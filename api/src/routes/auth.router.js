@@ -10,6 +10,7 @@ router.route('/signin').post(signin);
 
 router.route('/doctorsignup').post(doctorSignUp);
 router.route('/doctorssignin').post(doctorSignIn);
+// router.route('/docsignout').post(docLogoutUser);
 
 router.route('/google').post(google);
 
