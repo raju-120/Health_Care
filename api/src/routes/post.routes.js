@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { dropPost } from "../controllers/post.controller.js";
+import { dropPost, getPost } from "../controllers/post.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 
@@ -11,6 +11,8 @@ router.route("/droped").post( upload.fields([
         maxCount: 10
     }
 ]),dropPost);
+
+router.route("/all-posts").get(getPost);
 
 
 export default router;
