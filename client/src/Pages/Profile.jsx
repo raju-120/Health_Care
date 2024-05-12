@@ -8,17 +8,18 @@ import {Link, useNavigate} from 'react-router-dom';
 
 export default function Profile() {
 
-  const {currentUser,loading} = useSelector(state => state.user);
+  const {currentUser} = useSelector(state => state.user);
   const fileRef = useRef(null);
   const [file,setFile] = useState(undefined);
   const [formData, setFormData] = useState({});
   const [filePerc,setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log('Current User ID: ', `${currentUser?.data?.user?.role}`) 
+  console.log('Current User ID: ', `${currentUser?.data?.user?._id}`) 
   console.log(formData);
  
 
@@ -41,6 +42,7 @@ export default function Profile() {
     const storageRef = ref(storage,fileName);
     const uploadTask = uploadBytesResumable(storageRef,file);
 
+    setLoading(true);
     uploadTask.on('state_changed',
     (snapshot) =>{
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -52,6 +54,7 @@ export default function Profile() {
       getDownloadURL(uploadTask.snapshot.ref)
         .then((downloadUrl) =>{
           setFormData({...formData, avatar: downloadUrl});
+          setLoading(false);
         })
     }
     )

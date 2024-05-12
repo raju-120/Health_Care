@@ -74,14 +74,14 @@ const dropPost = asyncHandler(async (req, res)=>{
 
 });
 
-const getPost = asyncHandler(async (req, res,next) =>{
+const getPost = async (req, res,next) =>{
     const query = {};
     const result = await POST.find(query);
     
     return res.status(200).json(
         new APIResponse(200, result, "Posting all the post shown.")
     )
-})
+}
 
 export {
     dropPost,

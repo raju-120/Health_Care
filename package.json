@@ -19,6 +19,7 @@
   "author": "Asfak Hossain Raju",
   "license": "ISC",
   "dependencies": {
+    "@tanstack/react-query": "^5.35.5",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.1.0",
     "cookie-parser": "^1.4.6",
