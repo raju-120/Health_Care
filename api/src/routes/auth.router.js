@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { docLogoutUser, doctorSignIn, doctorSignUp, doctorUpdate, google, logoutUser, refreshAccessToken, /* refreshDocAccessToken, */ signin, signup, userUpdate } from "../controllers/auth.controller.js";
+import { docLogoutUser, doctorSignIn, doctorSignUp, doctorUpdate, getAllDoctors, google, logoutUser, refreshAccessToken, /* refreshDocAccessToken, */ signin, signup, userUpdate } from "../controllers/auth.controller.js";
 import { docUpVerifyJwt, docVerifyJwt, verifyJwt } from "../middlewares/auth.middleware.js";
 
 
@@ -10,7 +10,7 @@ router.route('/signin').post(signin);
 
 router.route('/doctorsignup').post(doctorSignUp);
 router.route('/doctorssignin').post(doctorSignIn);
-// router.route('/docsignout').post(docLogoutUser);
+router.route('/doctors').get(getAllDoctors);
 
 router.route('/google').post(google);
 

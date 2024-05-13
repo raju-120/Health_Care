@@ -38,6 +38,8 @@ export default function App() {
       <Route path='/profile' element={<Profile />}/>
       <Route path='/create-advertising' element={ <CreateAdvertising /> }/>
       <Route path='/doctorlists' element={<Doctors />} />
+
+      {/* Messenger options */}
       <Route path='/dashboard' element={<DashboardLayout />} />
 
     </Route>

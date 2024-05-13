@@ -479,6 +479,14 @@ const doctorUpdate = asyncHandler( async(req, res, next) =>{
     }
 } );
 
+const getAllDoctors = asyncHandler(async (req, res, next) =>{
+    const query = {};
+    const result = await Doctor.find(query);
+    res.status(201).json(
+        new APIResponse(201, result, "All the doctors a shown.")
+    )
+})
+
 
 export {
         signup,
@@ -492,4 +500,5 @@ export {
         doctorUpdate,
         refreshAccessToken,
         refreshDocAccessToken,
+        getAllDoctors,
     };
