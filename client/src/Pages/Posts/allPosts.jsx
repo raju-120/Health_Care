@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function AllPosts() {
   const [posts, setPosts] = useState([]);
@@ -20,6 +20,7 @@ export default function AllPosts() {
 
     fetchPosts();
   }, []);
+
 
   return (
     <div className="m-5 border-2 border-gray-200 rounded-lg">
