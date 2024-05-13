@@ -29,7 +29,7 @@ export default function Headers() {
         <Link to='/about'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>About</li>
         </Link>
-        <Link to='/dashboard'>
+        <Link to='/dashboard/messenger'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'><BsMessenger /></li>
         </Link> 
         
@@ -83,7 +83,7 @@ export default function Headers() {
 
           <div className='lg:flex md:flex font-normal items-center hidden'>
 
-            <Link className='mr-8 text-2xl text-blue-400' to="/dashboard">
+            <Link className='mr-8 text-2xl text-blue-400' to="/dashboard/messenger">
               <BsMessenger />
             </Link>
 

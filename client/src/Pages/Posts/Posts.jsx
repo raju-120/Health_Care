@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { BsImageFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 

@@ -493,6 +493,14 @@ const getSpecificDoctor = asyncHandler(async(req, res, next) =>{
     res.status(201).json(
         new APIResponse(201, result,"Specific doctor details ar provided.")
     )
+});
+
+const getAllUsers = asyncHandler(async(req , res, next) =>{
+    const query = {};
+    const result = await User.find(query);
+    res.status(201).json(
+        new APIResponse(201,result, "All Users provided.")
+    );
 })
 
 
@@ -510,4 +518,5 @@ export {
         refreshDocAccessToken,
         getAllDoctors,
         getSpecificDoctor,
+        getAllUsers,
     };

@@ -41,7 +41,7 @@ export default function DashboardLayout() {
                             {doctors.length > 0 ? (
                                 <div>
                                 {doctors.map((doctor) => (
-                                    <Link to="" key={doctor?._id}>
+                                    <Link to="/dashboard/messenger" key={doctor?._id}>
                                         <div className="flex items-center mb-5 " key={doctor?._id}>
                                             <div>
                                                 <img src={doctor?.avatar} alt="profile picture"  className="lg:h-14 lg:w-14 rounded-full"/>
