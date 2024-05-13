@@ -13,6 +13,7 @@ import CreateAdvertising from './Pages/Advertising/CreateAdvertising';
 import DoctorsSIgnUp from './Pages/DoctorsSIgnUp';
 import DoctorsSignin from './Pages/DoctorsSignin';
 import Doctors from './Pages/Doctors/Doctors';
+import DashboardLayout from './layouts/Dashboard/DashboardLayout';
 
 
 export default function App() {
@@ -37,16 +38,9 @@ export default function App() {
       <Route path='/profile' element={<Profile />}/>
       <Route path='/create-advertising' element={ <CreateAdvertising /> }/>
       <Route path='/doctorlists' element={<Doctors />} />
-      
-      
+      <Route path='/dashboard' element={<DashboardLayout />} />
 
-      
-
-      
-      
-      
-      
-      </Route>
+    </Route>
 
     </Routes>
     <Footer />

@@ -8,23 +8,19 @@ import Tips from "../Pages/Tips";
 import PrivateRoute from "../Components/PrivateRoute";
 
 export const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <MainLayout />,
-        children: [
-            {
-                path: '/',
-                element: <Home/>
-            },
-            {path: '/about', element: <About />},
-            {path: '/service', element: <Services />},
-            {path: '/tips', element: <Tips />},
-            <>
-                <PrivateRoute >
-                    {path= '/profile', element={ <Profile />}}
-                </PrivateRoute>
-            </>
-            
-        ]
-    }
-])
+  {
+    path: '/',
+    element: <MainLayout />,
+    children: [
+      { path: '/', element: <Home /> },
+      { path: '/about', element: <About /> },
+      { path: '/service', element: <Services /> },
+      { path: '/tips', element: <Tips /> },
+       //Use PrivateRoute properly if needed
+      { path: '/profile', element: <PrivateRoute component={Profile} /> },
+    ]
+  },
+  /* {
+    path: '/'
+  } */
+]);

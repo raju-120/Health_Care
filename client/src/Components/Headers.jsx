@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FaTimes } from "react-icons/fa";
 import { CiMenuFries } from "react-icons/ci";
 import {useSelector} from 'react-redux';
+import { BsMessenger } from "react-icons/bs";
 
 export default function Headers() {
 
@@ -28,6 +29,9 @@ export default function Headers() {
         <Link to='/about'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>About</li>
         </Link>
+        <Link to='/dashboard'>
+          <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'><BsMessenger /></li>
+        </Link> 
         
       </ul>
     </div>
@@ -78,6 +82,11 @@ export default function Headers() {
           </div>
 
           <div className='lg:flex md:flex font-normal items-center hidden'>
+
+            <Link className='mr-8 text-2xl text-blue-400' to="/dashboard">
+              <BsMessenger />
+            </Link>
+
             <Link to='/profile'>
               {
                 currentUser ? (
