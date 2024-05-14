@@ -7,7 +7,7 @@ import http from 'http';
 
 const app = express();
 
-/* const server = http.createServer(app);
+const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
@@ -22,7 +22,7 @@ io.on("Connection", (socket)=>{
     socket.on("disconnected", () =>{
         console.log(`User is Disconnected: ${socket.id} `)
     })
-}); */
+});
 
 
 

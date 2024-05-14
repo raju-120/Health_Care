@@ -112,21 +112,35 @@ export default function AllPosts() {
                 </div>
 
                 {/* comments shown section */}
-                 {/*  <div className="mt-5 p-3 bg-gray-50 rounded-md items-center">
-                    {allComments.length > 0? (
+                <div className="mt-5 bg-white p-2 rounded-md">
+                  {allComments.length > 0 ? (
                       <div>
-                        {allComments.map((comment)=>{
-                          <div key={comment._id}>
-                            if(comment?.pId === post?._id){
-                              <div><h2>Show</h2></div>
-                            }else{
-                              null
-                            }
-                          </div>
+                        {allComments.map((comment) => {
+                          if (comment?.pId === post?._id) {
+                            return (
+                              <div key={comment._id}>
+                                <div className="divider"></div>
+                                <div className="flex">
+                                  <div className="mt-3">
+                                    <img src={comment?.useravatar} alt="user photo" className="lg:w-14 lg:h-14 w-10 h-10 rounded-full" />
+                                  </div>
+                                  <div>
+                                    <h1 className="text-xl font-semibold mt-1 ml-4 mb-5">{comment?.username}</h1>
+                                    <div style={{marginTop: '-16px'}} className="ml-5 bg-gray-300 p-2 rounded-lg">
+                                      <p className="text-lg">{comment?.comments}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          } else {
+                            return null;
+                          }
                         })}
                       </div>
-                    ): (<p>No Comments found</p>)}
-                </div> */}
+                    ) : null
+                    }
+                </div>
 
                 <div className="mt-3">
                   <h2 className="text-lg mb-2 font-semibold">Comment Section : </h2>
@@ -138,27 +152,8 @@ export default function AllPosts() {
 
                 </div>
 
-                {/* <div className="mt-5 p-3 bg-gray-50 rounded-lg">
-                  <h1>Comments are displaying section area: </h1>
-                </div> */}
-
                 </div>
-                <div>
-                  {/* Comment sections */}
-                  {allComments.length > 0? (
-                    <div>
-                      {allComments?.map((comment)=>{
-                        <div key={comment?._id}>
-                          if(comment?.pId === post?._id){
-                            <div>
-                              <h1>{comment.comments}</h1>
-                            </div>
-                          }
-                        </div>
-                      })}
-                    </div>
-                  ):("")}
-                </div>
+                
               </div>
             ))}
 
