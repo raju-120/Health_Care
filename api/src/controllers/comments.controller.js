@@ -7,12 +7,14 @@ const test = asyncHandler(async (req, res) =>{
 });
 
 const comments = asyncHandler( async (req, res) =>{
-    const { pId,username,comment } = req.body;
+    const { pId,username,comments,uId,useravatar } = req.body;
 
     const postComments =  await Comments.create({
         pId,
         username,
-        comment,
+        comments,
+        uId,
+        useravatar
     });
 
     return res
@@ -20,9 +22,18 @@ const comments = asyncHandler( async (req, res) =>{
             .json(
                 new APIResponse( 201 , postComments, "Comments posted successfully"),
             )
-} )
+} );
+
+const getcomments = asyncHandler(async(req, res, next) =>{
+    const query = {};
+    const result = await Comments.find(query);
+    res.status(201).json(
+        new APIResponse(201, result, "All the comments are provided.")
+    )
+})
 
 export {
     test,
     comments,
+    getcomments,
     }

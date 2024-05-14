@@ -5,11 +5,19 @@ const commentSchema = new Schema({
         type: String,
         required: true,
     },
+    useravatar:{
+        type: String,
+        required: true,
+    },
     pId:{
         type: String,
         required: true,
     },
-    comment:{
+    uId: {
+        type: String,
+        required: true,
+    },
+    comments:{
         type: String,
         required: true
     },

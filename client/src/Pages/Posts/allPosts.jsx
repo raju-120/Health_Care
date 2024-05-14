@@ -1,7 +1,48 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 export default function AllPosts() {
+  const{currentUser} = useSelector(state => state.user);
   const [posts, setPosts] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [allComments, setAllComments] = useState([]);
+
+  console.log('allComments: ', allComments);
+
+  const handleSubmit =async (_id, e)=>{
+    e.preventDefault();
+    try{
+      if (newComment.trim() !== "") {
+        const res = await fetch('/api/comments/comments',{
+          method: 'POST',
+          headers: {
+            'content-type' : 'application/json'
+          },
+          body: JSON.stringify({
+            uId: currentUser?.data?.user?._id,
+            pId: _id,
+            comments: newComment,
+            username: currentUser?.data?.user?.username,
+            useravatar: currentUser?.data?.user?.avatar
+          }
+          )
+        })
+        const data = await res.json();
+        if(data.success === false){
+          console.log('Comment did not posted: ', data.message);
+        }
+        console.log('data for comment: ', data)
+        setNewComment("");
+      }
+    }catch(error){
+      console.log('error from comment: ', error.message);
+    }
+  }
+
+  const handleChange = (e) => {
+    setNewComment(e.target.value);
+  };
+
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -20,6 +61,24 @@ export default function AllPosts() {
 
     fetchPosts();
   }, []);
+
+  useEffect(()=>{
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch('/api/comments/comments');
+        const data = await res.json();
+        if (Array.isArray(data?.data)) {
+          setAllComments(data?.data);
+        } else {
+          console.error("Data is not an array:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts();
+  },[])
 
 
   return (
@@ -52,18 +111,53 @@ export default function AllPosts() {
                     </div>
                 </div>
 
+                {/* comments shown section */}
+                 {/*  <div className="mt-5 p-3 bg-gray-50 rounded-md items-center">
+                    {allComments.length > 0? (
+                      <div>
+                        {allComments.map((comment)=>{
+                          <div key={comment._id}>
+                            if(comment?.pId === post?._id){
+                              <div><h2>Show</h2></div>
+                            }else{
+                              null
+                            }
+                          </div>
+                        })}
+                      </div>
+                    ): (<p>No Comments found</p>)}
+                </div> */}
+
                 <div className="mt-3">
                   <h2 className="text-lg mb-2 font-semibold">Comment Section : </h2>
-                  <form>
-                    <input type="text-area" className="w-full p-4 rounded-lg mb-2"/>
+                  
+                  <form onClick={(e) =>handleSubmit(post?._id, e)}>
+                    <input type="text-area" className="w-full p-4 rounded-lg mb-2" id="comments" onChange={handleChange}/>
                     <button style={{marginLeft: '550px'}} className="mt-2 mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Comment</button>
                   </form>
+
                 </div>
 
-                <div className="mt-5 p-3 bg-gray-50 rounded-lg">
+                {/* <div className="mt-5 p-3 bg-gray-50 rounded-lg">
                   <h1>Comments are displaying section area: </h1>
-                </div>
+                </div> */}
 
+                </div>
+                <div>
+                  {/* Comment sections */}
+                  {allComments.length > 0? (
+                    <div>
+                      {allComments?.map((comment)=>{
+                        <div key={comment?._id}>
+                          if(comment?.pId === post?._id){
+                            <div>
+                              <h1>{comment.comments}</h1>
+                            </div>
+                          }
+                        </div>
+                      })}
+                    </div>
+                  ):("")}
                 </div>
               </div>
             ))}
