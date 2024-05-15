@@ -284,7 +284,7 @@ const logoutUser = asyncHandler (async(req, res) =>{
 
 const docLogoutUser = asyncHandler (async(req, res) =>{
 
-    console.log("here I am")
+    console.log("here I am for doctor: ")
     await Doctor.findByIdAndUpdate(
         req.user._id,
         {
@@ -516,6 +516,7 @@ export {
         doctorUpdate,
         refreshAccessToken,
         refreshDocAccessToken,
+        generateDocAccessAndRefreshTokens,
         getAllDoctors,
         getSpecificDoctor,
         getAllUsers,

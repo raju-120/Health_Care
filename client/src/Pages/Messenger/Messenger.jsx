@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import "./style.css";
+import Sidebar from "./Sidebar/Sidebar";
+import ChatBox from "./Chatbox/Chatbox";
 
 const socket = io.connect("/api");
 console.log('socket:', socket)
@@ -62,35 +64,26 @@ function ChatWindow() {
         <h2 className="text-blue-500">Available Users</h2>
         <ul>
           {doctors.map((user) => (
-            <li key={user?._id} onClick={() => handleUserSelect(user)}  className="text-xl font-semibold">
-              {user.username}
-            </li>
+            <Sidebar
+              user={user}
+              key={user?._id}
+              handleUserSelect={handleUserSelect}
+            ></Sidebar>
           ))}
         </ul>
       </div>
-      <div className="chat-messages">
-        <h2 className="text-xl font-semibold">Chat with {selectedUser ? selectedUser?.username : "..."}</h2>
+      <div className="chat-messages h-full mt-5">
+        <h2 className="text-lg font-semibold">Chat with <span className="text-2xl text-blue-500">{selectedUser ? selectedUser?.username : "..."}</span></h2>
         <div className="chat-window">
-          {selectedUser && (
-            <>
-              <div className="message-container">
-                {messages.map((message, index) => (
-                  <div key={index} className={message.sender === "user" ? "user-message" : "other-message"}>
-                    {message.text}
-                  </div>
-                ))}
-              </div>
-              <div className="chat-input">
-                <input
-                  type="text"
-                  placeholder="Type your message..."
-                  value={newMessage}
-                  onChange={handleMessageChange}
-                />
-                <button onClick={handleSendMessage}>Send</button>
-              </div>
-            </>
-          )}
+          <ChatBox
+              selectedUser= {selectedUser}
+              messages={messages}
+              newMessage={newMessage}
+              handleMessageChange={handleMessageChange}
+              handleSendMessage={handleSendMessage}
+          >
+
+          </ChatBox>
         </div>
       </div>
     </div>

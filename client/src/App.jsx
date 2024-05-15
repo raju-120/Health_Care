@@ -13,8 +13,9 @@ import CreateAdvertising from './Pages/Advertising/CreateAdvertising';
 import DoctorsSIgnUp from './Pages/DoctorsSIgnUp';
 import DoctorsSignin from './Pages/DoctorsSignin';
 import Doctors from './Pages/Doctors/Doctors';
-import DashboardLayout from './layouts/Dashboard/DashboardLayout';
+//import ChatDashboard from './Pages/ChatDashboard/ChatDashboaard';
 import Messenger from './Pages/Messenger/Messenger';
+
 
 
 export default function App() {
@@ -42,8 +43,7 @@ export default function App() {
       
 
       {/* Messenger options */}
-      <Route path='/dashboard' element={<DashboardLayout />} />
-      <Route path='/dashboard/messenger' element={<Messenger />} />
+      <Route path='/chat' element={ < Messenger /> } />
 
     </Route>
 

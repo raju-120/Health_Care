@@ -1,5 +1,20 @@
 import { Router } from "express";
-import { docLogoutUser, doctorSignIn, doctorSignUp, doctorUpdate, getAllDoctors, getAllUsers, getSpecificDoctor, google, logoutUser, refreshAccessToken, /* refreshDocAccessToken, */ signin, signup, userUpdate } from "../controllers/auth.controller.js";
+import { docLogoutUser,
+    generateDocAccessAndRefreshTokens, 
+    doctorSignIn,
+    doctorSignUp,
+    doctorUpdate, 
+    getAllDoctors,
+    getAllUsers,
+    getSpecificDoctor,
+    google,
+    logoutUser,
+    refreshAccessToken,
+    signin,
+    signup,
+    /* refreshDocAccessToken, */ 
+    userUpdate } from "../controllers/auth.controller.js";
+
 import { docUpVerifyJwt, docVerifyJwt, verifyJwt } from "../middlewares/auth.middleware.js";
 
 
