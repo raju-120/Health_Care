@@ -62,24 +62,46 @@ export default function Profile() {
 
   const handleSubmit = async(e) =>{
     e.preventDefault();
-    try{
-      dispatch(updateUserStart());
-      const result = await fetch(`/api/auth/update/${currentUser?.data?.user?._id}`,{
-        method:'POST',
-        headers: {
-          'Content-type' : 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-      const data = await result.json();
-      if(data.success === false){
-        dispatch(updateUserFailure(data.message))
-        return;
+    if(currentUser?.data?.user?.role === 'doctor'){
+      try{
+        dispatch(updateUserStart());
+        const result = await fetch(`/api/auth/docupdate/${currentUser?.data?.user?._id}`,{
+          method:'POST',
+          headers: {
+            'Content-type' : 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        const data = await result.json();
+        if(data.success === false){
+          dispatch(updateUserFailure(data.message))
+          return;
+        }
+        dispatch(updateUserSuccess(data))
+        setUpdateSuccess(true);
+      }catch(error){
+        console.log(error);
       }
-      dispatch(updateUserSuccess(data))
-      setUpdateSuccess(true);
-    }catch(error){
-      console.log(error);
+    }else{
+      try{
+        dispatch(updateUserStart());
+        const result = await fetch(`/api/auth/update/${currentUser?.data?.user?._id}`,{
+          method:'POST',
+          headers: {
+            'Content-type' : 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        const data = await result.json();
+        if(data.success === false){
+          dispatch(updateUserFailure(data.message))
+          return;
+        }
+        dispatch(updateUserSuccess(data))
+        setUpdateSuccess(true);
+      }catch(error){
+        console.log(error);
+      }
     }
   };
 
