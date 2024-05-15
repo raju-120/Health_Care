@@ -5,12 +5,13 @@ import io from "socket.io-client";
 import "./style.css";
 import Sidebar from "./Sidebar/Sidebar";
 import ChatBox from "./Chatbox/Chatbox";
+import toast from "react-hot-toast";
 
 const socket = io.connect("/api");
 console.log('socket:', socket)
 
 function ChatWindow() {
-  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -41,17 +42,35 @@ function ChatWindow() {
           }
       }
       fetchDoctors();
-  },[currentUser?.data?.user])
+  },[currentUser?.data?.user]);
 
   const handleMessageChange = (e) => {
     setNewMessage(e.target.value);
   };
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() !== "") {
-      setMessages([...messages, { text: newMessage, sender: "user" }]);
-      setNewMessage("");
-    }
+  const handleSendMessage = async(e) => {
+    e.preventDefault();
+    try{
+      setMessage('')
+      const res= await fetch(`/api/message/send/${selectedUser?._id}`,{
+        method:'POST',
+        headers: {
+          'content-type' : 'applications/json'
+        },
+        body: JSON.stringify({
+          message,
+          senderId: currentUser?.data?.user?._id,
+          receiverId: selectedUser?._id
+
+        })
+      });
+      const data = await res.json();
+      if(data.success === false){
+        toast.error('message was not sent!');
+      }
+      setMessage(data);
+      toast.success('message sent successfully');
+    }catch(error){console.log(error.message)}
   };
 
   const handleUserSelect = (user) => {
@@ -77,7 +96,7 @@ function ChatWindow() {
         <div className="chat-window">
           <ChatBox
               selectedUser= {selectedUser}
-              messages={messages}
+              message={message}
               newMessage={newMessage}
               handleMessageChange={handleMessageChange}
               handleSendMessage={handleSendMessage}
