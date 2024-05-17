@@ -15,7 +15,7 @@ const sendMessage = async (req, res) => {
 		console.log('i am here from message controller conversation: ', conversation );
 
 		if (!conversation) {
-			conversation = await Conversation.create({
+			conversation = await Chatroom.create({
 				participants: [senderId, receiverId],
 			});
 		}
@@ -55,7 +55,7 @@ const getMessages = async (req, res) => {
 		const { id: userToChatId } = req.params;
 		const senderId = req.user._id;
 
-		const conversation = await Conversation.findOne({
+		const conversation = await Chatroom.findOne({
 			participants: { $all: [senderId, userToChatId] },
 		}).populate("messages"); // NOT REFERENCE BUT ACTUAL MESSAGES
 

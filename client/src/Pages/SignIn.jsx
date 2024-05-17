@@ -4,6 +4,7 @@ import logo from '../assets/sign.avif';
 import {useDispatch, useSelector} from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from "../redux/user/userSlice";
 import OAuth from "../Components/OAuth";
+import toast from "react-hot-toast";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
@@ -35,8 +36,10 @@ export default function SignIn() {
       //console.log(data);
       if(data.success === false){
         dispatch(signInFailure(data.message));
+        toast.error("User credential did not matched!")
         return;
       }
+
       dispatch(signInSuccess(data));
       navigate('/');
     } catch(error){

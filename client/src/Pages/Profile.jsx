@@ -4,6 +4,7 @@ import app from '../firebase/firebase';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import { signOutUserFailure, signOutUserStart, signOutUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice';
 import {Link, useNavigate} from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 
 export default function Profile() {
@@ -75,10 +76,12 @@ export default function Profile() {
         const data = await result.json();
         if(data.success === false){
           dispatch(updateUserFailure(data.message))
+          toast.error("Only you can update your own information.")
           return;
         }
-        dispatch(updateUserSuccess(data))
         setUpdateSuccess(true);
+        dispatch(updateUserSuccess(data))
+        toast.success("Doctor profile updated successfully.")
       }catch(error){
         console.log(error);
       }
@@ -94,17 +97,20 @@ export default function Profile() {
         });
         const data = await result.json();
         if(data.success === false){
-          dispatch(updateUserFailure(data.message))
+          dispatch(updateUserFailure(data.message));
+          toast.error("Only you can update your own information.")
           return;
         }
-        dispatch(updateUserSuccess(data))
         setUpdateSuccess(true);
+        dispatch(updateUserSuccess(data))
+        toast.success("User can update successfully.")
       }catch(error){
         console.log(error);
       }
     }
   };
 
+  //sign out
 
   const handleSingOut = async() =>{
     console.log(currentUser)
@@ -118,6 +124,7 @@ export default function Profile() {
           headers: {
             'Content-type' : 'application/json'
           },
+         
           body: JSON.stringify(currentUser)
         });
         const data = await res.json();
@@ -155,6 +162,8 @@ export default function Profile() {
         }
     }
   };
+
+
 
   return (
     <div className='p-3 max-w-lg mx-auto mb-24'>
@@ -209,11 +218,11 @@ export default function Profile() {
           readOnly
         />
 
-        <input 
-          type="password" 
-          placeholder='password' 
-          id='password' 
-          className='border p-3 rounded-lg' 
+        <input
+          type="password"
+          placeholder='password'
+          id='password'
+          className='border p-3 rounded-lg'
           onChange={handleChange}
         />
 
