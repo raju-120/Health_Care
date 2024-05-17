@@ -1,4 +1,4 @@
-import Conversation from "../models/conversation.model.js";
+import Chatroom from "../models/Chatroom.model.js";
 import Message from "../models/message.model.js";
 //import { getReceiverSocketId, io } from "../app.js";
 
@@ -9,7 +9,7 @@ const sendMessage = async (req, res) => {
 		const receiverId = req.params.id;
 		const senderId = req.user._id;
 
-		let conversation = await Conversation.findOne({
+		let conversation = await Chatroom.findOne({
 			participants: { $all: [senderId, receiverId] },
 		});
 		console.log('i am here from message controller conversation: ', conversation );

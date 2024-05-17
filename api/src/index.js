@@ -6,6 +6,7 @@ import express from "express";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
+import Message from "./models/message.model.js";
 
 
 //routes
@@ -34,13 +35,26 @@ const io = new Server(server, {
     }
 });
 
-io.on("connection", (socket) =>{
-    console.log(`user is connected to : ${socket.id}`);
+io.on('connection', (socket) => {
+    console.log(`a user connected ${socket.id}`);
 
-    socket.on("disconnect", ()=>{
-        console.log(`user is disconnected to : ${socket.id}`)
-    })
-})
+    socket.on('join_room', ({ senderId, receiverId }) => {
+        const room = [senderId, receiverId].sort().join('_');
+        socket.join(room);
+        console.log(`${senderId} joined room ${room}`);
+      });
+    
+      socket.on('send_message', async ({ senderId, receiverId, message }) => {
+        const room = [senderId, receiverId].sort().join('_');
+        const newMessage = new Message({ senderId, receiverId, message });
+        await newMessage.save();
+        io.to(room).emit('receive_message', newMessage);
+      });
+  
+    socket.on('disconnect', () => {
+      console.log(`a user connected ${socket.id}`);
+    });
+  });
 
 
 /* app.use("/api/user",userRouter); */
