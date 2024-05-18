@@ -58,7 +58,7 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
 
     export const docVerifyJwt = asyncHandler(async (req, res, next) => {
         try {
-            console.log('DOc: ',req.body.accessToken);
+            //console.log('DOc: ',req.body.accessToken);
             
             const token = req.body.data.accessToken;
 
@@ -78,7 +78,7 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
 
     export const docVerifyJwtForMessage = asyncHandler(async (req, res, next) => {
         try {
-            console.log('DOc: ',req.body.accessToken);
+            console.log('DOc: ',req.body);
             
             const token = req.body.accessToken;
 
@@ -120,4 +120,5 @@ export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
     } catch (error) {
         throw new ApiError(401, error?.message || "Invalid access token");
     };
-})
+});
+

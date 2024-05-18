@@ -54,8 +54,9 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
     try {
+		console.log('i am here for doc data', req.body)
         const { id: userToChatId } = req.params;
-        const senderId = req.user._id;
+        const senderId = req.body.senderId;
 
         const conversation = await Chatroom.findOne({
             participants: { $all: [senderId, userToChatId] },

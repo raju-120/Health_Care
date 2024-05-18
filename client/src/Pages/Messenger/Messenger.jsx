@@ -173,8 +173,8 @@ function ChatWindow() {
             <>
               <div className="message-container mb-72">
               {console.log(messages)}
-                {messages.map((message, index) => (
-                  <div key={index.id} className={message.senderId === currentUser?.data?.user?._id ? "user-message" : "other-message"}>
+                {messages.map((message) => (
+                  <div key={message?._id} className={message.senderId === currentUser?.data?.user?._id ? "user-message" : "other-message"}>
                     {message.message}
                     
                   </div>
