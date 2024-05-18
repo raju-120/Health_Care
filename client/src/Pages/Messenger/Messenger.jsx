@@ -95,7 +95,8 @@ function ChatWindow() {
               body: JSON.stringify({
                   senderId,
                   receiverId,
-                  message: newMessage
+                  message: newMessage,
+                  accessToken: currentUser?.data?.accessToken
               })
           });
 
@@ -105,7 +106,7 @@ function ChatWindow() {
               console.log('Message not sent: ', data?.message);
           } else {
               // Update the local state with the new message
-              setMessages(prevMessages => [...prevMessages, { senderId, receiverId, message: newMessage }]);
+              setMessages( [ { senderId, receiverId, message: newMessage }]);
               setNewMessage("");
           }
       }
@@ -127,7 +128,8 @@ function ChatWindow() {
                 body: JSON.stringify({
                     senderId,
                     receiverId,
-                    message: newMessage
+                    message: newMessage,
+                    accessToken: currentUser?.data?.accessToken
                 })
             });
 
@@ -170,9 +172,11 @@ function ChatWindow() {
           {selectedUser && (
             <>
               <div className="message-container mb-72">
+              {console.log(messages)}
                 {messages.map((message, index) => (
-                  <div key={index} className={message.senderId === currentUser?.data?.user?._id ? "user-message" : "other-message"}>
+                  <div key={index.id} className={message.senderId === currentUser?.data?.user?._id ? "user-message" : "other-message"}>
                     {message.message}
+                    
                   </div>
                 ))}
               </div>

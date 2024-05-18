@@ -10,8 +10,9 @@ const sendMessage = async (req, res) => {
     try {
 		console.log("i am here for message: ",req.body);
 		const { message } = req.body;
-        const receiverId = req.params.id;
-        const senderId = req.user._id;
+        const receiverId = req.body.receiverId;
+        const senderId = req.body.senderId;
+		
 		
 
         // Determine the room ID based on participants

@@ -58,12 +58,30 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
 
     export const docVerifyJwt = asyncHandler(async (req, res, next) => {
         try {
-            console.log(req.body);
+            console.log('DOc: ',req.body.accessToken);
             
             const token = req.body.data.accessToken;
+
+            const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+            const docUser = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
     
-           
+            if (!docUser) {
+                throw new ApiError(401, "Doctor not found");
+            }
     
+            req.doctor = docUser;
+            next();
+        } catch (error) {
+            next(new ApiError(401, error?.message || "Invalid access token"));
+        }
+    });
+
+    export const docVerifyJwtForMessage = asyncHandler(async (req, res, next) => {
+        try {
+            console.log('DOc: ',req.body.accessToken);
+            
+            const token = req.body.accessToken;
+
             const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
             const docUser = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
     
