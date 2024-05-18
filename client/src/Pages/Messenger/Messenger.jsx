@@ -12,6 +12,8 @@ function ChatWindow() {
   const { currentUser } = useSelector(state => state.user);
   const [doctors, setDoctors] = useState([]);
 
+
+  //find out the users or doctor
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -25,6 +27,7 @@ function ChatWindow() {
     fetchDoctors();
   }, [currentUser?.data?.user]);
 
+  //selected for user or doctor
   useEffect(() => {
     if (selectedUser) {
       const senderId = currentUser?.data?.user?._id;
@@ -41,14 +44,107 @@ function ChatWindow() {
     }
   }, [selectedUser, currentUser?.data?.user?._id]);
 
-  const handleSendMessage = () => {
+  /* const handleSendMessage = async() => {
     const senderId = currentUser?.data?.user?._id;
     const receiverId = selectedUser?._id;
     if (newMessage.trim() && senderId && receiverId) {
       socket.emit('send_message', { senderId, receiverId, message: newMessage });
+      
+      const res = await fetch(`/api/message/send/${selectedUser?._id}`,{
+        method:"POST",
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+
+        })
+      });
+      const data = await res.json({
+        senderId,
+        receiverId,
+        message: newMessage
+      });
+      if(data.success === false){
+        console.log('message not sent: ',data?.message )
+      }
+
+
+      setMessages(prevMessages => [...prevMessages, { senderId, receiverId, message: newMessage }]);
       setNewMessage("");
     }
   };
+
+ */
+
+  const handleSendMessage = async () => {
+    if(currentUser?.data?.user?.role === 'doctor'){
+        const senderId = currentUser?.data?.user?._id;
+      const receiverId = selectedUser?._id;
+      
+      if (newMessage.trim() && senderId && receiverId) {
+          // Emit the message to the Socket.IO server
+          socket.emit('send_message', { senderId, receiverId, message: newMessage });
+
+          // Send the message to the server to save in the database
+          const res = await fetch(`/api/message/send/doc/${receiverId}`, {
+              method: "POST",
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${currentUser?.data?.accessToken}`
+              },
+              body: JSON.stringify({
+                  senderId,
+                  receiverId,
+                  message: newMessage
+              })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+              console.log('Message not sent: ', data?.message);
+          } else {
+              // Update the local state with the new message
+              setMessages(prevMessages => [...prevMessages, { senderId, receiverId, message: newMessage }]);
+              setNewMessage("");
+          }
+      }
+    }else{
+        const senderId = currentUser?.data?.user?._id;
+        const receiverId = selectedUser?._id;
+      
+        if (newMessage.trim() && senderId && receiverId) {
+            // Emit the message to the Socket.IO server
+            socket.emit('send_message', { senderId, receiverId, message: newMessage });
+
+            // Send the message to the server to save in the database
+            const res = await fetch(`/api/message/send/${receiverId}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${currentUser?.data?.accessToken}`
+                },
+                body: JSON.stringify({
+                    senderId,
+                    receiverId,
+                    message: newMessage
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                console.log('Message not sent: ', data?.message);
+            } else {
+                // Update the local state with the new message
+                setMessages(prevMessages => [...prevMessages, { senderId, receiverId, message: newMessage }]);
+                setNewMessage("");
+            }
+        }
+    }
+};
+
+
 
   const handleUserSelect = (user) => {
     setSelectedUser(user);

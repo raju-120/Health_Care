@@ -1,12 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const chatroomSchema = new mongoose.Schema({
-  name: {
-    type: String,
-  },
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }],
 });
 
-const Chatroom = mongoose.model("Chatroom", chatroomSchema);
-
+const Chatroom = mongoose.model('Chatroom', chatroomSchema);
 export default Chatroom;
-

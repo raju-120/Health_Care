@@ -35,27 +35,34 @@ const io = new Server(server, {
     }
 });
 
-io.on('connection', (socket) => {
-    console.log(`a user connected ${socket.id}`);
+const socketIdMap = new Map();
 
-    socket.on('join_room', ({ senderId, receiverId }) => {
-        const room = [senderId, receiverId].sort().join('_');
-        socket.join(room);
-        console.log(`${senderId} joined room ${room}`);
-      });
-    
-      socket.on('send_message', async ({ senderId, receiverId, message }) => {
-        const room = [senderId, receiverId].sort().join('_');
-        const newMessage = new Message({ senderId, receiverId, message });
-        await newMessage.save();
-        io.to(room).emit('receive_message', newMessage);
-      });
-  
-    socket.on('disconnect', () => {
-      console.log(`a user connected ${socket.id}`);
-    });
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
+
+  socket.on('join_room', ({ senderId, receiverId }) => {
+      const room = [senderId, receiverId].sort().join('_');
+      socket.join(room);
+      socketIdMap.set(senderId, socket.id); // Store the sender's socket ID
+      console.log(`User ${senderId} and ${receiverId} joined room: ${room}`);
   });
 
+  socket.on('send_message', ({ senderId, receiverId, message }) => {
+      const room = [senderId, receiverId].sort().join('_');
+      const newMessage = { senderId, receiverId, message, createdAt: new Date() };
+      io.to(room).emit('receive_message', newMessage);
+  });
+
+  socket.on('disconnect', () => {
+      for (let [userId, socketId] of socketIdMap.entries()) {
+          if (socketId === socket.id) {
+              socketIdMap.delete(userId);
+              break;
+          }
+      }
+      console.log('User disconnected:', socket.id);
+  });
+});
 
 /* app.use("/api/user",userRouter); */
 app.use("/api/auth", authRouter);
@@ -85,3 +92,4 @@ connectDB()
 
 
 
+export {io, socketIdMap};

@@ -58,12 +58,11 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
 
     export const docVerifyJwt = asyncHandler(async (req, res, next) => {
         try {
-            console.log(req.body)
+            console.log(req.body);
+            
             const token = req.body.data.accessToken;
     
-            // if (!token) {
-            //     throw new ApiError(401, "Token not provided");
-            // }
+           
     
             const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
             const docUser = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
