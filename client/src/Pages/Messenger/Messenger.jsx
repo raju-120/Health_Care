@@ -2,16 +2,19 @@ import { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import io from "socket.io-client";
 import "./style.css";
+import  toast from "react-hot-toast";
 
 const socket = io('http://localhost:5000');
 
 function ChatWindow() {
-  const [messages, setMessages] = useState([]);
+  //const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [allMessages, setAllMessages] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const { currentUser } = useSelector(state => state.user);
   const [doctors, setDoctors] = useState([]);
 
+  console.log('allMessage:', allMessages)
 
   //find out the users or doctor
   useEffect(() => {
@@ -35,7 +38,7 @@ function ChatWindow() {
       socket.emit('join_room', { senderId, receiverId });
 
       socket.on('receive_message', (message) => {
-        setMessages(prevMessages => [...prevMessages, message]);
+        setAllMessages(prevMessages => [...prevMessages, message]);
       });
 
       return () => {
@@ -44,41 +47,10 @@ function ChatWindow() {
     }
   }, [selectedUser, currentUser?.data?.user?._id]);
 
-  /* const handleSendMessage = async() => {
-    const senderId = currentUser?.data?.user?._id;
-    const receiverId = selectedUser?._id;
-    if (newMessage.trim() && senderId && receiverId) {
-      socket.emit('send_message', { senderId, receiverId, message: newMessage });
-      
-      const res = await fetch(`/api/message/send/${selectedUser?._id}`,{
-        method:"POST",
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-
-        })
-      });
-      const data = await res.json({
-        senderId,
-        receiverId,
-        message: newMessage
-      });
-      if(data.success === false){
-        console.log('message not sent: ',data?.message )
-      }
-
-
-      setMessages(prevMessages => [...prevMessages, { senderId, receiverId, message: newMessage }]);
-      setNewMessage("");
-    }
-  };
-
- */
 
   const handleSendMessage = async () => {
     if(currentUser?.data?.user?.role === 'doctor'){
-        const senderId = currentUser?.data?.user?._id;
+      const senderId = currentUser?.data?.user?._id;
       const receiverId = selectedUser?._id;
       
       if (newMessage.trim() && senderId && receiverId) {
@@ -106,7 +78,7 @@ function ChatWindow() {
               console.log('Message not sent: ', data?.message);
           } else {
               // Update the local state with the new message
-              setMessages( [ { senderId, receiverId, message: newMessage }]);
+              setAllMessages( [ { senderId, receiverId, message: newMessage }]);
               setNewMessage("");
           }
       }
@@ -139,20 +111,55 @@ function ChatWindow() {
                 console.log('Message not sent: ', data?.message);
             } else {
                 // Update the local state with the new message
-                setMessages(prevMessages => [...prevMessages, { senderId, receiverId, message: newMessage }]);
+                setAllMessages(prevMessages => [...prevMessages, { senderId, receiverId, message: newMessage }]);
                 setNewMessage("");
             }
         }
     }
 };
 
-
-
   const handleUserSelect = (user) => {
     setSelectedUser(user);
-    setMessages([]); // Optionally, clear messages when selecting a new user
+    setAllMessages([]); // Optionally, clear messages when selecting a new user
   };
 
+  //get the all messages
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const endpoint = currentUser?.data?.user?.role === 'doctor'
+          ? `/api/message/doc/${currentUser?.data?.user?._id}`
+          : `/api/message/${currentUser?.data?.user?._id}`;
+  
+        const res = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentUser?.data?.accessToken}`
+          }
+        });
+  
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.message || 'Failed to load messages');
+        }
+        
+        setAllMessages(data.messages || []);
+        toast.success('Successfully loaded previous messages.');
+      } catch (error) {
+        console.error('Error fetching messages:', error.message);
+        toast.error('Failed to load messages.');
+      }
+    };
+  
+    if (currentUser?.data?.user?._id) {
+      fetchMessages();
+    }
+  }, [currentUser?.data?.user?.role, currentUser?.data?.user?._id, currentUser?.data?.accessToken]);
+  
+
+
+  
   return (
     <div className="chat-container">
       <div className="chat-users bg-gray-300 w-full">
@@ -172,11 +179,10 @@ function ChatWindow() {
           {selectedUser && (
             <>
               <div className="message-container mb-72">
-              {console.log(messages)}
-                {messages.map((message) => (
-                  <div key={message?._id} className={message.senderId === currentUser?.data?.user?._id ? "user-message" : "other-message"}>
+              {console.log(allMessages)}
+                {allMessages.map((message) => (
+                  <div key={message?.id} className={message.senderId === currentUser?.data?.user?._id ? "user-message" : "other-message"}>
                     {message.message}
-                    
                   </div>
                 ))}
               </div>

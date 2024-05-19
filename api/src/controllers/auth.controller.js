@@ -433,7 +433,7 @@ const doctorUpdate = asyncHandler( async(req, res, next) =>{
     /* if(req.doctor.id !== req.params.id){
         throw new ApiError(401, 'You can only update your own details!');
     } */
-    console.log('Doctor id: ', req.doctor.id);
+    console.log('Doctor id: ', req.body);
     try{
         const {
             username,

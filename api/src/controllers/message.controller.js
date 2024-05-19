@@ -54,23 +54,18 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
     try {
-		console.log('i am here for doc data', req.body)
-        const { id: userToChatId } = req.params;
-        const senderId = req.body.senderId;
-
-        const conversation = await Chatroom.findOne({
-            participants: { $all: [senderId, userToChatId] },
-        }).populate("messages");
-
-        if (!conversation) return res.status(200).json([]);
-
-        const messages = conversation.messages;
-
-        res.status(200).json(messages);
-    } catch (error) {
-        console.log("Error in getMessages controller: ", error.message);
-        res.status(500).json({ error: "Internal server error" });
-    }
+        const { senderId, receiverId } = req.params;
+        const messages = await Message.find({
+          $or: [
+            { senderId, receiverId },
+            { senderId: receiverId, receiverId: senderId }
+          ]
+        }).sort({ createdAt: 1 });
+    
+        res.json({ success: true, messages });
+      } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+      }
 };
 
 export {
