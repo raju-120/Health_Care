@@ -22,7 +22,7 @@ export default function LeftSide() {
       <Link to='/doctorlists'>
         <h1 className='text-xl mb-3 font-semibold ml-1'>Doctors List</h1>
       </Link>
-      <Link to='#'>
+      <Link to='/hospitallists'>
         <h1 className='text-xl mb-3 font-semibold ml-1'>Hospitals List</h1>
       </Link>
     </div>
@@ -57,7 +57,7 @@ export default function LeftSide() {
           </div>
         </Link>
 
-        <Link>
+        <Link to='/hospitallists'>
           <div className="hover:bg-slate-400 p-5 mt-2 rounded">
             <h1 className="text-xl font-serif font-semibold ">Hospital List</h1>
           </div>
