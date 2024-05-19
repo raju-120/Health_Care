@@ -13,7 +13,8 @@ import Message from "./models/message.model.js";
 import authRouter from "./routes/auth.router.js";
 import dropPostRouter from "./routes/post.routes.js";
 import commentsRouter from "./routes/comment.routes.js";
-import MessageRouter from "./routes/message.routes.js"
+import MessageRouter from "./routes/message.routes.js";
+import AdvertiseRouter from "./routes/advertise.route.js";
 
 
 
@@ -69,6 +70,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/posts", dropPostRouter);
 app.use("/api/comments", commentsRouter);
 app.use("/api/message", MessageRouter);
+app.use("/api/add", AdvertiseRouter);
 
 
 dotenv.config({

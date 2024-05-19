@@ -91,14 +91,14 @@ export default function CreateAdvertising() {
       setLoading(true);
       setError(false);
     
-      const res = await fetch('/api/advertise/create-advertise',{
+      const res = await fetch('/api/add/advertises',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           ...formData,
-          userRef: currentUser._id
+          userRef: currentUser?.data?.user?._id
         }),
       });
       const data = await res.json();
@@ -107,7 +107,8 @@ export default function CreateAdvertising() {
         setError(data.message);
         console.log(data);
       }
-      navigate(`/advertise/${data._id}`)
+      window.alert('Advertise item uploaded successfully');
+      navigate('/')
     }catch(error){
       setError(error.message);
       setLoading(false);

@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 
 
+
 const generateAccessAndRefreshTokens = async(userId) =>{
     try{
         const user = await User.findById(userId);
@@ -133,11 +134,6 @@ const refreshDocAccessToken = asyncHandler(async (req, res) =>{
 const signup = asyncHandler(async(req, res) =>{
     const {username, email,password} = req.body;
 
-    /* if(
-        [username,email,password].some((field) => field?.trim() === "" )
-    ){
-        throw new ApiError(400, "All the field are required");
-    }; */
 
     const existedUser = await User.findOne({
         $or: [{ email }]

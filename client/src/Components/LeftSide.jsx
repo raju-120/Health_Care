@@ -35,7 +35,7 @@ export default function LeftSide() {
 
 
   return (
-    <div className=''>
+    <div className='p-2'>
     <div className='h-auto flex-col justify-between  text-white '>
       
       <div className='lg:flex-col md:flex font-normal items-center hidden'>

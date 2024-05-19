@@ -374,11 +374,15 @@ export default function Profile() {
         </div>
 
       </div>
-      <Link to='/create-advertising'>
-        <div className='w-full text-center my-10  bg-slate-500 p-2 rounded-xl'>
-          <button type='button' className='text-white text-lg hover:opacity-40 opacity-90'>Advertising your Health-Care center</button>
-        </div>
-      </Link>
+      { 
+        currentUser?.data?.user?.role === 'doctor' ? (
+          <Link to='/create-advertising'>
+          <div className='w-full text-center my-10  bg-slate-500 p-2 rounded-xl'>
+            <button type='button' className='text-white text-lg hover:opacity-40 opacity-90'>Advertising your Health-Care center</button>
+          </div>
+        </Link>
+        ) : null
+      }
       
     </div>
   )
