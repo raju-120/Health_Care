@@ -19,5 +19,13 @@ const advertise = asyncHandler(async(req, res, next) => {
     )
 });
 
+const getAdvertise = asyncHandler(async(req, res, next) =>{
+    const query = {};
+    const result = await Advertise.find(query);
+    res.status(201).json(
+        new APIResponse(201, result, "All the advertises are passing.")
+    )
+})
 
-export {advertise}
+
+export {advertise, getAdvertise}

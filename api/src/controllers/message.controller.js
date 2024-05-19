@@ -12,7 +12,9 @@ const sendMessage = async (req, res) => {
 		const { message } = req.body;
         const receiverId = req.body.receiverId;
         const senderId = req.body.senderId;
-		
+        const sendername = req.body.username;
+        const receivername = req.body.receivername;
+		//console.log(':', )
 		
 
         // Determine the room ID based on participants
@@ -22,7 +24,7 @@ const sendMessage = async (req, res) => {
 
         if (!conversation) {
             conversation = await Chatroom.create({
-                participants: [senderId, receiverId],
+                participants: [senderId, receiverId,sendername,receivername],
             });
         }
 
@@ -30,6 +32,8 @@ const sendMessage = async (req, res) => {
             senderId,
             receiverId,
             message,
+            receivername,
+            sendername
         });
         console.log('I am here newMessage:', newMessage);
 
@@ -54,14 +58,16 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
     try {
-        const { senderId, receiverId } = req.params;
-        const messages = await Message.find({
+        const { senderId, receiverId} = req.params;
+        const messages = await Chatroom.find({
           $or: [
             { senderId, receiverId },
             { senderId: receiverId, receiverId: senderId }
           ]
         }).sort({ createdAt: 1 });
-    
+
+        console.log('message:', messages)
+
         res.json({ success: true, messages });
       } catch (error) {
         res.status(500).json({ success: false, message: error.message });

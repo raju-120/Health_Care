@@ -29,7 +29,6 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
     }
 })
 
-
                         //Doctors
 
    /*  export const docVerifyJwt = asyncHandler(async(req, _, next) => {
