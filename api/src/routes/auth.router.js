@@ -37,7 +37,7 @@ router.route('/google').post(google);
 
 //update Doctor & user information
 router.route('/update/:id').post(verifyJwt,userUpdate);
-router.route('/docupdate/:id').post(docVerifyJwt,doctorUpdate);
+router.route('/docupdate/:id').post(docUpVerifyJwt,doctorUpdate);
 
 
 

@@ -104,7 +104,7 @@ export default function AllPosts() {
 
                   <div className="mt-5 p-3 bg-gray-50 rounded-md items-center">
                     <div>
-                      <span className="font-semibold text-xl text-center">{post?.description}</span>
+                      <span className="font-semibold text-xl text-center">{post?.descriptions}</span>
                     </div>
                     <div className="lg:w-2/5">
                       <img className="mt-2 rounded-lg" src={post?.avatar} alt="" />

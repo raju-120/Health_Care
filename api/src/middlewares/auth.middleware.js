@@ -58,6 +58,7 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
     export const docVerifyJwt = asyncHandler(async (req, res, next) => {
         try {
             //console.log('DOc: ',req.body.accessToken);
+            console.log('Doc Update access token: ',req.body);
             
             const token = req.body.data.accessToken;
 
@@ -99,7 +100,7 @@ export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
     try {
         console.log('Middleware : ', req.body);
         
-        const token = req.cookies?.accessToken /* || req.header("Authorization")?.replace("Bearer ", ""); */
+        const token = req.cookies?.accessToken
         if (!token) {
             throw new ApiError(401, "Unauthorized request")
         };

@@ -132,7 +132,11 @@ export default function Profile() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         },
-        body: JSON.stringify({...formData})
+        body: JSON.stringify(
+          {
+            ...formData,
+            accessToken: currentUser?.data?.accessToken
+          })
       });
   
       const data = await result.json();

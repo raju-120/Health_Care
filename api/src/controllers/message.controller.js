@@ -58,21 +58,21 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
     try {
-        const { senderId, receiverId} = req.params;
-        const messages = await Chatroom.find({
-          $or: [
-            { senderId, receiverId },
-            { senderId: receiverId, receiverId: senderId }
-          ]
-        }).sort({ createdAt: 1 });
-
-        console.log('message:', messages)
-
-        res.json({ success: true, messages });
-      } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        const { username } = jwt.verify(token, SECRET_KEY);
+        const messages = await Message.find({
+          $or: [{ from: username }, { to: username }],
+        });
+        res.status(200).send(messages);
+      } catch (err) {
+        res.status(401).send('Unauthorized');
       }
 };
+
+
+/* app.get('/messages', async (req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+   
+  }); */
 
 export {
     sendMessage,

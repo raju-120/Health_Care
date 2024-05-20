@@ -4,16 +4,10 @@ import { APIResponse } from "../utils/ApiResponse.js";
 
 
 const advertise = asyncHandler(async(req, res, next) => {
-    const {name, address,phone,avatar, userRef} = req.body;
+    //const {name, address,phone,avatar, userRef} = req.body;
 
-    const advertises = await Advertise.create({
-        name,
-        address,
-        phone,
-        avatar,
-        userRef
-    });
-
+    const advertises = await Advertise.create(req.body);
+    console.log("Data : ",advertises)
     return res.status(201).json(
         new APIResponse(201,advertises,"Advertising posted successfully" )
     )

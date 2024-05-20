@@ -39,31 +39,23 @@ const io = new Server(server, {
 const socketIdMap = new Map();
 
 io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
-
-  socket.on('join_room', ({ senderId, receiverId }) => {
-      const room = [senderId, receiverId].sort().join('_');
-      socket.join(room);
-      socketIdMap.set(senderId, socket.id); // Store the sender's socket ID
-      console.log(`User ${senderId} and ${receiverId} joined room: ${room}`);
+    console.log('New client connected');
+  
+    socket.on('sendMessage', async ({ from, to, message }) => {
+      const newMessage = new Message({ from, to, message });
+      await newMessage.save();
+      io.to(to).emit('receiveMessage', newMessage);
+      io.to(from).emit('receiveMessage', newMessage);  // Ensure sender also gets the message
+    });
+  
+    socket.on('messageRead', async ({ messageId, username }) => {
+      await Message.findByIdAndUpdate(messageId, { $addToSet: { readBy: username } });
+    });
+  
+    socket.on('disconnect', () => {
+      console.log('Client disconnected');
+    });
   });
-
-  socket.on('send_message', ({ senderId, receiverId, message }) => {
-      const room = [senderId, receiverId].sort().join('_');
-      const newMessage = { senderId, receiverId, message, createdAt: new Date() };
-      io.to(room).emit('receive_message', newMessage);
-  });
-
-  socket.on('disconnect', () => {
-      for (let [userId, socketId] of socketIdMap.entries()) {
-          if (socketId === socket.id) {
-              socketIdMap.delete(userId);
-              break;
-          }
-      }
-      console.log('User disconnected:', socket.id);
-  });
-});
 
 /* app.use("/api/user",userRouter); */
 app.use("/api/auth", authRouter);

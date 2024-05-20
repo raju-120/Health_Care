@@ -1,14 +1,13 @@
-import { request } from 'express';
-import mongoose from 'mongoose';
+// models/Message.js
+import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema({
-    senderId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    sendername: { type: String },
-    receivername: { type: String },
-    receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    message: { type: String, required: true },
-    
-}, { timestamps: true });
+  from: { type: String, required: true },
+  to: { type: String, required: true },
+  message: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now },
+  readBy: { type: [String], default: [] },  // Track users who have read the message
+});
 
 const Message = mongoose.model('Message', messageSchema);
 export default Message;

@@ -2,16 +2,17 @@ import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import io from "socket.io-client";
 import "./style.css";
-import toast from "react-hot-toast";
 
 const socket = io('http://localhost:5000');
 
 function ChatWindow() {
-  const [messages, setMessages] = useState([]);
+  // const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const { currentUser } = useSelector(state => state.user);
   const [doctors, setDoctors] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [recipient, setRecipient] = useState('');
 
   useEffect(() => {
     const fetchDoctors = async () => {
