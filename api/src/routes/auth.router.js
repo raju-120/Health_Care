@@ -41,7 +41,6 @@ router.route('/docupdate/:id').post(docUpVerifyJwt,doctorUpdate);
 
 
 
-
 //secure sections
 
 router.route('/signout').post(verifyJwt,logoutUser);

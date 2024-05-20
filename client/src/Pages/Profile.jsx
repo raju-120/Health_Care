@@ -133,13 +133,16 @@ export default function Profile() {
           'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify(
-          {
+          {   
             ...formData,
-            accessToken: currentUser?.data?.accessToken
+            accessToken: currentUser?.data?.accessToken,
+            id:currentUser?.data?.user?._id,
           })
+
       });
   
       const data = await result.json();
+      console.log(data)
   
       if (!data.success) {
         dispatch(updateUserFailure(data.message));
@@ -148,7 +151,7 @@ export default function Profile() {
       }
   
       setUpdateSuccess(true);
-      dispatch(updateUserSuccess(data));
+      /* dispatch(updateUserSuccess(data)); */
       toast.success(isDoctor ? "Doctor profile updated successfully." : "User profile updated successfully.");
     } catch (error) {
       console.log(error);

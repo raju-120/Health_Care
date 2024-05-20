@@ -425,12 +425,10 @@ const userUpdate = asyncHandler(  async (req, res) =>{
     }
 );
 
-const doctorUpdate = asyncHandler( async(req, res, next) =>{
-    /* if(req.doctor.id !== req.params.id){
-        throw new ApiError(401, 'You can only update your own details!');
-    } */
-    console.log('Doctor id: ', req.body);
-    try{
+const doctorUpdate = asyncHandler(async (req, res, next) => {
+    console.log('Doctor id: ', req.body.id);
+    const _id = req.body.id
+    try {
         const {
             username,
             email,
@@ -444,38 +442,46 @@ const doctorUpdate = asyncHandler( async(req, res, next) =>{
             department,
             phone,
             appointmentnumber,
-            address
+            address,
         } = req.body;
-        const hashedPassword = bcrypt.hashSync(password, 10);
 
-        const doctorUserUpdate = await Doctor.findByIdAndUpdate(
-            req.doctor.id,
-            {
-                $set: {
-                    username,
-                    email,
-                    password: hashedPassword,
-                    avatar,
-                    bmdc,
-                    specialty,
-                    qualification,
-                    designation,
-                    institute,
-                    department,
-                    phone,
-                    appointmentnumber,
-                    address
-                }
-            },{new: true},
-        )
+        let updateData = {
+            _id,
+            username,
+            email,
+            avatar,
+            bmdc,
+            specialty,
+            qualification,
+            designation,
+            institute,
+            department,
+            phone,
+            appointmentnumber,
+            address
+        };
+
+        // Only hash and update the password if it is provided
+        if (password) {
+            updateData.password = bcrypt.hashSync(password, 10);
+        }
+
+        let doctorUserUpdate = await Doctor.findByIdAndUpdate(
+            _id,
+            { $set: updateData },
+            { new: true }
+        );
+        doctorUserUpdate = updateData;
 
         return res
-                .status(200)
-                .json(new APIResponse(200, doctorUserUpdate,"Doctor Details update successfully"))
-    }catch(error){
+            .status(200)
+            .json(new APIResponse(200, doctorUserUpdate, "Doctor Details updated successfully"));
+    } catch (error) {
         console.log('Something went wrong in doctor update section: ', error.message);
+        return res.status(500).json(new APIResponse(500, null, "Something went wrong in doctor update section"));
     }
-} );
+});
+
 
 const getAllDoctors = asyncHandler(async (req, res, next) =>{
     const query = {};

@@ -2,21 +2,21 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 export default function AllPosts() {
-  const{currentUser} = useSelector(state => state.user);
+  const { currentUser } = useSelector(state => state.user);
   const [posts, setPosts] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [allComments, setAllComments] = useState([]);
 
   console.log('allComments: ', allComments);
 
-  const handleSubmit =async (_id, e)=>{
+  const handleSubmit = async (_id, e) => {
     e.preventDefault();
-    try{
+    try {
       if (newComment.trim() !== "") {
-        const res = await fetch('/api/comments/comments',{
+        const res = await fetch('/api/comments/comments', {
           method: 'POST',
           headers: {
-            'content-type' : 'application/json'
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             uId: currentUser?.data?.user?._id,
@@ -24,17 +24,16 @@ export default function AllPosts() {
             comments: newComment,
             username: currentUser?.data?.user?.username,
             useravatar: currentUser?.data?.user?.avatar
-          }
-          )
-        })
+          })
+        });
         const data = await res.json();
-        if(data.success === false){
+        if (data.success === false) {
           console.log('Comment did not posted: ', data.message);
         }
-        console.log('data for comment: ', data)
+        console.log('data for comment: ', data);
         setNewComment("");
       }
-    }catch(error){
+    } catch (error) {
       console.log('error from comment: ', error.message);
     }
   }
@@ -43,14 +42,15 @@ export default function AllPosts() {
     setNewComment(e.target.value);
   };
 
-
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await fetch('/api/posts/all-posts');
         const data = await res.json();
         if (Array.isArray(data?.data)) {
-          setPosts(data?.data);
+          // Sort posts by createdAt in descending order
+          const sortedPosts = data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          setPosts(sortedPosts);
         } else {
           console.error("Data is not an array:", data);
         }
@@ -62,8 +62,8 @@ export default function AllPosts() {
     fetchPosts();
   }, []);
 
-  useEffect(()=>{
-    const fetchPosts = async () => {
+  useEffect(() => {
+    const fetchComments = async () => {
       try {
         const res = await fetch('/api/comments/comments');
         const data = await res.json();
@@ -73,20 +73,18 @@ export default function AllPosts() {
           console.error("Data is not an array:", data);
         }
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error fetching comments:", error);
       }
     };
 
-    fetchPosts();
-  },[])
-
+    fetchComments();
+  }, []);
 
   return (
     <div className="m-5 border-2 border-gray-200 rounded-lg">
       <div className="m-2 p-5">
         {posts.length > 0 ? (
           <div>
-
             {posts.map((post) => (
               <div key={post?._id} className="border-3 border-blue-500 mb-4">
                 <div className="bg-gray-300 p-1 rounded-md">
@@ -109,11 +107,11 @@ export default function AllPosts() {
                     <div className="lg:w-2/5">
                       <img className="mt-2 rounded-lg" src={post?.avatar} alt="" />
                     </div>
-                </div>
+                  </div>
 
-                {/* comments shown section */}
-                <div className="mt-5 bg-white p-2 rounded-md">
-                  {allComments.length > 0 ? (
+                  {/* comments shown section */}
+                  <div className="mt-5 bg-white p-2 rounded-md">
+                    {allComments.length > 0 ? (
                       <div>
                         {allComments.map((comment) => {
                           if (comment?.pId === post?._id) {
@@ -126,7 +124,7 @@ export default function AllPosts() {
                                   </div>
                                   <div>
                                     <h1 className="text-xl font-semibold mt-1 ml-4 mb-5">{comment?.username}</h1>
-                                    <div style={{marginTop: '-16px'}} className="ml-5 bg-gray-300 p-2 rounded-lg">
+                                    <div style={{ marginTop: '-16px' }} className="ml-5 bg-gray-300 p-2 rounded-lg">
                                       <p className="text-lg">{comment?.comments}</p>
                                     </div>
                                   </div>
@@ -138,25 +136,22 @@ export default function AllPosts() {
                           }
                         })}
                       </div>
-                    ) : null
-                    }
-                </div>
+                    ) : null}
+                  </div>
 
-                <div className="mt-3">
-                  <h2 className="text-lg mb-2 font-semibold">Comment Section : </h2>
-                  
-                  <form onClick={(e) =>handleSubmit(post?._id, e)}>
-                    <input type="text-area" className="w-full p-4 rounded-lg mb-2" id="comments" onChange={handleChange}/>
-                    <button style={{marginLeft: '550px'}} className="mt-2 mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Comment</button>
-                  </form>
+                  <div className="mt-3">
+                    <h2 className="text-lg mb-2 font-semibold">Comment Section : </h2>
+
+                    <form onClick={(e) => handleSubmit(post?._id, e)}>
+                      <input type="text-area" className="w-full p-4 rounded-lg mb-2" id="comments" onChange={handleChange} />
+                      <button style={{ marginLeft: '550px' }} className="mt-2 mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Comment</button>
+                    </form>
+
+                  </div>
 
                 </div>
-
-                </div>
-                
               </div>
             ))}
-
           </div>
         ) : (
           <p>No posts available</p>
