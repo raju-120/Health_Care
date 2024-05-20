@@ -39,7 +39,7 @@ const io = new Server(server, {
 const socketIdMap = new Map();
 
 io.on('connection', (socket) => {
-    console.log('New client connected');
+    console.log(`New client connected: ${socket.id}`);
   
     socket.on('sendMessage', async ({ from, to, message }) => {
       const newMessage = new Message({ from, to, message });
@@ -53,9 +53,24 @@ io.on('connection', (socket) => {
     });
   
     socket.on('disconnect', () => {
-      console.log('Client disconnected');
+      console.log(`client disconnected: ${socket.id}`);
     });
   });
+
+  /* app.get('/messages', async (req, res) => {
+    console.log(req.body)
+    const token = req.headers.authorization.split(' ')[1];
+    try {
+      const { username } = jwt.verify(token, SECRET_KEY);
+      const messages = await Message.find({
+        $or: [{ from: username }, { to: username }],
+      });
+      res.status(200).send(messages);
+    } catch (err) {
+      res.status(401).send('Unauthorized');
+    }
+  }); */
+
 
 /* app.use("/api/user",userRouter); */
 app.use("/api/auth", authRouter);

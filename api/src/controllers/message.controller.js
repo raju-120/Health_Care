@@ -1,55 +1,52 @@
 import Chatroom from "../models/Chatroom.model.js";
 import Message from "../models/message.model.js";
 import { io, socketIdMap } from "../index.js"; // Ensure io and socketIdMap are imported from the correct file
-
 const getReceiverSocketId = (receiverId) => {
     return socketIdMap.get(receiverId);
 };
-
 const sendMessage = async (req, res) => {
     try {
 		console.log("i am here for message: ",req.body);
 		const { message } = req.body;
         const receiverId = req.body.receiverId;
         const senderId = req.body.senderId;
-        const sendername = req.body.username;
-        const receivername = req.body.receivername;
-		//console.log(':', )
+        const senderusername = req.body.sendername;
+        const receiverusername = req.body.receiverusername;
+        console.log(senderusername)
+        console.log(receiverusername)
 		
-
+		
         // Determine the room ID based on participants
-        let conversation = await Chatroom.findOne({
-            participants: { $all: [senderId, receiverId] },
+       /*  let conversation = await Chatroom.findOne({
+            participants: { $all: [senderId, receiverId,senderusername,receiverusername] },
         });
-
         if (!conversation) {
             conversation = await Chatroom.create({
-                participants: [senderId, receiverId,sendername,receivername],
+                participants: [senderId, receiverId,senderusername,receiverusername],
             });
-        }
-
+        } */
         const newMessage = new Message({
             senderId,
             receiverId,
             message,
-            receivername,
-            sendername
+            senderusername,
+            receiverusername
         });
-        console.log('I am here newMessage:', newMessage);
-
-        if (newMessage) {
+    
+       /*  if (newMessage) {
             conversation.messages.push(newMessage._id);
-        }
+        } */
+        await  newMessage.save();
 
-        await Promise.all([conversation.save(), newMessage.save()]);
+        const query1 = {senderId,receiverId};
+        console.log(query1)
+        const query2 = {senderId:receiverId,receiverId:senderId};
+        console.log(query2)
+        const result = await Message.find(query1);
+        const result1 = await Message.find(query2);
+        let combinedData = result.concat(result1);
 
-        const roomId = conversation._id.toString();
-        const receiverSocketId = getReceiverSocketId(receiverId);
-        if (receiverSocketId) {
-            io.to(receiverSocketId).emit("newMessage", { ...newMessage._doc, roomId });
-        }
-
-        res.status(201).json(newMessage);
+        res.status(201).json(combinedData);
     } catch (error) {
         console.log("Error in sendMessage controller: ", error.message);
         res.status(500).json({ error: "Internal server error" });
@@ -58,22 +55,23 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
     try {
-        const { username } = jwt.verify(token, SECRET_KEY);
-        const messages = await Message.find({
-          $or: [{ from: username }, { to: username }],
-        });
-        res.status(200).send(messages);
-      } catch (err) {
-        res.status(401).send('Unauthorized');
-      }
+        const senderId = req.body.senderId;
+        const receiverId = req.body.receiverId;
+		console.log(senderId,receiverId);
+        const query1 = {senderId,receiverId};
+        console.log(query1)
+        const query2 = {senderId:receiverId,receiverId:senderId};
+        console.log(query2)
+        const result = await Message.find(query1);
+        const result1 = await Message.find(query2);
+        let combinedData = result.concat(result1);
+
+        res.status(201).json(combinedData)
+    } catch (error) {
+        console.log("Error in getMessages controller: ", error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
 };
-
-
-/* app.get('/messages', async (req, res) => {
-    const token = req.headers.authorization.split(' ')[1];
-   
-  }); */
-
 export {
     sendMessage,
     getMessages

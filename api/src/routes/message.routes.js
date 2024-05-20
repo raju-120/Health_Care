@@ -6,7 +6,7 @@ import { docVerifyJwtForMessage, verifyJwt } from "../middlewares/auth.middlewar
 
 const router = express.Router();
 
-router.get("/:id",verifyJwt,  getMessages);
+router.post("/",  getMessages);
 router.post("/doc/:id", docVerifyJwtForMessage, getMessages);
 
 router.post("/send/:id", verifyJwt,sendMessage);
