@@ -16,6 +16,7 @@ import Doctors from './Pages/Doctors/Doctors';
 //import ChatDashboard from './Pages/ChatDashboard/ChatDashboaard';
 import Messenger from './Pages/Messenger/Messenger';
 import Hospital from './Pages/Hospital/Hospital';
+import ServiceDetails from './Pages/ServiceDetails';
 
 
 
@@ -42,6 +43,7 @@ export default function App() {
       <Route path='/create-advertising' element={ <CreateAdvertising /> }/>
       <Route path='/doctorlists' element={<Doctors />} />
       <Route path='/hospitallists' element={<Hospital />} />
+      <Route path='/service/:id' element={<ServiceDetails />} />
       
 
       {/* Messenger options */}

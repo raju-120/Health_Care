@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/fileUpload.js";
 import POST from "../models/post.model.js";
 import { APIResponse } from "../utils/ApiResponse.js";
+import Services from "../models/services.js";
 
 
 const dropPost = asyncHandler(async (req, res)=>{
@@ -81,9 +82,33 @@ const getPost = async (req, res,next) =>{
     return res.status(200).json(
         new APIResponse(200, result, "Posting all the post shown.")
     )
-}
+};
+
+const getAllServices = asyncHandler(async(req,res,next)=>{
+    const query = {};
+    const result = await Services.find(query);
+    res.status(201).json( new APIResponse(201, result, 'services are provided'));
+});
+
+
+const getSpecificService = asyncHandler(async (req, res, next) => {
+    try {
+        const id = req.params._id
+        const service = await Services.findById(req.params.id);
+        if (!service) {
+            return res.status(404).json(new APIResponse(404, null, 'Service not found'));
+        }
+        res.status(200).json(new APIResponse(200, service, 'Specific service'));
+    } catch (error) {
+        console.error('Error fetching service:', error);
+        res.status(500).json(new APIResponse(500, null, 'Server error'));
+    }
+});
+
 
 export {
     dropPost,
-    getPost
+    getPost,
+    getAllServices,
+    getSpecificService
 };
