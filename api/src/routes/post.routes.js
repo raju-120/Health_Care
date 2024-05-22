@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { dropPost, getAllServices, getPost, getSpecificService } from "../controllers/post.controller.js";
+import { dropPost, getAllServices, getAllSolution, getPost, getSpecificService, getSpecificSolution } from "../controllers/post.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 
@@ -15,6 +15,9 @@ router.route("/droped").post( upload.fields([
 router.route("/all-posts").get(getPost);
 router.route("/services").get(getAllServices);
 router.route("/service/:id").get(getSpecificService);
+
+router.route("/solutions").get(getAllSolution);
+router.route("/solution/:id").get(getSpecificSolution);
 
 
 export default router;

@@ -17,6 +17,7 @@ import Doctors from './Pages/Doctors/Doctors';
 import Messenger from './Pages/Messenger/Messenger';
 import Hospital from './Pages/Hospital/Hospital';
 import ServiceDetails from './Pages/ServiceDetails';
+import TipsDetails from './Pages/TipsDetails';
 
 
 
@@ -44,6 +45,8 @@ export default function App() {
       <Route path='/doctorlists' element={<Doctors />} />
       <Route path='/hospitallists' element={<Hospital />} />
       <Route path='/service/:id' element={<ServiceDetails />} />
+      <Route path='/solution/:id' element={<TipsDetails />} />
+      {/* <Route path='/service/:id' element={<ServiceDetails />} /> */}
       
 
       {/* Messenger options */}
