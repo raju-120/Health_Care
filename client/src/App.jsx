@@ -18,6 +18,7 @@ import Messenger from './Pages/Messenger/Messenger';
 import Hospital from './Pages/Hospital/Hospital';
 import ServiceDetails from './Pages/ServiceDetails';
 import TipsDetails from './Pages/TipsDetails';
+import Appointments from './Pages/Appointments/Appointments';
 
 
 
@@ -41,6 +42,7 @@ export default function App() {
       <Route path='/service' element={<Services />}/>
       <Route path='/tips' element={<Tips />}/>
       <Route path='/profile' element={<Profile />}/>
+      <Route path='/appointment' element={<Appointments />}/>
       <Route path='/create-advertising' element={ <CreateAdvertising /> }/>
       <Route path='/doctorlists' element={<Doctors />} />
       <Route path='/hospitallists' element={<Hospital />} />

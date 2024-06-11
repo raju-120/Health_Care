@@ -1,6 +1,6 @@
 import LeftSide from "../Components/LeftSide";
 import CenterSide from "../Components/CenterSide";
-import RightSide from "../Components/RightSide";
+/* import RightSide from "../Components/RightSide"; */
 
 
 
@@ -14,9 +14,9 @@ export default function MainLayout() {
             <div className="lg:mr-14 ">
                 <CenterSide />
             </div>
-            <div className="lg:w-96">
+           {/*  <div className="lg:w-96">
                 <RightSide />
-            </div>
+            </div> */}
         </div>
     </div>
   )

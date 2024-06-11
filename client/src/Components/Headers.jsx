@@ -17,18 +17,27 @@ export default function Headers() {
         <Link to='/'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>Home</li>
         </Link>
+
+        <Link to='/appointment'>
+          <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>Appointment</li>
+        </Link>
+
         <Link to='/profile'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>Profile</li>
         </Link>
+
         <Link to='/tips'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>Tips</li>
         </Link>
+
         <Link to='/service'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>Services</li>
         </Link>
+
         <Link to='/about'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'>About</li>
         </Link>
+
         <Link to='/chat'>
           <li className=' border-b border-slate-800 hover:text-green-300 hover:underline'><BsMessenger /></li>
         </Link> 
@@ -62,18 +71,26 @@ export default function Headers() {
             </h1>
 
           </div>
-          <div className='lg:flex md:flex lg:flex-1  items-center justify-center font-normal hidden mr-24'>
+          <div className='lg:flex md:flex lg:flex-1  items-center justify-center font-normal hidden mr-16'>
            
             <ul className='flex gap-8 item-center text-zinc-200 uppercase text-lg'>
               <Link to='/'>
                 <li className='hover:text-gray-300'>Home</li>
               </Link>
-              <Link to='/service'>
-                <li className='hover:text-gray-300'>Service</li>
-              </Link>
+
               <Link to='/tips'>
                 <li className='hover:text-gray-300'>Tips</li>
               </Link>
+
+              
+              <Link to='/appointment'>
+                <li className='hover:text-gray-300'>Appointment</li>
+              </Link>
+
+              <Link to='/service'>
+                <li className='hover:text-gray-300'>Service</li>
+              </Link>
+             
               <Link to='/about'>
                 <li className='hover:text-gray-300'>About</li>
               </Link>
