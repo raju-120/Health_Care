@@ -7,7 +7,7 @@ import CenterSide from "../Components/CenterSide";
 export default function MainLayout() {
   return (
     <div>
-        <div className="container max-w-auto flex justify-between">
+        <div className="lg:container max-w-auto lg:flex justify-between">
             <div className=" lg:p-6 h-16 lg:h-full  bg-neutral-500">
                 <LeftSide />
             </div>

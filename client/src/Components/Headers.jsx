@@ -104,7 +104,7 @@ export default function Headers() {
               <BsMessenger />
             </Link>
 
-            <Link to='/profile'>
+            <Link to='/dashboard'>
               {
                 currentUser ? (
                   <img src={currentUser?.data?.user?.avatar} className='w-16 h-16 rounded-full' alt='profile'/>

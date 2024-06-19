@@ -81,23 +81,23 @@ export default function AllPosts() {
   }, []);
 
   return (
-    <div className="m-5 border-2 border-gray-200 rounded-lg">
-      <div className="m-2 p-5">
+    <div className="lg:m-5 border-2 border-gray-200 rounded-lg">
+      <div className="lg:m-2 lg:p-5">
         {posts.length > 0 ? (
           <div>
             {posts.map((post) => (
               <div key={post?._id} className="border-3 border-blue-500 mb-4">
-                <div className="bg-gray-300 p-1 rounded-md">
-                  <div className="flex gap-3 mt-2 bg-gray-100 p-3 rounded-xl">
+                <div className="bg-gray-300 lg:p-1 rounded-md">
+                  <div className="lg:flex gap-4 mt-4 bg-gray-100 p-3 ">
                     <div className="lg:w-12 lg:h-12  w-8 h-8">
-                      <img className="rounded-full" src={post?.profile} alt="" />
+                      <img className="rounded-full" src={post?.useravatar} alt="" />
                     </div>
                     <div className="text-xl m-1 font-semibold items-center ">
                       {post?.username}
                     </div>
-                    <div className="mt-1">
+                    {/* <div className="mt-1">
                       <span className="text-xs  ">posted something..</span>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="mt-5 p-3 bg-gray-50 rounded-md items-center">
@@ -139,12 +139,12 @@ export default function AllPosts() {
                     ) : null}
                   </div>
 
-                  <div className="mt-3">
-                    <h2 className="text-lg mb-2 font-semibold">Comment Section : </h2>
+                  <div className="mt-3 ">
+                    {/* <h2 className="text-lg lg:mb-2 font-semibold">Comment Section : </h2> */}
 
                     <form onClick={(e) => handleSubmit(post?._id, e)}>
-                      <input type="text-area" className="w-full p-4 rounded-lg mb-2" id="comments" onChange={handleChange} />
-                      <button style={{ marginLeft: '550px' }} className="mt-2 mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Comment</button>
+                      <input type="text-area" className="lg:w-2/3 p-4 rounded-lg mb-2" id="comments" onChange={handleChange} />
+                      <button  className="lg:mt-2 lg:mb-4 ml-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm">Comment</button>
                     </form>
 
                   </div>

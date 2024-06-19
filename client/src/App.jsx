@@ -19,6 +19,9 @@ import Hospital from './Pages/Hospital/Hospital';
 import ServiceDetails from './Pages/ServiceDetails';
 import TipsDetails from './Pages/TipsDetails';
 import Appointments from './Pages/Appointments/Appointments';
+import DashboardLayout from './DashboardLayout/DashboardLayout';
+import DashboardHome from './Pages/DashboardPages/DashboardHome';
+import DashboardSet from './Pages/DashboardPages/DashboardSet';  
 
 
 
@@ -41,7 +44,7 @@ export default function App() {
       <Route path='/about' element={<About />}/>
       <Route path='/service' element={<Services />}/>
       <Route path='/tips' element={<Tips />}/>
-      <Route path='/profile' element={<Profile />}/>
+      
       <Route path='/appointment' element={<Appointments />}/>
       <Route path='/create-advertising' element={ <CreateAdvertising /> }/>
       <Route path='/doctorlists' element={<Doctors />} />
@@ -53,6 +56,12 @@ export default function App() {
 
       {/* Messenger options */}
       <Route path='/chat' element={ < Messenger /> } />
+
+     <Route path='/dashboard' element={<DashboardLayout /> }>
+         <Route path='/dashboard/' element={<DashboardHome />} />  
+        <Route path='/dashboard/settings' element={<DashboardSet />} /> 
+        <Route path='/dashboard/profile' element={<Profile />}/>
+      </Route> 
 
     </Route>
 
