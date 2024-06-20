@@ -132,7 +132,7 @@ const refreshDocAccessToken = asyncHandler(async (req, res) =>{
 
 
 const signup = asyncHandler(async(req, res) =>{
-    const {username, email,password} = req.body;
+    const {username, email,password,role} = req.body;
 
 
     const existedUser = await User.findOne({
@@ -146,7 +146,7 @@ const signup = asyncHandler(async(req, res) =>{
     const user = await User.create({
         username,
         email,
-        password
+        password,
     })
 
     const createdUser = await User.findById(user._id).select(

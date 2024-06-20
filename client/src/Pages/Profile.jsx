@@ -217,7 +217,7 @@ export default function Profile() {
 
 
   return (
-    <div className='p-3 max-w-lg mx-auto mb-24'>
+    <div className='p-3 max-w-3/5 mx-96 mb-24'>
       <h1 className='text-3xl front-semibold text-center my-7'>Profile</h1>
 
       {
