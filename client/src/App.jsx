@@ -20,8 +20,10 @@ import ServiceDetails from './Pages/ServiceDetails';
 import TipsDetails from './Pages/TipsDetails';
 import Appointments from './Pages/Appointments/Appointments';
 import DashboardLayout from './DashboardLayout/DashboardLayout';
-import DashboardHome from './Pages/DashboardPages/DashboardHome';
-import DashboardSet from './Pages/DashboardPages/DashboardSet';  
+import AdminSignIn from './Pages/Admin/AdminSignIn';
+import SystemAdminSignIn from './Pages/Admin/SystemAdminSignIn';
+import AdminList from './Pages/DashboardPages/AdminList';
+import AddAdmin from './Pages/DashboardPages/AddAdmin';
 
 
 
@@ -37,6 +39,11 @@ export default function App() {
     <Route path='/sign-up' element={<SignUp />}/>
     <Route path='/doctors-sign-up' element={<DoctorsSIgnUp />}/>
     <Route path='/doctor-signin' element={ <DoctorsSignin /> } />
+
+    {/* Admin & System Admin Panel Login  */}
+
+    <Route path='/admin' element={ <AdminSignIn /> } />
+    <Route path='/systemadmin' element={ <SystemAdminSignIn /> } />
 
     {/* Private Route Section */}
     <Route element={<PrivateRoute />}>
@@ -57,10 +64,10 @@ export default function App() {
       {/* Messenger options */}
       <Route path='/chat' element={ < Messenger /> } />
 
-     <Route path='/dashboard' element={<DashboardLayout /> }>
-         <Route path='/dashboard/' element={<DashboardHome />} />  
-        <Route path='/dashboard/settings' element={<DashboardSet />} /> 
+      <Route path='/dashboard' element={<DashboardLayout /> }>
         <Route path='/dashboard/profile' element={<Profile />}/>
+        <Route path='/dashboard/adminlist' element={<AdminList />} /> 
+        <Route path='/dashboard/addAdmin' element={<AddAdmin />} />  
       </Route> 
 
     </Route>

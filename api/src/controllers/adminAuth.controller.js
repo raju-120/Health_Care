@@ -119,7 +119,7 @@ const systemAdminSignIn = asyncHandler(async (req, res, next) => {
         .status(200)
         .cookie("refreshToken", refreshToken, options)
         .json(new APIResponse(200, {
-            System: loggedInUser,
+            user: loggedInUser,
             accessToken,
             refreshToken
         }, "System logged in successfully"));
@@ -127,23 +127,25 @@ const systemAdminSignIn = asyncHandler(async (req, res, next) => {
 
 const adminSignup= asyncHandler(async(req, res) =>{
     const {username,email,password,role} = req.body;
-    const existedUser = await Admin.findOne({
-        $or:[{ email }]
-    });
-    if(existedUser){
-        throw new ApiError(402, "This email id already used")
-    };
-    const AdminUser = await Admin.create({username,email,password,role})
+    const avatar = req.file ? req.file.path : null; 
 
-    const createdUser = await Admin.findById(AdminUser._id).select("-password -refreshToken");
-    if(!createdUser) {
-        throw new ApiError(500, "System admin id not created.There must be fill up all the fields!");
-    };
+  const newAdmin = new SystemAdmin({
+    username,
+    email,
+    password,
+    role: 'admin',
+    avatar,
+  });
 
-    return res.status(201).json(
-        new APIResponse(200, createdUser, "System Admin registered successfully.")
-    )
+  await newAdmin.save();
+
+  res.status(201).json({
+    success: true,
+    message: 'Admin added successfully',
+    data: newAdmin,
+  });
 });
+
 
 const adminSignIn = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
@@ -171,17 +173,23 @@ const adminSignIn = asyncHandler(async (req, res, next) => {
         httpOnly: true,
         secure: true,
     }
-
     return res
         .status(200)
         .cookie("refreshToken", refreshToken, options)
         .json(new APIResponse(200, {
-            Admin: loggedInUser,
+            user: loggedInUser,
             accessToken,
             refreshToken
         }, "Admin logged in successfully"));
 });
 
+const getAllAdminList = asyncHandler(async(req, res, next) =>{
+    const query = {};
+    const result = await Admin.find(query);
+    res.status(201).json(
+        new APIResponse(201, result, "All the Admin list founded.")
+    )
+});
 
 
 
@@ -195,4 +203,5 @@ export {
     systemAdminSignIn,
     adminSignup,
     adminSignIn,
+    getAllAdminList,
 }

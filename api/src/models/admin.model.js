@@ -1,6 +1,8 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+
+const { Schema } = mongoose;
 
 const adminSchema = new Schema({
     username: {
@@ -19,23 +21,33 @@ const adminSchema = new Schema({
     role: { 
         type: String, 
         required: true,
-    }
-},{timestamps: true});
+    },
+    avatar: { 
+        type: String,
+        default: '/uploads/default-avatar.jpg'  // Default avatar path if not provided
+    },
+}, { timestamps: true });
 
+// Hash password before saving to database
 adminSchema.pre("save", async function(next) {
-    if(!this.isModified("password")) return next();
-
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
+    if (!this.isModified("password")) return next();
+    try {
+        this.password = await bcrypt.hash(this.password, 10);
+        next();
+    } catch (error) {
+        next(error);
+    }
 });
 
+// Compare password method
 adminSchema.methods.isPasswordCorrect = async function(password) {
     return await bcrypt.compare(password, this.password);
 };
 
+// Generate access token method
 adminSchema.methods.generateAccessToken = function() {
     return jwt.sign({
-        _id:  this._id,
+        _id: this._id,
         email: this.email,
         username: this.username,
     },
@@ -45,9 +57,10 @@ adminSchema.methods.generateAccessToken = function() {
     });
 };
 
+// Generate refresh token method
 adminSchema.methods.generateRefreshToken = function() {
     return jwt.sign({
-        _id:  this._id,
+        _id: this._id,
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
