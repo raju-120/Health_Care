@@ -8,6 +8,8 @@ import { cloudinary } from "../utils/cloudinaryConfig.js";
 
 
 
+/*   Token Sections    */
+
 const generateSysAdminAccessAndRefreshTokens = async(sysAdminId) =>{
     try{
         const sysAdminUser = await SystemAdmin.findById(sysAdminId);
@@ -69,6 +71,71 @@ const refreshSysAdminAccessToken = asyncHandler(async (req, res) =>{
     }
 });
 
+const generateAdminAccessAndRefreshTokens = async(adminId) =>{
+    try{
+        const sysAdminUser = await Admin.findById(adminId);
+        const accessToken = sysAdminUser.generateAccessToken();
+        const refreshToken = sysAdminUser.generateRefreshToken();
+
+        sysAdminUser.refreshToken = refreshToken;
+        await sysAdminUser.save({validateBeforeSave:  false});
+
+        return {accessToken, refreshToken};
+    }catch(error){
+        throw new ApiError(500, error?.message || "something went wrong while generating refresh and access token.");
+    }
+};
+
+const refreshAdminAccessToken = asyncHandler(async (req, res) =>{
+    const incomingRefreshToken = req.cookies.refreshToken ||
+                                req.body.refreshToken;
+
+    if(incomingRefreshToken){
+        throw new ApiError(401, "unauthorized access token");
+    };
+
+    try {
+            const decodedToken = jwt.verify(
+                incomingRefreshToken,
+                process.env.REFRESH_TOKEN_SECRET
+            )
+            const user = await sysAdmin.findById(decodedToken?._id);
+
+            if(!user){
+                throw new ApiError(401, "Invalid refresh token")
+            };
+
+            if(incomingRefreshToken !== user?.refreshToken){
+                throw new ApiError(401, "Refresh token is expired!");
+            };
+
+            const options = {
+                httpOnly: true,
+                secure: true,
+                };
+
+            const {accessToken,newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
+
+            return res
+                .status(200)
+                .cookie("accessToken", accessToken, options)
+                .cookie("refreshToken", newRefreshToken, options)
+                .json(
+                new APIResponse(
+                    201,
+                    {accessToken, refreshToken: newRefreshToken},
+                    "Access TOken refreshed"
+                ));
+
+    } catch (error) {
+        new ApiError(401, error?.message || "Invalid refresh token")
+    }
+});
+
+
+/* Login Section */
+
+
 const systemAdminSignup= asyncHandler(async(req, res) =>{
     const {username,email,password,role} = req.body;
     const existedUser = await SystemAdmin.findOne({
@@ -106,8 +173,7 @@ const systemAdminSignIn = asyncHandler(async (req, res, next) => {
         throw new ApiError(401, "System Admin password won't match!");
     }
 
-    const accessToken = user.generateAccessToken(); // Call on instance
-    const refreshToken = user.generateRefreshToken(); // Call on instance
+    const {accessToken, refreshToken} = await generateSysAdminAccessAndRefreshTokens(user._id);
 
     const loggedInUser = await SystemAdmin.findById(user._id).select("-password -refreshToken");
 
@@ -118,6 +184,7 @@ const systemAdminSignIn = asyncHandler(async (req, res, next) => {
 
     return res
         .status(200)
+        .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
         .json(new APIResponse(200, {
             user: loggedInUser,
@@ -209,8 +276,7 @@ const adminSignIn = asyncHandler(async (req, res, next) => {
         throw new ApiError(401, "System Admin password won't match!");
     }
 
-    const accessToken = user.generateAccessToken(); // Call on instance
-    const refreshToken = user.generateRefreshToken(); // Call on instance
+    const {accessToken, refreshToken} = await generateAdminAccessAndRefreshTokens(user._id);
 
     const loggedInUser = await Admin.findById(user._id).select("-password -refreshToken");
 
@@ -220,6 +286,7 @@ const adminSignIn = asyncHandler(async (req, res, next) => {
     }
     return res
         .status(200)
+        .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
         .json(new APIResponse(200, {
             user: loggedInUser,
@@ -263,15 +330,31 @@ const adminLogOut = asyncHandler(async (req, res) => {
         .json(new APIResponse(200, {}, "Admin logged out"));
 });
 
-
-
-
-
+const adminDelete = asyncHandler(async(req, res) =>{
+    const {id} = req.params;
+    if(!id) {
+        throw new ApiError(400, 'Admin Id is required');
+    }
+    if (req.user.role !== 'system-admin') {
+        throw new ApiError(403, "Forbidden: You don't have permission to delete this admin");
+    }
+    const admin = await Admin.findByIdAndDelete(id);
+    if(!admin){
+        throw new ApiError(404, 'Admin not found');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Admin deleted successfully',
+        data: admin,
+      });
+})
 
 
 export {
     generateSysAdminAccessAndRefreshTokens,
     refreshSysAdminAccessToken,
+    generateAdminAccessAndRefreshTokens,
+    refreshAdminAccessToken,
     systemAdminSignup,
     systemAdminSignIn,
     adminSignup,
@@ -279,4 +362,5 @@ export {
     getAllAdminList,
     adminLogOut,
     systemAdminOut,
+    adminDelete,
 }

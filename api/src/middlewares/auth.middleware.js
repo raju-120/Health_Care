@@ -130,17 +130,14 @@ export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
 
 export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
+        console.log('Token:', req.body); // Log the token for debugging
         const token = req.cookies?.refreshToken;
-        
-        console.log('Token:', token); // Log the token for debugging
 
         if (!token) {
             throw new ApiError(401, "Unauthorized request");
         }
 
-        const decodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET); // Use REFRESH_TOKEN_SECRET for refresh tokens
-        console.log('Decoded Token:', decodedToken); // Log the decoded token for debugging
-
+        const decodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET); 
         const user = await Admin.findById(decodedToken?._id).select("-password -refreshToken");
 
         if (!user) {
@@ -150,7 +147,7 @@ export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
         req.user = user;
         next();
     } catch (error) {
-        console.error('JWT Error:', error.message); // Log the error for debugging
+        console.error('JWT Error:', error.message);
         throw new ApiError(401, error?.message || "Invalid access token");
     }
 });
@@ -159,16 +156,18 @@ export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
 
 export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
-        const token = req.cookies?.refreshToken;
         
-        console.log('Token:', token); // Log the token for debugging
+        /* const token2 = req.cookies?.accessToken;
+        console.log('Access Token : ' ,token2 ) */
+        const token = req.cookies?.accessToken;
+        console.log('Token:', token);
 
         if (!token) {
             throw new ApiError(401, "Unauthorized request");
         }
 
-        const decodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET); // Use REFRESH_TOKEN_SECRET for refresh tokens
-        console.log('Decoded Token:', decodedToken); // Log the decoded token for debugging
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        console.log('Decoded Token:', decodedToken);
 
         const user = await SystemAdmin.findById(decodedToken?._id).select("-password -refreshToken");
 

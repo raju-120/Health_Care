@@ -189,7 +189,53 @@ export default function Profile() {
       }catch(error){
         dispatch(signOutUserFailure(error.message));
       }
-    }else{
+    }else if(currentUser?.data?.user?.role === 'system-admin'){
+      try{
+        dispatch(signOutUserStart());
+        const res = await fetch('/api/auth/sysadminlogout',{
+          method:'POST',
+          headers: {
+            'Content-type' : 'application/json'
+          },
+         
+          body: JSON.stringify(currentUser)
+        });
+        const data = await res.json();
+        console.log('Data log out doctor: ',data );
+        if(data.success === false){
+          dispatch(signOutUserFailure(data.message));
+          return;
+        }
+        dispatch(signOutUserSuccess(data.message));
+        navigate('/systemadmin');
+      }catch(error){
+        dispatch(signOutUserFailure(error.message));
+      }
+    }
+    else if(currentUser?.data?.user?.role === 'admin'){
+      try{
+        dispatch(signOutUserStart());
+        const res = await fetch('/api/auth/adminlogout',{
+          method:'POST',
+          headers: {
+            'Content-type' : 'application/json'
+          },
+         
+          body: JSON.stringify(currentUser)
+        });
+        const data = await res.json();
+        console.log('Data log out doctor: ',data );
+        if(data.success === false){
+          dispatch(signOutUserFailure(data.message));
+          return;
+        }
+        dispatch(signOutUserSuccess(data.message));
+        navigate('/admin');
+      }catch(error){
+        dispatch(signOutUserFailure(error.message));
+      }
+    }
+    else{
       console.log(formData)
         try{
           dispatch(signOutUserStart());

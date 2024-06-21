@@ -30,10 +30,11 @@ export default function AddAdmin() {
       formDataToSend.append("username", formData.username);
       formDataToSend.append("email", formData.email);
       formDataToSend.append("password", formData.password);
+      formDataToSend.append("role", "admin");
       if (file) {
         formDataToSend.append("avatar", file);
       }
-
+      console.log('Form data: ', formDataToSend);
       const res = await fetch('/api/auth/adminsignup', {
         method: 'POST',
         body: formDataToSend,
@@ -48,7 +49,7 @@ export default function AddAdmin() {
       
       setLoading(false);
       setError(null);
-      navigate('/adminlist');
+      navigate('/dashboard/adminlist');
     } catch (error) {
       setLoading(false);
       setError(error.message);
