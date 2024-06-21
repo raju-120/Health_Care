@@ -23,7 +23,7 @@ export default function AdminSignIn() {
         e.preventDefault();
         try{
           dispatch(signInStart());
-          const res = await fetch('/api/auth/systemadminsignin',
+          const res = await fetch('/api/auth/adminsignin',
           {
             method: 'POST',
             headers: {

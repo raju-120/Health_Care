@@ -17,26 +17,19 @@ export default function Footer() {
                         <p>Solution</p>
                         <p>Marketing</p>
                         <p>Analytics</p>
-                        <p>Commerce</p>
-                        <p>Insights</p>
                     </div>
                     <div>
                         <p>Support</p>
                         <p>Documentation</p>
                         <p>Guides</p>
-                        <p>Status</p>
                     </div>
                     <div>
                         <p>Company</p>
-                        <p>About</p>
-                        <p>Blog</p>
                         <p>Jobs</p>
                         <p>Press</p>
-                        <p>Partners</p>
                     </div>
                     <div>
                         <p>Legal</p>
-                        <p>Claim</p>
                         <p>Privacy</p>
                         <p>Terms</p>
                     </div>

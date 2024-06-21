@@ -1,4 +1,3 @@
-import { request } from 'express';
 import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema({
@@ -6,8 +5,7 @@ const messageSchema = new mongoose.Schema({
     senderusername: { type: String },
     receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     receiverusername: { type: String },
-    message: { type: String, required: true },
-    
+    message: { type: String, required: true }
 }, { timestamps: true });
 
 const Message = mongoose.model('Message', messageSchema);

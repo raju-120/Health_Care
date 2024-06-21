@@ -121,14 +121,14 @@ export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
 
 export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
+        console.log('Token:', req.cookies?.accessToken);
         const token = req.cookies?.accessToken;
-        /* console.log('Token:', req.body); */
 
         if (!token) {
             throw new ApiError(401, "Unauthorized request");
         }
 
-        const decodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET); 
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET); 
         const user = await Admin.findById(decodedToken?._id).select("-password -refreshToken");
 
         if (!user) {

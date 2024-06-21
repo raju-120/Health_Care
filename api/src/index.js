@@ -39,23 +39,34 @@ const io = new Server(server, {
 const socketIdMap = new Map();
 
 io.on('connection', (socket) => {
-    console.log(`New client connected: ${socket.id}`);
-  
-    socket.on('sendMessage', async ({ from, to, message }) => {
-      const newMessage = new Message({ from, to, message });
+  console.log(`New client connected: ${socket.id}`);
+
+  socket.on('joinRoom', ({ userId }) => {
+      socketIdMap.set(userId, socket.id);
+      socket.join(userId);
+  });
+
+  socket.on('sendMessage', async ({ from, to, message, senderusername, receiverusername }) => {
+      const newMessage = new Message({ senderId: from, receiverId: to, message, senderusername, receiverusername });
       await newMessage.save();
       io.to(to).emit('receiveMessage', newMessage);
-      io.to(from).emit('receiveMessage', newMessage);  // Ensure sender also gets the message
-    });
-  
-    socket.on('messageRead', async ({ messageId, username }) => {
-      await Message.findByIdAndUpdate(messageId, { $addToSet: { readBy: username } });
-    });
-  
-    socket.on('disconnect', () => {
-      console.log(`client disconnected: ${socket.id}`);
-    });
+      io.to(from).emit('receiveMessage', newMessage);
   });
+
+  socket.on('messageRead', async ({ messageId, username }) => {
+      await Message.findByIdAndUpdate(messageId, { $addToSet: { readBy: username } });
+  });
+
+  socket.on('disconnect', () => {
+      console.log(`Client disconnected: ${socket.id}`);
+      for (let [userId, id] of socketIdMap.entries()) {
+          if (id === socket.id) {
+              socketIdMap.delete(userId);
+              break;
+          }
+      }
+  });
+});
 
   /* app.get('/messages', async (req, res) => {
     console.log(req.body)

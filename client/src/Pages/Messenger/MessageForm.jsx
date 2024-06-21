@@ -1,5 +1,5 @@
 // src/components/MessageForm.js
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const MessageForm = ({ onSendMessage }) => {
   const [message, setMessage] = useState('');
