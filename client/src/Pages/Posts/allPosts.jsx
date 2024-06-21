@@ -7,41 +7,6 @@ export default function AllPosts() {
   const [newComment, setNewComment] = useState("");
   const [allComments, setAllComments] = useState([]);
 
-  console.log('allComments: ', allComments);
-
-  const handleSubmit = async (_id, e) => {
-    e.preventDefault();
-    try {
-      if (newComment.trim() !== "") {
-        const res = await fetch('/api/comments/comments', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            uId: currentUser?.data?.user?._id,
-            pId: _id,
-            comments: newComment,
-            username: currentUser?.data?.user?.username,
-            useravatar: currentUser?.data?.user?.avatar
-          })
-        });
-        const data = await res.json();
-        if (data.success === false) {
-          console.log('Comment did not posted: ', data.message);
-        }
-        console.log('data for comment: ', data);
-        setNewComment("");
-      }
-    } catch (error) {
-      console.log('error from comment: ', error.message);
-    }
-  }
-
-  const handleChange = (e) => {
-    setNewComment(e.target.value);
-  };
-
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -60,25 +25,43 @@ export default function AllPosts() {
     };
 
     fetchPosts();
+    const interval = setInterval(fetchPosts, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const res = await fetch('/api/comments/comments');
+  const handleSubmit = async (postId, e) => {
+    e.preventDefault();
+    try {
+      if (newComment.trim() !== "") {
+        const res = await fetch('/api/comments/comments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            uId: currentUser?.data?.user?._id,
+            pId: postId,
+            comments: newComment,
+            username: currentUser?.data?.user?.username,
+            useravatar: currentUser?.data?.user?.avatar
+          })
+        });
         const data = await res.json();
-        if (Array.isArray(data?.data)) {
-          setAllComments(data?.data);
-        } else {
-          console.error("Data is not an array:", data);
+        if (!data.success) {
+          console.log('Comment did not post:', data.message);
         }
-      } catch (error) {
-        console.error("Error fetching comments:", error);
+        setAllComments();
+        setNewComment("");
       }
-    };
+    } catch (error) {
+      console.error('Error posting comment:', error.message);
+    }
+  };
 
-    fetchComments();
-  }, []);
+  const handleChange = (e) => {
+    setNewComment(e.target.value);
+  };
 
   return (
     <div className="lg:m-5 border-2 border-gray-200 rounded-lg">
@@ -86,75 +69,42 @@ export default function AllPosts() {
         {posts.length > 0 ? (
           <div>
             {posts.map((post) => (
-              <div key={post?._id} className="border-3 border-blue-500 mb-4">
-                <div className="bg-gray-300 lg:p-1 rounded-md">
-                  <div className="lg:flex gap-4 mt-4 bg-gray-100 p-3 ">
-                    <div className="lg:w-12 lg:h-12  w-8 h-8">
-                      <img className="rounded-full" src={post?.useravatar} alt="" />
-                    </div>
-                    <div className="text-xl m-1 font-semibold items-center ">
-                      {post?.username}
-                    </div>
-                    {/* <div className="mt-1">
-                      <span className="text-xs  ">posted something..</span>
-                    </div> */}
-                  </div>
-
-                  <div className="mt-5 p-3 bg-gray-50 rounded-md items-center">
-                    <div>
-                      <span className="font-semibold text-xl text-center">{post?.descriptions}</span>
-                    </div>
-                    <div className="lg:w-2/5">
-                      <img className="mt-2 rounded-lg" src={post?.avatar} alt="" />
-                    </div>
-                  </div>
-
-                  {/* comments shown section */}
-                  <div className="mt-5 bg-white p-2 rounded-md">
-                    {allComments.length > 0 ? (
-                      <div>
-                        {allComments.map((comment) => {
-                          if (comment?.pId === post?._id) {
-                            return (
-                              <div key={comment._id}>
-                                <div className="divider"></div>
-                                <div className="flex">
-                                  <div className="mt-3">
-                                    <img src={comment?.useravatar} alt="user photo" className="lg:w-14 lg:h-14 w-10 h-10 rounded-full" />
-                                  </div>
-                                  <div>
-                                    <h1 className="text-xl font-semibold mt-1 ml-4 mb-5">{comment?.username}</h1>
-                                    <div style={{ marginTop: '-16px' }} className="ml-5 bg-gray-300 p-2 rounded-lg">
-                                      <p className="text-lg">{comment?.comments}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          } else {
-                            return null;
-                          }
-                        })}
-                      </div>
-                    ) : null}
-                  </div>
-
-                  <div className="mt-3 ">
-                    {/* <h2 className="text-lg lg:mb-2 font-semibold">Comment Section : </h2> */}
-
-                    <form onClick={(e) => handleSubmit(post?._id, e)}>
-                      <input type="text-area" className="lg:w-2/3 p-4 rounded-lg mb-2" id="comments" onChange={handleChange} />
-                      <button  className="lg:mt-2 lg:mb-4 ml-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm">Comment</button>
-                    </form>
-
-                  </div>
-
+              <div key={post?._id} className="border-2 border-blue-500 mb-4 rounded-lg p-3">
+                <div className="flex items-center mb-2">
+                  <img className="rounded-full w-12 h-12 mr-2" src={post?.useravatar} alt="" />
+                  <div className="text-xl font-semibold">{post?.username}</div>
                 </div>
+                <div className="bg-gray-100 p-3 rounded-md mb-3">
+                  <p className="text-lg font-semibold">{post?.descriptions}</p>
+                  <img className="mt-2 rounded-lg" src={post?.avatar} alt="" />
+                </div>
+                <div className="bg-white p-3 rounded-md mb-3">
+                  {allComments.filter(comment => comment.pId === post._id).map((comment) => (
+                    <div key={comment._id} className="flex items-center mb-3">
+                      <img className="rounded-full w-10 h-10 mr-3" src={comment?.useravatar} alt="user photo" />
+                      <div>
+                        <h1 className="text-xl font-semibold">{comment?.username}</h1>
+                        <p className="text-lg">{comment?.comments}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <form onSubmit={(e) => handleSubmit(post._id, e)}>
+                  <textarea
+                    className="w-full p-2 rounded-lg mb-2"
+                    value={newComment}
+                    onChange={handleChange}
+                    placeholder="Write a comment..."
+                  />
+                  <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm">
+                    Comment
+                  </button>
+                </form>
               </div>
             ))}
           </div>
         ) : (
-          <p>No posts available</p>
+          <p className="text-center">No posts available</p>
         )}
       </div>
     </div>
