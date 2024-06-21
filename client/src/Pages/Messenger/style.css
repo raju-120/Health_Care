@@ -64,6 +64,8 @@
   .user-message {
     background-color: #e2f0cb;
     padding: 10px;
+    margin-left: 40%;
+    text-align: right;
     margin-bottom: 5px;
     border-radius: 5px;
   }
@@ -71,6 +73,7 @@
   .other-message {
     background-color: #d4eaff;
     padding: 10px;
+    margin-right: 40%;
     margin-bottom: 5px;
     border-radius: 5px;
   }
