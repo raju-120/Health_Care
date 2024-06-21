@@ -33,7 +33,7 @@ router.route('/adminsignin').post(adminSignIn);
 router.route('/adminlogout').post(AdminVerifyJWT,adminLogOut);
 
 router.route('/getadmin').get(getAllAdminList);
-router.route('/admin-delete/:id').delete(AdminVerifyJWT,adminDelete);
+router.route('/admin-delete/:id').delete(systemAdminVerifyJWT,adminDelete);
 
 //User sign in & sign up
 

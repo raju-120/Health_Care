@@ -196,7 +196,6 @@ const systemAdminSignIn = asyncHandler(async (req, res, next) => {
 const systemAdminOut = asyncHandler(async (req, res) => {
     await SystemAdmin.findByIdAndUpdate(
         req?.user._id,
-        console.log(req?.user._id),
         {
             $unset: {
                 refreshToken: 1 // This will remove the field from the document
@@ -307,7 +306,6 @@ const getAllAdminList = asyncHandler(async(req, res, next) =>{
 const adminLogOut = asyncHandler(async (req, res) => {
     await Admin.findByIdAndUpdate(
         req?.user._id,
-        console.log(req?.user._id),
         {
             $unset: {
                 refreshToken: 1 // This will remove the field from the document
@@ -330,24 +328,29 @@ const adminLogOut = asyncHandler(async (req, res) => {
         .json(new APIResponse(200, {}, "Admin logged out"));
 });
 
-const adminDelete = asyncHandler(async(req, res) =>{
-    const {id} = req.params;
-    if(!id) {
+const adminDelete = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
         throw new ApiError(400, 'Admin Id is required');
     }
+
     if (req.user.role !== 'system-admin') {
         throw new ApiError(403, "Forbidden: You don't have permission to delete this admin");
     }
+
     const admin = await Admin.findByIdAndDelete(id);
-    if(!admin){
+
+    if (!admin) {
         throw new ApiError(404, 'Admin not found');
     }
+
     res.status(200).json({
         success: true,
         message: 'Admin deleted successfully',
         data: admin,
-      });
-})
+    });
+});
 
 
 export {

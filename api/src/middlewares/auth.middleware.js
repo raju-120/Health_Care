@@ -60,7 +60,7 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
     export const docVerifyJwt = asyncHandler(async (req, res, next) => {
         try {
             //console.log('DOc: ',req.body.accessToken);
-            console.log('Doc Update access token: ',req.body);
+           /*  console.log('Doc Update access token: ',req.body); */
             
             const token = req.body.data.accessToken;
 
@@ -80,7 +80,7 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
 
     export const docVerifyJwtForMessage = asyncHandler(async (req, res, next) => {
         try {
-            console.log('DOc: ',req.body);
+           /*  console.log('DOc: ',req.body); */
             
             const token = req.body.accessToken;
 
@@ -100,20 +100,11 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
 
 export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
     try {
-        console.log('Middleware : ', req.body);
-        
         const token = req.body?.accessToken;
         
-       /*  if (!token) {
-            throw new ApiError(401, "Unauthorized request")
-        }; */
-        /* console.log(req.header("Authorization")?.replace("Bearer ", ""))
-        console.log( req.cookies?.accessToken)
- */
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         
-        /* console.log('I am here for decoded token', decodedToken);
- */
+        /* console.log('I am here for decoded token', decodedToken);*/
         const user = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
        /*  console.log('I am here', doctor); */
         if ( !user) {
@@ -130,8 +121,8 @@ export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
 
 export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
-        console.log('Token:', req.body); // Log the token for debugging
-        const token = req.cookies?.refreshToken;
+        const token = req.cookies?.accessToken;
+        /* console.log('Token:', req.body); */
 
         if (!token) {
             throw new ApiError(401, "Unauthorized request");
@@ -156,10 +147,8 @@ export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
 
 export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
-        
-        /* const token2 = req.cookies?.accessToken;
-        console.log('Access Token : ' ,token2 ) */
         const token = req.cookies?.accessToken;
+        console.log('Token Secret:', process.env.ACCESS_TOKEN_SECRET);
         console.log('Token:', token);
 
         if (!token) {
@@ -170,6 +159,7 @@ export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
         console.log('Decoded Token:', decodedToken);
 
         const user = await SystemAdmin.findById(decodedToken?._id).select("-password -refreshToken");
+        console.log('User:', user);
 
         if (!user) {
             throw new ApiError(401, "Invalid Access Token");
@@ -178,7 +168,7 @@ export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
         req.user = user;
         next();
     } catch (error) {
-        console.error('JWT Error:', error.message); // Log the error for debugging
+        console.error('JWT Error:', error);
         throw new ApiError(401, error?.message || "Invalid access token");
     }
 });
