@@ -2,10 +2,11 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { APIResponse } from "../utils/ApiResponse.js";
 import { SystemAdmin } from "../models/systemAdmin.model.js";
-import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
-import { QueriesObserver } from "@tanstack/react-query";
 import { Admin } from "../models/admin.model.js";
+import { cloudinary } from "../utils/cloudinaryConfig.js";
+
+
 
 const generateSysAdminAccessAndRefreshTokens = async(sysAdminId) =>{
     try{
@@ -125,26 +126,70 @@ const systemAdminSignIn = asyncHandler(async (req, res, next) => {
         }, "System logged in successfully"));
 });
 
-const adminSignup= asyncHandler(async(req, res) =>{
-    const {username,email,password,role} = req.body;
-    const avatar = req.file ? req.file.path : null; 
+const systemAdminOut = asyncHandler(async (req, res) => {
+    await SystemAdmin.findByIdAndUpdate(
+        req?.user._id,
+        console.log(req?.user._id),
+        {
+            $unset: {
+                refreshToken: 1 // This will remove the field from the document
+            }
+        },
+        {
+            new: true
+        }
+    );
 
-  const newAdmin = new SystemAdmin({
-    username,
-    email,
-    password,
-    role: 'admin',
-    avatar,
-  });
+    const options = {
+        httpOnly: true, 
+        secure: true
+    };
 
-  await newAdmin.save();
-
-  res.status(201).json({
-    success: true,
-    message: 'Admin added successfully',
-    data: newAdmin,
-  });
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(new APIResponse(200, {}, "System admin logged out"));
 });
+
+const adminSignup = asyncHandler(async (req, res) => {
+    const { username, email, password, role } = req.body;
+    let avatarUrl = null;
+  
+    try {
+      if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: 'avatars',
+        });
+        avatarUrl = result.secure_url;
+      }
+  
+      const newAdmin = new Admin({
+        username,
+        email,
+        password,
+        role: 'admin',
+        avatar: avatarUrl,
+      });
+  
+      await newAdmin.save();
+  
+      res.status(201).json({
+        success: true,
+        message: 'Admin added successfully',
+        data: newAdmin,
+      });
+    } catch (error) {
+      console.error('Error during image upload:', error);
+      throw new ApiError(500, 'Image upload failed');
+    } finally {
+      // Clean up: Delete the temporary file after upload
+      if (req.file) {
+        const fs = require('fs');
+        fs.unlinkSync(req.file.path); // Delete the temporary file
+      }
+    }
+  });
 
 
 const adminSignIn = asyncHandler(async (req, res, next) => {
@@ -192,6 +237,34 @@ const getAllAdminList = asyncHandler(async(req, res, next) =>{
 });
 
 
+const adminLogOut = asyncHandler(async (req, res) => {
+    await Admin.findByIdAndUpdate(
+        req?.user._id,
+        console.log(req?.user._id),
+        {
+            $unset: {
+                refreshToken: 1 // This will remove the field from the document
+            }
+        },
+        {
+            new: true
+        }
+    );
+
+    const options = {
+        httpOnly: true, 
+        secure: true
+    };
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(new APIResponse(200, {}, "Admin logged out"));
+});
+
+
+
 
 
 
@@ -204,4 +277,6 @@ export {
     adminSignup,
     adminSignIn,
     getAllAdminList,
+    adminLogOut,
+    systemAdminOut,
 }

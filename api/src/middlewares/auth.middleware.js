@@ -3,6 +3,8 @@ import { Doctor } from "../models/doctor.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from 'jsonwebtoken';
+import { Admin } from "../models/admin.model.js";
+import { SystemAdmin } from "../models/systemAdmin.model.js";
 
 
 export const verifyJwt = asyncHandler(async(req, _, next) => {
@@ -124,4 +126,63 @@ export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
         throw new ApiError(401, error?.message || "Invalid access token");
     };
 });
+
+
+export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
+    try {
+        const token = req.cookies?.refreshToken;
+        
+        console.log('Token:', token); // Log the token for debugging
+
+        if (!token) {
+            throw new ApiError(401, "Unauthorized request");
+        }
+
+        const decodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET); // Use REFRESH_TOKEN_SECRET for refresh tokens
+        console.log('Decoded Token:', decodedToken); // Log the decoded token for debugging
+
+        const user = await Admin.findById(decodedToken?._id).select("-password -refreshToken");
+
+        if (!user) {
+            throw new ApiError(401, "Invalid Access Token");
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        console.error('JWT Error:', error.message); // Log the error for debugging
+        throw new ApiError(401, error?.message || "Invalid access token");
+    }
+});
+
+
+
+export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
+    try {
+        const token = req.cookies?.refreshToken;
+        
+        console.log('Token:', token); // Log the token for debugging
+
+        if (!token) {
+            throw new ApiError(401, "Unauthorized request");
+        }
+
+        const decodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET); // Use REFRESH_TOKEN_SECRET for refresh tokens
+        console.log('Decoded Token:', decodedToken); // Log the decoded token for debugging
+
+        const user = await SystemAdmin.findById(decodedToken?._id).select("-password -refreshToken");
+
+        if (!user) {
+            throw new ApiError(401, "Invalid Access Token");
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        console.error('JWT Error:', error.message); // Log the error for debugging
+        throw new ApiError(401, error?.message || "Invalid access token");
+    }
+});
+
+
 

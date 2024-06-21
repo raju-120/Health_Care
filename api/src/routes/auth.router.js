@@ -15,8 +15,8 @@ import { docLogoutUser,
     /* refreshDocAccessToken, */ 
     userUpdate } from "../controllers/auth.controller.js";
 
-import { docUpVerifyJwt, docVerifyJwt, verifyJwt } from "../middlewares/auth.middleware.js";
-import { adminSignIn,adminSignup, getAllAdminList, systemAdminSignIn, systemAdminSignup } from "../controllers/adminAuth.controller.js";
+import { AdminVerifyJWT, docUpVerifyJwt, docVerifyJwt, systemAdminVerifyJWT, verifyJwt } from "../middlewares/auth.middleware.js";
+import { adminLogOut, adminSignIn,adminSignup, getAllAdminList, systemAdminOut, systemAdminSignIn, systemAdminSignup } from "../controllers/adminAuth.controller.js";
 import {adminUpload} from "../middlewares/adminmulter.middleware.js";
 
 const router = Router();
@@ -24,11 +24,13 @@ const router = Router();
 //System Admin Signup & sing in
 router.route('/systemadminsignup').post(systemAdminSignup);
 router.route('/systemadminsignin').post(systemAdminSignIn);
+router.route('/sysadminlogout').post(systemAdminVerifyJWT, systemAdminOut);
 
 
-// Admin Signup & signin section
-router.route('/adminsignup').post(adminUpload.single('avatar'),adminSignup )
+// Admin Signup & sign in section
+router.route('/admin-sign-up').post(adminUpload,adminSignup )
 router.route('/adminsignin').post(adminSignIn);
+router.route('/adminlogout').post(AdminVerifyJWT,adminLogOut);
 router.route('/getadmin').get(getAllAdminList);
 
 //User sign in & sign up

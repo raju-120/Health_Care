@@ -24,7 +24,7 @@ const adminSchema = new Schema({
     },
     avatar: { 
         type: String,
-        default: '/uploads/default-avatar.jpg'  // Default avatar path if not provided
+        required: true,
     },
 }, { timestamps: true });
 
@@ -62,7 +62,7 @@ adminSchema.methods.generateRefreshToken = function() {
     return jwt.sign({
         _id: this._id,
     },
-    process.env.REFRESH_TOKEN_SECRET,
+    process.env.REFRESH_TOKEN_SECRET, // Use REFRESH_TOKEN_SECRET for refresh tokens
     {
         expiresIn: process.env.REFRESH_TOKEN_EXPIRY
     });
