@@ -121,7 +121,7 @@ export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
 
 export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
-        console.log('Token:', req.cookies?.accessToken);
+        //console.log('Token:', req.cookies?.accessToken);
         const token = req.cookies?.accessToken;
 
         if (!token) {
@@ -148,18 +148,18 @@ export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
 export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
         const token = req.cookies?.accessToken;
-        console.log('Token Secret:', process.env.ACCESS_TOKEN_SECRET);
-        console.log('Token:', token);
+        //console.log('Token Secret:', process.env.ACCESS_TOKEN_SECRET);
+        //console.log('Token:', token);
 
         if (!token) {
             throw new ApiError(401, "Unauthorized request");
         }
 
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        console.log('Decoded Token:', decodedToken);
+        //console.log('Decoded Token:', decodedToken);
 
         const user = await SystemAdmin.findById(decodedToken?._id).select("-password -refreshToken");
-        console.log('User:', user);
+        //console.log('User:', user);
 
         if (!user) {
             throw new ApiError(401, "Invalid Access Token");

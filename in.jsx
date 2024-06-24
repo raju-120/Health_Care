@@ -176,4 +176,427 @@
       "six": " reatment of stages 0, A and B includes partial hepatectomy, total hepatectomy and liver transplant. The tumor can be ablated using radio frequency ablation, microwave therapy, percutaneous ethanol injection and cryoablation. ",
       "footer": "Liver Cancer is completely curable if detected early. Liver cirrhosis and viral hepatitis ca be detected early by regular health screenings. An integrated approach of a multidisciplinary team is the best way to conquer liver cancer.Radiation Therapy for liver tumours is quite complex as the liver is one of the most radiosensitive organs in the body. Proton Therapy can play a vital role in the treatment of liver cancers as it can reduce the toxicity to surrounding healthy organs while delivering the required radiation dosage to destroy the tumour"
     }
-   ]
+   ],
+
+[
+  {
+    "id" : 1,
+    "department": [
+      {
+        "id" : 11,
+        "deptname": "Cardiology",
+        "doctors": [
+          {
+            "id": 31,
+            "docname": "DR. A. M. SHAFIQUE",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45798",
+            "designation":"Senior Consultant",
+            "depname":"Cardiology",
+            "qualification ":"MBBS, MD",
+            "avatar": "https://i.ibb.co/0KtN4JC/doc-4.jpg"
+          },
+          {
+            "id": 32,
+            "docname": "DR. FATEMA BEGUM",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Female",
+            "bmdc" : "A-45788",
+            "designation":"Senior Consultant",
+            "depname":"Cardiology",
+            "qualification ":"MBBS, FCPS (Med), MD (Card)",
+            "avatar": "https://i.ibb.co/cJ6BsCm/doc-3.jpg"
+          },
+          {
+            "id": 33,
+            "docname": "DR. N A M MOMENUZZAMAN",
+            "email": "drabc@gmail.com@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Chief Consultant",
+            "depname":"Cardiology",
+            "qualification ":"MBBS, D-Card. MD (Card)",
+            "avatar": "https://i.ibb.co/rQxvxYy/doc-2.jpg"
+          }
+        ]
+      },
+      {
+        "id" : 12,
+        "deptname": "CHILDREN SPECIALIST",
+        "doctors": [
+        {
+            "id": 34,
+            "docname": "DR. ASHRAF A. SHEIKH",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Chief Consultant",
+            "depname":"CHILDREN SPECIALIST",
+            "qualification ":"MBBS, MRCPCH (London, UK), MRCP (Ireland), DCH (Glasgow)",
+            "avatar": "https://i.ibb.co/Ycbcc0p/Doc-1.jpg"
+          },
+          {
+            "id": 35,
+            "docname": "DR. RUNA LAILA",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Female",
+            "bmdc" : "A-45790",
+            "designation":"Associate  Consultant",
+            "depname":"CHILDREN SPECIALIST",
+            "qualification ":"MBBS, FCPS",
+            "avatar": "https://i.ibb.co/cJ6BsCm/doc-3.jpg"
+          },
+          {
+            "id": 36,
+            "docname": "PROF. DR. MD. SALIM SHAKUR PHD",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Chief Consultant",
+            "depname":"CHILDREN SPECIALIST",
+            "qualification ":"FRCPCH (UK),MRCP (UK), DCH (Glas), DCH (Dublin)",
+            "avatar": "https://i.ibb.co/rQxvxYy/doc-2.jpg"
+          }
+        ]
+      },
+      {
+        "id" : 13,
+        "deptname": "DIABETES & ENDOCRINOLOGY",
+        "doctors": [
+        {
+            "id": 37,
+            "docname": "PROF. DR. MUHAMMAD HAFIZUR RAHMAN",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Chief Consultant",
+            "depname":"DIABETES & ENDOCRINOLOGY",
+            "qualification ":"MBBS, DEM (Diploma in Endocrinology & Metabolism), MD (Endocrinology & Metabolism)",
+            "avatar": "https://i.ibb.co/Ycbcc0p/Doc-1.jpg"
+          },
+          {
+            "id": 38,
+            "docname": "DR. KAZI ALI HASSAN",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Associate  Consultant",
+            "depname":"DIABETES & ENDOCRINOLOGY",
+            "qualification ":"MBBS, M.Phil (Clinical Endocrinology), MRCP (UK)",
+            "avatar": "https://i.ibb.co/rQxvxYy/doc-2.jpg"
+          }
+        ]
+      },
+      {
+        "id" : 14,
+        "deptname": "ENT",
+        "doctors": [
+        {
+            "id": 40,
+            "docname": "PROF. DR. MD. MONWAR HOSSAIN",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior Consultant",
+            "depname":"ENT",
+            "qualification ":"MBBS, FCPS (ENT)",
+            "avatar": "https://i.ibb.co/Ycbcc0p/Doc-1.jpg"
+          },
+          {
+            "id": 41,
+            "docname": "DR. MD. RAKIB HOSSAIN",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Associate  Consultant",
+            "depname":"ENT",
+            "qualification ":"MBBS, DLO, MCPS (ENT)",
+            "avatar": "https://i.ibb.co/rQxvxYy/doc-2.jpg"
+          }
+        ]
+      },
+      
+      {
+        "id" : 15,
+        "deptname": "DENTISTRY",
+        "doctors": [
+        {
+            "id": 42,
+            "docname": "DR. ASHIS KUMAR BISWAS",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Consultant",
+            "depname":"DENTISTRY",
+            "qualification ":"BDS, MCPS (Dental Surgery), FCPS (Orthodontic & Dentofacial Orthopaedics)",
+            "avatar": "https://i.ibb.co/Ycbcc0p/Doc-1.jpg"
+          },
+          {
+            "id": 43,
+            "docname": "DR. LUTFUN NAHAR",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Female",
+            "bmdc" : "A-45790",
+            "designation":"Consultant",
+            "depname":"DENTISTRY",
+            "qualification ":"BDS, MSc (Singapore)",
+            "avatar": "https://i.ibb.co/cJ6BsCm/doc-3.jpg"
+          }
+        ]
+      },
+      {
+        "id" : 16,
+        "deptname": "DERMATOLOGY",
+        "doctors": [
+          {
+            "id": 44,
+            "docname": "PROF. DR. CHOWDHURY MOHAMMAD ALI",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior Consultant",
+            "depname":"DERMATOLOGY",
+            "qualification ":"MBBS, DDV (DU)",
+            "avatar": "https://i.ibb.co/Ycbcc0p/Doc-1.jpg"
+          },
+          {
+            "id": 45,
+            "docname": "DR. LUTFUN NAHAR",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Female",
+            "bmdc" : "A-45790",
+            "designation":"Consultant",
+            "depname":"DERMATOLOGY",
+            "qualification ":"MBBS, MSc",
+            "avatar": "https://i.ibb.co/8xv5h27/Kendall.jpg"
+          },
+          {
+            "id": 46,
+            "docname": "DR. NUBAYRA TASNEEM",
+            "email": "dra.mshafique@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Female",
+            "bmdc" : "A-45790",
+            "designation":"Consultant",
+            "depname":"DERMATOLOGY",
+            "qualification ":"MBBS, DDV, MCPS, Fellowship in aesthetic dermatology (India, Germany), Msc in sexology and psychosexual counselling (India, USA)",
+            "avatar": "https://i.ibb.co/cJ6BsCm/doc-3.jpg"
+          }
+        ]
+      },
+      {
+        "id" : 17,
+        "deptname": "GENERAL SURGERY",
+        "doctors": [
+          {
+            "id": 47,
+            "docname": "PROF. DR. MD. OMAR ALI",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior Consultant",
+            "depname":"GENERAL SURGERY",
+            "qualification ":"MBBS, FCPS (Surgery), WHO Fellowship in Laparoscopic & Endoscopic Surgery (Thailand)",
+            "avatar": "https://i.ibb.co/Ycbcc0p/Doc-1.jpg"
+          },
+          {
+            "id": 48,
+            "docname": "DR. FARHANA SALAM",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Female",
+            "bmdc" : "A-45790",
+            "designation":"Associate Consultant",
+            "depname":"GENERAL SURGERY",
+            "qualification ":"MBBS, FCPS (Surgery), MS (Colorectal Surgery)",
+            "avatar": "https://i.ibb.co/8xv5h27/Kendall.jpg"
+          },
+          {
+            "id": 49,
+            "docname": "DR. AJMAL QUADER CHOWDHURY",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Consultant",
+            "depname":"GENERAL SURGERY",
+            "qualification ":"MBBS, FCPS, MRCS",
+            "avatar": "https://i.ibb.co/0KtN4JC/doc-4.jpg"
+          }
+        ]
+      },
+      {
+        "id" : 18,
+        "deptname": "MEDICINE SPECIALIST",
+        "doctors": [
+          {
+            "id": 50,
+            "docname": "Prof.Dr.Haroon Ur Rashid",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior Consultant",
+            "depname":"MEDICINE SPECIALIST",
+            "qualification ":"MBBS, MD (Chest Diseases), FCCP(USA)",
+            "avatar": "https://i.ibb.co/Ycbcc0p/Doc-1.jpg"
+          },
+          {
+            "id": 51,
+            "docname": "Dr. Md Abdullahel Kafee",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Associate Consultant",
+            "depname":"MEDICINE SPECIALIST",
+            "qualification ":"MBBS(Dhaka), BCS (Health) FCPS (Medicine), MD (Chest)",
+            "avatar": "https://i.ibb.co/rQxvxYy/doc-2.jpg"
+          },
+          {
+            "id": 52,
+            "docname": "Dr. Mohammad Zahidul Islam",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior Consultant",
+            "depname":"MEDICINE SPECIALIST",
+            "qualification ":"MBBS, DTCD ( DU)",
+            "avatar": "https://i.ibb.co/0KtN4JC/doc-4.jpg"
+          }
+        ]
+      },
+      {
+        "id" : 19,
+        "deptname": "NEUROLOGY",
+        "doctors": [
+          {
+            "id": 53,
+            "docname": "DR. ALIM AKHTAR BHUIYAN",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior Consultant",
+            "depname":"NEUROLOGY",
+            "qualification ":"MBBS, DTM&H (UK), MD (USA) Board Certified in Neurology (USA)",
+            "avatar": "https://i.ibb.co/Ycbcc0p/Doc-1.jpg"
+          },
+          {
+            "id": 54,
+            "docname": "PROF. DR. SHAHRUKH AHMED",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior  Consultant",
+            "depname":"NEUROLOGY",
+            "qualification ":"MBBS, FCPS (Internal Medicine), MD (Neurology)",
+            "avatar": "https://i.ibb.co/rQxvxYy/doc-2.jpg"
+          },
+          {
+            "id": 55,
+            "docname": "DR. AMINUR RAHMAN",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Consultant",
+            "depname":"NEUROLOGY",
+            "qualification ":"MBBS, FCPS (Medicine), MD (Neurology",
+            "avatar": "https://i.ibb.co/0KtN4JC/doc-4.jpg"
+          }
+        ]
+      },
+      {
+        "id" : 20,
+        "deptname": "NEUROSURGERY",
+        "doctors": [
+          {
+            "id": 56,
+            "docname": "DR. SYED SAYED AHMED",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior Consultant, Head of the Department of Neurosurgery & Director, Neuro Centre",
+            "depname":"NEUROSURGERY",
+            "qualification ":"MBBS, FRCS (UK)",
+            "avatar": "https://i.ibb.co/Ycbcc0p/Doc-1.jpg"
+          },
+          {
+            "id": 57,
+            "docname": "DR. M AL AMIN SALEK",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior  Consultant",
+            "depname":"NEUROSURGERY",
+            "qualification ":"MBBS, MCPS (Surgery), FCPS (Surgery), MRCS (eng)",
+            "avatar": "https://i.ibb.co/rQxvxYy/doc-2.jpg"
+          }
+        ]
+      },
+      {
+        "id" : 21,
+        "deptname": "ORTHOPEDICS",
+        "doctors": [
+          {
+            "id": 58,
+            "docname": "DR. AMINUL HASHAN",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior Consultant",
+            "depname":"ORTHOPEDICS",
+            "qualification ":"MBBS, D.Orth, MS (Orth), FACS",
+            "avatar": "https://i.ibb.co/Ycbcc0p/Doc-1.jpg"
+          },
+          {
+            "id": 59,
+            "docname": "PROF. DR. BRIG GEN (RTD) MD ABDUL MANNAN",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior  Consultant",
+            "depname":"ORTHOPEDICS",
+            "qualification ":"MBBS, MS (Ortho)",
+            "avatar": "https://i.ibb.co/rQxvxYy/doc-2.jpg"
+          },
+          {
+            "id": 60,
+            "docname": "PROF. DR. BRIG. GEN. MD. REZA-UL KARIM",
+            "email": "drabc@gmail.com",
+            "phone": "01859834455",
+            "gender" : "Male",
+            "bmdc" : "A-45790",
+            "designation":"Senior  Consultant",
+            "depname":"ORTHOPEDICS",
+            "qualification ":"MBBS, MS (Orthopedics)",
+            "avatar": "https://i.ibb.co/0KtN4JC/doc-4.jpg"
+          }
+        ]
+      }    ]
+  }
+]
+  

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { BsImageFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
-import {  toast, Toaster } from "react-hot-toast"; // Import ToastContainer and toast
+import {  toast, Toaster } from "react-hot-toast";
 
 export default function Posts() {
   const { currentUser } = useSelector(state => state?.user);
@@ -42,14 +42,14 @@ export default function Posts() {
         body: formDataObj,
       });
       const data = await res.json();
+      console.log(data);
 
       setFormData({});
       setImagePreview(null);
-
-      // Show success toast
+      
       toast.success("Post created successfully!", {
         position: "top-center",
-        duration: 5000, // milliseconds
+        duration: 5000,
         style: {
           background: "#4CAF50",
           color: "white",
@@ -106,7 +106,7 @@ export default function Posts() {
           </div>
         </div>
       </div>
-      <Toaster position="center-top"/> {/* Position the ToastContainer at top-left */}
+      <Toaster position="center-top"/>
     </div>
   );
 }

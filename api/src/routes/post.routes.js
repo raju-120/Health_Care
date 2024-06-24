@@ -20,6 +20,7 @@ router.route("/solutions").get(getAllSolution);
 router.route("/solution/:id").get(getSpecificSolution);
 
 
+
 export default router;
 
 
