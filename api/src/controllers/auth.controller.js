@@ -505,7 +505,58 @@ const getAllUsers = asyncHandler(async(req , res, next) =>{
     res.status(201).json(
         new APIResponse(201,result, "All Users provided.")
     );
-})
+});
+
+const userDelete = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    console.log("delete: ", req.params);
+
+    if (!id) {
+        throw new ApiError(400, 'Admin or System Admin Id is required');
+    }
+
+    if (req.user.role !== 'system-admin' && req.user.role !== 'admin') {
+        throw new ApiError(403, "Forbidden: You don't have permission to delete this admin");
+    }
+
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+        throw new ApiError(404, 'Deleted User is not found');
+    }
+
+    res.status(200).json({
+        success: true,
+        message: 'User Delete deleted successfully',
+        data: deletedUser,
+    });
+});
+
+const doctorDelete = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    console.log("delete: ", req.params);
+
+    if (!id) {
+        throw new ApiError(400, 'Admin or System Admin Id is required');
+    }
+
+    if (req.user.role !== 'system-admin' && req.user.role !== 'admin') {
+        throw new ApiError(403, "Forbidden: You don't have permission to delete this admin");
+    }
+
+    const deletedDoctor = await Doctor.findByIdAndDelete(id);
+
+    if (!deletedDoctor) {
+        throw new ApiError(404, 'Deleted User is not found');
+    }
+
+    res.status(200).json({
+        success: true,
+        message: 'User Delete deleted successfully',
+        data: deletedDoctor,
+    });
+});
+
 
 
 export {
@@ -524,4 +575,6 @@ export {
         getAllDoctors,
         getSpecificDoctor,
         getAllUsers,
+        userDelete,
+        doctorDelete
     };

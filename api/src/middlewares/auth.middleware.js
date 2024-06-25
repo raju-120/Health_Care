@@ -121,7 +121,7 @@ export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
 
 export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
-        //console.log('Token:', req.cookies?.accessToken);
+        console.log('Token:', req.cookies?.accessToken);
         const token = req.cookies?.accessToken;
 
         if (!token) {
@@ -173,5 +173,14 @@ export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
     }
 });
 
+
+export const conditionalAuth = (req, res, next) => {
+    // Assume AdminVerifyJWT and systemAdminVerifyJWT are already defined
+    if (AdminVerifyJWT(req, res, () => {}) || systemAdminVerifyJWT(req, res, () => {})) {
+      return next();
+    }
+    return res.status(403).json({ message: 'Forbidden' });
+  };
+  
 
 

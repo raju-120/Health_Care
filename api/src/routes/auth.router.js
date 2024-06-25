@@ -13,9 +13,11 @@ import { docLogoutUser,
     signin,
     signup,
     /* refreshDocAccessToken, */ 
-    userUpdate } from "../controllers/auth.controller.js";
+    userUpdate, 
+    userDelete,
+    doctorDelete} from "../controllers/auth.controller.js";
 
-import { AdminVerifyJWT, docUpVerifyJwt, docVerifyJwt, systemAdminVerifyJWT, verifyJwt } from "../middlewares/auth.middleware.js";
+import { AdminVerifyJWT, conditionalAuth, docUpVerifyJwt, docVerifyJwt, systemAdminVerifyJWT, verifyJwt } from "../middlewares/auth.middleware.js";
 import { adminDelete, adminLogOut, adminSignIn,adminSignup, getAllAdminList, systemAdminOut, systemAdminSignIn, systemAdminSignup } from "../controllers/adminAuth.controller.js";
 import {adminUpload} from "../middlewares/adminmulter.middleware.js";
 
@@ -64,8 +66,12 @@ router.route('/signout').post(verifyJwt,logoutUser);
 router.route('/docsignout').post(docVerifyJwt,docLogoutUser);
 
 
+//user & doctor delete router
+router.route('/admin/delete-user/:id').delete(AdminVerifyJWT,userDelete);
+router.route('/system-admin/delete-user/:id').delete(systemAdminVerifyJWT,userDelete);
 
-
+router.route('/admin/delete-doctor/:id').delete(AdminVerifyJWT,doctorDelete);
+router.route('/system-admin/delete-doctor/:id').delete(systemAdminVerifyJWT,doctorDelete);
 
 router.route('/refresh-token').post(refreshAccessToken);
 /* router.route('/refresh-doc-token').post(refreshDocAccessToken); */

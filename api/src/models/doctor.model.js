@@ -57,6 +57,10 @@ const doctorSchema = new Schema({
     avatar:{
         type: Array,
         required: true,
+    },
+    role: { 
+        type: String,
+        default: 'doctor'
     }
 },{timestamps: true});
 
