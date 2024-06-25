@@ -4,11 +4,12 @@ import { useSelector } from 'react-redux';
 
 export default function DashboardLayout() {
     const {currentUser} = useSelector(state => state?.user);
-    console.log('User : ', currentUser);
+    //console.log('User : ', currentUser);
     const menuItems = 
                         <React.Fragment>
                             <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/profile'>Profile</Link></li>
-                            <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/'>My Appointment</Link></li>
+                            <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard'>My Appointment</Link></li>
+                            <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' hidden><Link to='/dashboard/Payment/:id'>Payment</Link></li>
                             {
                                 currentUser?.data?.user?.role=== "system-admin" &&
                                 (

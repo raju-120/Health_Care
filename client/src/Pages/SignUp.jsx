@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../assets/sign.avif';
 import OAuth from "../Components/OAuth";
+import toast from "react-hot-toast";
 
 
 export default function SignUp() {
@@ -38,6 +39,7 @@ export default function SignUp() {
       }
       setLoading(false);
       setError(null);
+      toast.success("User Sign Up Successful");
       navigate('/sign-in');
     } catch(error){
       setLoading(false);

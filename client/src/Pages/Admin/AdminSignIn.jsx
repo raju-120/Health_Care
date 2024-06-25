@@ -38,8 +38,8 @@ export default function AdminSignIn() {
             toast.error("User credential did not matched!")
             return;
           }
-    
           dispatch(signInSuccess(data));
+          toast.success("Admin Login Successful");
           navigate('/');
         } catch(error){
           dispatch(signInFailure(error.message))

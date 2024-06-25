@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { dropPost, getAllServices, getAllSolution, getPost, getSpecificService, getSpecificSolution } from "../controllers/post.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
+/* import { createPrescription } from "../controllers/prescription.controller.js"; */
 
 
 const router = Router();
@@ -18,6 +19,8 @@ router.route("/service/:id").get(getSpecificService);
 
 router.route("/solutions").get(getAllSolution);
 router.route("/solution/:id").get(getSpecificSolution);
+
+/* router.route('/prescription').post(createPrescription); */
 
 
 

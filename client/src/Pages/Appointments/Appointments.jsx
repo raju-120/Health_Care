@@ -121,6 +121,7 @@ function Appointments() {
       if (data.success === false) {
         setLoading(false);
         setError(data.message);
+        toast.error("Something missing");
       }
       toast.success("Appointment submit successfully!", {
         position: "top-center",

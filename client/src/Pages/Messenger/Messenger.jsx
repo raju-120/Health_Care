@@ -1,7 +1,7 @@
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import io from "socket.io-client";
+import PrescriptionModal from "./prescriptionModal.jsx";
 import "./style.css";
 
 const socket = io('http://localhost:5000');
@@ -10,6 +10,7 @@ function ChatWindow() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
   const { currentUser } = useSelector(state => state.user);
   const [doctors, setDoctors] = useState([]);
 
@@ -75,6 +76,43 @@ function ChatWindow() {
     setMessages([]);
   };
 
+  const handlePrescribe = async (medicines) => {
+    try {
+      const response = await fetch('/api/posts/prescription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentUser?.data?.accessToken}`,
+        },
+        body: JSON.stringify({
+          senderId: currentUser?.data?.user?._id,
+          receiverId: selectedUser?._id,
+          medicines,
+        }),
+      });
+
+      if (response.ok) {
+        const prescription = await response.json();
+        console.log('Prescription created:', prescription);
+
+        // Send prescription URL as message
+        const senderId = currentUser?.data?.user?._id;
+        const receiverId = selectedUser?._id;
+        const senderusername = currentUser?.data?.user?.username;
+        const receiverusername = selectedUser?.username;
+        const message = `Prescription created: ${prescription.pdfUrl}`;
+
+        socket.emit('sendMessage', { from: senderId, to: receiverId, message, senderusername, receiverusername });
+
+        setModalOpen(false);
+      } else {
+        console.error('Error creating prescription:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error creating prescription:', error);
+    }
+  };
+
   return (
     <div className="chat-container">
       <div className="chat-users bg-gray-300 w-full">
@@ -109,14 +147,20 @@ function ChatWindow() {
                   onKeyPress={(event) => { event.key === "Enter" && handleSendMessage() }}
                 />
                 <button onClick={handleSendMessage}>Send</button>
+                <button onClick={() => setModalOpen(true)}>Prescribe Medicine</button>
               </div>
             </>
           )}
         </div>
       </div>
+
+      <PrescriptionModal
+        isOpen={isModalOpen}
+        onRequestClose={() => setModalOpen(false)}
+        onSubmit={handlePrescribe}
+      />
     </div>
   );
 }
 
 export default ChatWindow;
- 

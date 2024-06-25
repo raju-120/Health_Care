@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import {useSelector} from "react-redux";
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 export default function MyAppointment() {
   const {currentUser} = useSelector(state => state?.user)
   const [allData, setAllData] = useState([]);
+  const navigate = useNavigate();
+
   console.log("user: " , currentUser?.data?.user?.email);
 
   useEffect(() => {
@@ -30,6 +32,15 @@ export default function MyAppointment() {
     getAllAdmins();
   }, [currentUser?.data?.user?.email]);
 
+  const handleClick = (e, _id) => {
+    e.preventDefault();
+    if (_id) {
+      //console.log('_id:', _id);
+      navigate(`/dashboard/Payment/${_id}`);
+    } else {
+      console.error('ID is null or undefined');
+    }
+  };
 
   return (
     <div>
@@ -62,25 +73,21 @@ export default function MyAppointment() {
                 <td className="text-md">{data?.department}</td>
                 <td className="text-md">{data?.date}</td>
                 <td className="text-md">{data?.appointmentSlots}</td>
-                <td className="text-md">
-                {
-                      data?.price && !data?.paid && <Link
-                          to={`/dashboard/payment`}
-                      >
-                          <button
-                              className='btn btn-sm btn-primary'>
-                              Pay
-                          </button>
-                      </Link>
-                  }
-                  {
-                      data?.price && data?.paid && <span
-                      className='text-green-500'>
-                          Paid
-                      </span>
-                  }
+                <td className="text-lg">
+                <>
+                  {data?.price && !data?.paid ? (
+                    <button onClick={(e) => handleClick(e, data?._id)}>
+                      Pay
+                    </button>
+                    ) : (
+                    <span className='text-green-500'>
+                      Paid
+                    </span>
+                  )}
+                </>
+
                 </td>
-                <td className="text-md ">
+                <td className="text-lg ">
                   {currentUser?.data?.user?.role === 'admin' || currentUser?.data?.user?.role === 'systemAdmin' ? (
                     <button className="bg-orange-600 p-1 rounded hover:opacity-75">
                       {data?.status}

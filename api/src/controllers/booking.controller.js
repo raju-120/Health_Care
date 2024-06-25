@@ -1,6 +1,7 @@
 import {Appointment} from "../models/appointment.model.js";
 import { APIResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
 /* import mongoose from "mongoose";
 import sendGridMail from "@sendgrid/mail"; */
 
@@ -67,9 +68,10 @@ const getBooking = asyncHandler(async (req, res) => {
   )
   })
 
-  const getSpecificBooking = asyncHandler(async( req, res) =>{
-    const {id} = req.params;
-
+  const getSpecificBooking = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    console.log("backend: ", id);
+  
     if (!id) {
       throw new ApiError(400, 'Appointment Id is required');
     }
@@ -78,8 +80,9 @@ const getBooking = asyncHandler(async (req, res) => {
       success: true,
       message: 'Specific id found successfully',
       data: booking,
+    });
   });
-  });
+  
 
   const updateAppointmentStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;

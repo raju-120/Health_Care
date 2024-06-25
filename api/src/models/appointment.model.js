@@ -1,4 +1,4 @@
-// models/appointment.model.js
+
 import mongoose from 'mongoose';
 
 const appointmentSchema = new mongoose.Schema({
@@ -52,8 +52,9 @@ const appointmentSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        default: 'pending', // Default status set to 'pending'
-    }
+        default: 'pending', 
+    },
+    paid: { type: Boolean, default: false },
 }, { timestamps: true });
 
 export const Appointment = mongoose.model('Appointment', appointmentSchema);

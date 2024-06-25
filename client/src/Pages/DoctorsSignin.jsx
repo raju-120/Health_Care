@@ -3,6 +3,7 @@ import DoctorsLogo from '../assets/absec.jpg';
 import { useDispatch } from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 
 export default function DoctorsSignin() {
@@ -33,9 +34,11 @@ export default function DoctorsSignin() {
       //console.log(data);
       if(data.success === false){
         dispatch(signInFailure());
+        toast.error("Doctor credential unmatched");
         return;
       }
       dispatch(signInSuccess(data));
+      toast.success("Doctor Login Successful");
       navigate('/');
     }catch(error){
       dispatch(signInFailure(error.message));

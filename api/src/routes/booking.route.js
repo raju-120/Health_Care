@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { booking, getAllBooking, getBooking, getSpecificBooking, updateAppointmentStatus } from "../controllers/booking.controller.js";
-import { AdminVerifyJWT, systemAdminVerifyJWT } from "../middlewares/auth.middleware.js";
+import {  systemAdminVerifyJWT } from "../middlewares/auth.middleware.js";
+import { payment, paymentIntent } from "../controllers/payment.controller.js";
 
 const router = Router()
 
@@ -11,6 +12,10 @@ router.route("/bookings/:email").get(getBooking);
 router.route("/booking/:id").get(getSpecificBooking);
 
 router.route("/booking/update/:id").put(systemAdminVerifyJWT, updateAppointmentStatus);
+
+router.route("/booking/create-payment-intent").post(paymentIntent);
+router.route("/booking/payment").post(payment);
+
 
 
 

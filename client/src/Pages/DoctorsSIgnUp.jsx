@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import DoctorsLogo from '../assets/absec.jpg';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import app from "../firebase/firebase";
+import toast from "react-hot-toast";
 
 
 export default function DoctorsSIgnUp() {
@@ -112,9 +113,11 @@ export default function DoctorsSIgnUp() {
         setLoading(false);
         setError(data.message) 
         //console.log(data.message);
+        toast.error("Something is missing");
       }
       setLoading(false);
       setError(null);
+      toast.success("Doctor Sign up Successful");
       navigate('/doctor-signin') 
     }catch(error){
       setLoading(false);
