@@ -1,0 +1,119 @@
+/*--------------------------------------------------------------
+13. Before After Slider
+----------------------------------------------------------------*/
+
+.cs_before_after_wrap {
+  position: relative;
+
+  .cs_half_bg {
+    background: var(--white);
+    position: absolute;
+    height: 40%;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+.cs_before_after {
+  max-width: 754px;
+  width: 100%;
+  position: relative;
+  height: 444px;
+  border: 7px solid var(--white);
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: 0px 10px 80px 0px rgba(0, 55, 106, 0.20);
+  backdrop-filter: blur(40px);
+}
+
+.cs_before_after:before,
+.cs_before_after:after {
+  content: "";
+  position: absolute;
+  height: calc(50% - 25px);
+  width: 100%;
+  z-index: 2;
+  left: 0;
+}
+
+.cs_before_after:before {
+  top: 0;
+}
+
+.cs_before_after:after {
+  bottom: 0;
+}
+
+.cs_before_after .cs_single_slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background-position: top left;
+  background-repeat: no-repeat;
+  border-radius: inherit;
+}
+
+.cs_before_after .cs_single_slide.cs_before {
+  right: 50%;
+}
+
+.cs_before_after .cs_handle_before_after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 30px;
+  left: 50%;
+  margin-left: -15px;
+  cursor: ew-resize;
+}
+
+.cs_handle_before_after span {
+  height: 62px;
+  width: 62px;
+  border-radius: 62px;
+  border: 2px solid var(--white);
+  background: rgba(255, 255, 255, 0.70);
+  box-shadow: 0px 10px 50px 0px rgba(0, 55, 106, 0.20);
+  backdrop-filter: blur(40px);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cs_before_after .cs_handle_before_after:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  left: 50%;
+  margin-left: -1px;
+  background: var(--white);
+}
+
+
+.cs_handle_before_after span:before,
+.cs_handle_before_after span:after {
+  font-size: 16px;
+  color: var(--accent);
+  font-weight: 900;
+  font-family: "font awesome 5 free";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.cs_handle_before_after span:before {
+  content: "\f053";
+  left: 12px;
+}
+
+.cs_handle_before_after span:after {
+  content: "\f054";
+  right: 12px;
+}

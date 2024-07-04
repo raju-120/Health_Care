@@ -1,0 +1,96 @@
+/*--------------------------------------------------------------
+  24. Video
+----------------------------------------------------------------*/
+.cs_video_block.cs_style_1 {
+  .cs_section_title_up {
+    margin-bottom: 29px;
+  }
+
+  .cs_section_title {
+    margin-bottom: 2px;
+  }
+
+  .cs_player_btn {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+
+    @media (max-width: 767px) {
+      width: 100px;
+      height: 100px;
+    }
+
+    &.cs_white_bg {
+      width: 126px;
+      height: 126px;
+      border: 6px solid var(--accent_v2);
+      color: var(--accent_v2);
+      transition: all 0.5s ease;
+
+      @media (max-width: 767px) {
+        width: 100px;
+        height: 100px;
+      }
+
+      &:hover {
+        border-color: var(--white);
+        background-color: var(--accent_v2);
+        color: var(--white);
+      }
+    }
+
+    img,
+    svg {
+      transition: all 0.3s ease;
+    }
+
+    &:hover {
+      img {
+        transform: scale(1.1) rotate(180deg);
+      }
+    }
+  }
+
+  .cs_video_block_overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(#000000, 0.3);
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+.cs_video_block.cs_style_2 {
+  img {
+    width: 100%;
+  }
+
+  .cs_play_btn {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 35px;
+    color: var(--accent_v4);
+    &.cs_color_1 {
+      color: var(--accent_v3);
+    }
+
+    &::after {
+      content: '';
+      width: 110px;
+      height: 110px;
+      border: 2px dashed var(--white);
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate-rounded 5s linear infinite;
+    }
+  }
+}

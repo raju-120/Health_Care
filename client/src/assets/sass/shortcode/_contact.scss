@@ -1,0 +1,377 @@
+/*--------------------------------------------------------------
+  25. Contact
+----------------------------------------------------------------*/
+.cs_appointment_wrap {
+  padding-left: 30px;
+
+  .cs_appointment_title_up {
+    margin-bottom: 10px;
+  }
+
+  &.cs_type_2 {
+    padding: 30px 0;
+  }
+
+  @media (max-width: 991px) {
+    padding-left: 0;
+  }
+
+  &.cs_version_4 {
+    padding: 60px 30px 60px 42px;
+
+    .cs_form_field {
+      background-color: transparent;
+      border: 1px solid rgba(#fff, 0.45);
+      border-radius: 0;
+      color: var(--white);
+
+      &::placeholder {
+        color: rgba(#fff, 0.9);
+      }
+    }
+
+    span {
+      color: rgba(#fff, 0.45);
+    }
+
+    .cs_btn.cs_style_1 {
+      color: var(--accent_v4);
+      &.cs_color_1 {
+        color: var(--accent_v3);
+      }
+    }
+
+    .select2-container--default .select2-selection--single {
+      background-color: transparent;
+      border: 1px solid rgba(#fff, 0.45);
+      border-radius: 0;
+    }
+
+    .select2-container--default
+      .select2-selection--single
+      .select2-selection__rendered {
+      color: rgba(#fff, 0.9);
+    }
+
+    .select2-container--default
+      .select2-selection--single
+      .select2-selection__arrow
+      b {
+      border-color: rgba(#fff, 0.45);
+    }
+
+    .cs_date,
+    .cs_time {
+      background-color: transparent;
+      border: 1px solid rgba(#fff, 0.45);
+      border-radius: 0;
+      color: rgba(#fff, 0.9);
+
+      &::placeholder {
+        color: rgba(#fff, 0.9);
+      }
+    }
+
+    .cs_contact_shape {
+      top: 0;
+      right: 0;
+    }
+  }
+}
+
+.cs_appointment_thumb {
+  height: 100%;
+  min-height: 800px;
+  margin-right: 26px;
+
+  @media (max-width: 991px) {
+    margin-right: 0;
+    min-height: 500px;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.ca_appointment_form {
+  .cs_input_field {
+    position: relative;
+
+    span {
+      position: absolute;
+      top: 12px;
+      right: 15px;
+      pointer-events: none;
+    }
+  }
+
+  label {
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+
+  .cs_form_field {
+    padding: 14px 15px;
+    background-color: var(--white);
+    border-radius: 0;
+    border: none;
+    resize: none;
+    border-radius: 5px;
+  }
+
+  &.cs_type_2 {
+    .cs_form_field {
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      resize: none;
+    }
+
+    .cs_time,
+    .cs_date {
+      border-radius: 5px;
+      border: 1px solid var(--border);
+    }
+  }
+}
+
+.cs_contact_form {
+  .cs_form_field {
+    width: 100%;
+    padding: 13.5px 30px;
+    height: 100%;
+    background-color: transparent;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    z-index: 1;
+
+    &:focus,
+    &:valid {
+      border-color: var(--accent);
+      background-color: transparent;
+
+      + label {
+        transform: translate(0, -22px) scale(0.8);
+        color: var(--accent);
+      }
+    }
+  }
+
+  &.cs_type_2 {
+    label {
+      color: #b1b1b1;
+      background-color: var(--gray);
+    }
+
+    .cs_btn.cs_style_1 {
+      margin-top: 6px;
+    }
+
+    .cs_form_field {
+      padding: 14px 17px;
+      border: 1px solid var(--border);
+      background: var(--gray);
+      resize: none;
+      transition: all 0.3s ease;
+
+      &:focus,
+      &:valid {
+        background-color: transparent;
+        border-color: var(--accent);
+
+        + label {
+          background-color: var(--white);
+        }
+      }
+    }
+  }
+
+  label {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    color: var(--primary);
+    padding: 0 15px;
+    margin: 0 20px;
+    background-color: var(--white);
+    z-index: 1;
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  .cs_btn.cs_style_1 {
+    margin-top: 10px;
+
+    @media (max-width: 767px) {
+      margin-top: 0px;
+    }
+  }
+
+  &.cs_version_3 {
+    label {
+      background-color: #fff4f8;
+    }
+
+    .cs_form_field {
+      &:focus,
+      &:valid {
+        border-color: var(--accent_v3);
+
+        + label {
+          color: var(--accent_v3);
+        }
+      }
+    }
+  }
+
+  &.cs_version_4 {
+    .cs_form_field {
+      &:focus,
+      &:valid {
+        border-color: var(--accent_v4);
+      }
+
+      + label {
+        transform: translate(0, -22px) scale(1);
+        color: var(--secondary);
+      }
+    }
+  }
+  &.cs_version_5 {
+    .cs_form_field {
+      &:focus,
+      &:valid {
+        border-color: var(--accent_v3);
+      }
+
+      + label {
+        transform: translate(0, -22px) scale(1);
+        color: var(--secondary);
+      }
+    }
+  }
+}
+
+.cs_google_map {
+  height: 700px;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: none;
+  }
+}
+
+.contact_shape_wrapper {
+  width: 100%;
+  height: 104px;
+  background-color: var(--white);
+}
+
+.cs_accordian_wrap.cs_contact {
+  width: 100%;
+  max-width: 420px;
+  padding: 10px 45px 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  @media (max-width: 575px) {
+    min-width: 100%;
+  }
+
+  .cs_accordian.cs_style_1 {
+    border-radius: 0;
+    margin-bottom: 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--white);
+    }
+  }
+
+  .cs_accordian_head {
+    padding: 25px 0;
+
+    &:hover {
+      color: rgba(#ffffff, 0.8);
+    }
+  }
+
+  .cs_accordian_body {
+    padding: 0px 0 24px 0;
+    margin-top: -5px;
+
+    @media (max-width: 991px) {
+      padding-bottom: 20px;
+    }
+  }
+
+  .cs_accordian_toggle {
+    width: 25px;
+    height: 2px;
+    background-color: var(--white);
+    right: 0;
+    top: 33px;
+
+    &::after {
+      content: '';
+      width: 2px;
+      height: 25px;
+      background-color: var(--white);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+    }
+  }
+
+  .cs_accordian.active {
+    .cs_accordian_head {
+      pointer-events: none;
+      color: rgba(#ffffff, 0.8);
+    }
+
+    .cs_accordian_toggle {
+      background-color: rgba(#ffffff, 0.8);
+
+      &::after {
+        transform: translate(-50%, -50%) scaleY(0);
+      }
+    }
+  }
+
+  .cs_address_widget {
+    li {
+      position: relative;
+      padding-left: 30px;
+
+      i {
+        position: absolute;
+        top: 6px;
+        left: 0;
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 15px;
+      }
+    }
+  }
+}
+
+.cs_features_list.cs_style_3 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+
+  @media (max-width: 575px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

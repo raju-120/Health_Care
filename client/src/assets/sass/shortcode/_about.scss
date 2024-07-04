@@ -1,0 +1,384 @@
+/*--------------------------------------------------------------
+  23. About
+----------------------------------------------------------------*/
+.cs_about.cs_style_1 {
+  .cs_about_thumb {
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cs_video_btn_wrap {
+      width: 66px;
+      height: 211px;
+      padding: 13px 10px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: absolute;
+      top: -211px;
+      right: 55px;
+      border-radius: 0 0 33px 33px;
+      transition: all 0.3s ease;
+
+      @media (max-width: 575px) {
+        right: 25px;
+      }
+
+      .cs_player_btn {
+        width: 45px;
+        height: 45px;
+        background-color: var(--white);
+        color: var(--accent);
+        border: 7px solid rgba(#0957de, 0.8);
+        transform: scale(0);
+        transition: all 0.3s ease;
+        transition-delay: 0.2s;
+      }
+      &.cs_accent_bg_v3 {
+        .cs_player_btn {
+          border-color: #e83e72;
+          svg {
+            path {
+              fill: var(--accent_v3);
+            }
+          }
+        }
+      }
+    }
+
+    &:hover {
+      .cs_video_btn_wrap {
+        top: 0;
+      }
+
+      .cs_player_btn {
+        transform: scale(1);
+      }
+    }
+  }
+
+  .cs_about_text {
+    max-width: 600px;
+
+    &.cs_type_2 {
+      max-width: 630px;
+      margin-bottom: 30px;
+    }
+  }
+
+  .cs_review_progress_wrap {
+    margin: 35px 0 37px;
+
+    .cs_progress_text {
+      margin-bottom: 12px;
+    }
+  }
+
+  .cs_author_card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    &.cs_version_4 {
+      @media (max-width: 500px) {
+        align-items: start;
+        margin-bottom: 38px;
+      }
+    }
+
+    .cs_author_thumb {
+      width: 93px;
+      height: 93px;
+      padding: 6px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      &.cs_color_1 {
+        border-color: var(--accent_v3);
+      }
+    }
+
+    .cs_author_title {
+      margin-bottom: 3px;
+    }
+
+    img {
+      border-radius: inherit;
+    }
+
+    .cs_author_sign {
+      width: 150px;
+      flex: none;
+      top: 50%;
+      left: 320px;
+      transform: translateY(-50%);
+
+      @media (max-width: 500px) {
+        top: 85%;
+        left: 105px;
+        transform: translateY(-15%);
+      }
+    }
+  }
+}
+
+.cs_about.cs_style_2 {
+  .cs_section_heading.cs_style_1 {
+    width: 100%;
+    max-width: 580px;
+    z-index: 1;
+  }
+
+  .cs_section_title {
+    margin-bottom: 19px;
+  }
+
+  .cs_section_subtitle {
+    margin-bottom: 26px;
+  }
+
+  .cs_list.cs_style_5 {
+    margin-bottom: 37px;
+  }
+
+  .cs_dog_img {
+    bottom: 0;
+    right: -100px;
+    z-index: -1;
+
+    @media (max-width: 1199px) {
+      opacity: 0.3;
+    }
+  }
+}
+
+/* Doctor details page design */
+.cs_doctor_bio {
+  box-shadow: 0px 0px 45px 0px rgba(0, 0, 0, 0.1);
+
+  .cs_doctor_thumb {
+    margin-bottom: 33px;
+  }
+
+  img {
+    width: 100%;
+    border-radius: inherit;
+  }
+
+  .cs_doctor_info {
+    padding: 0 20px 40px;
+    max-width: 520px;
+  }
+
+  .cs_doctor_title {
+    margin-bottom: 9px;
+  }
+
+  .cs_doctor_speciality {
+    margin-bottom: 12px;
+  }
+
+  .cs_doctor_subtitle {
+    margin-bottom: 32px;
+  }
+
+  .cs_social_btns {
+    justify-content: flex-start;
+    padding: 0;
+
+    a {
+      width: 45px;
+      height: 45px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      color: var(--accent);
+
+      &:hover {
+        background-color: var(--accent);
+        color: var(--white);
+      }
+    }
+  }
+}
+
+.cs_schedule_wrapper {
+  padding: 24px 20px 40px;
+  background: rgba(1, 84, 247, 0.05);
+  margin-top: 40px;
+
+  @media (max-width: 991px) {
+    margin-left: 0;
+    margin-top: 30px;
+  }
+}
+
+.cs_shedule_title {
+  margin-bottom: 18px;
+  position: relative;
+
+  &::after {
+    content: '';
+    width: 60px;
+    height: 2px;
+    background-color: var(--accent);
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+  }
+}
+
+.cs_shedule_list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--secondary);
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+}
+
+.cs_doctor_bio_right {
+  padding-left: 18px;
+
+  @media (max-width: 991px) {
+    padding-left: 0;
+  }
+
+  .cs_doctor_heading {
+    margin-bottom: 13px;
+  }
+
+  .cs_list_heading {
+    margin-top: 22px;
+    margin-bottom: 30px;
+
+    @media (max-width: 991px) {
+      br {
+        display: none;
+      }
+    }
+  }
+
+  .cs_list.cs_style_2 {
+    margin-bottom: 47px;
+
+    @media (max-width: 991px) {
+      margin-bottom: 30px;
+    }
+  }
+
+  .cs_skill_heading {
+    margin-bottom: 21px;
+  }
+
+  .cs_timeline_heading {
+    margin-bottom: 18px;
+  }
+
+  .cs_timeline_subtitle {
+    margin-bottom: 37px;
+  }
+
+  .cs_progress_title {
+    margin-bottom: 7px;
+  }
+
+  .cs_skill_list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 56px;
+
+    @media (max-width: 991px) {
+      margin-bottom: 36px;
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .cs_timeline {
+    padding-left: 15px;
+  }
+}
+
+.cs_timeline_list {
+  padding-left: 32px;
+  border-left: 4px solid var(--border);
+  margin-left: 100px;
+  padding-bottom: 40px;
+
+  @media (max-width: 767px) {
+    margin-left: 0;
+  }
+
+  .cs_timeline_item {
+    position: relative;
+
+    &:not(:last-child) {
+      margin-bottom: 50px;
+    }
+  }
+
+  .cs_timeline_title {
+    margin-bottom: 12px;
+  }
+
+  span {
+    display: block;
+    width: 35px;
+    height: 35px;
+    background-color: var(--white);
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: -52px;
+
+    &::after {
+      content: '';
+      width: 15px;
+      height: 15px;
+      background-color: var(--accent);
+      border-radius: inherit;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .cs_timeline_year {
+    width: 55px;
+    height: 26px;
+    background-color: var(--border);
+    border-radius: 5px;
+    transform: skew(-20deg) translate(8px, 6px) rotate(-20deg);
+    position: absolute;
+    left: -140px;
+    top: 10px;
+
+    @media (max-width: 767px) {
+      position: absolute;
+      left: -70px;
+      top: 35px;
+      transform: skew(0deg) translate(8px, 6px) rotate(0deg);
+    }
+
+    @media (max-width: 575px) {
+      position: initial;
+      transform: initial;
+      margin-bottom: 10px;
+    }
+  }
+}

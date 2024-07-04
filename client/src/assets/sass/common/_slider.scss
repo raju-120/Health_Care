@@ -1,0 +1,235 @@
+/*--------------------------------------------------------------
+  6. Slider
+----------------------------------------------------------------*/
+.cs_slider {
+  .cs_slider_wrapper {
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+
+  .slick_slide_in {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  &.cs_slider_animation1 {
+    .cs_slider_wrapper {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+    .slick_slide_in {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+  }
+}
+
+#doctors {
+  .slick-list {
+    padding: 20px 0;
+  }
+}
+
+.cs_testimonial_slider {
+  .slick-list {
+    padding: 20px 0;
+  }
+}
+
+.cs_slider_animation1 {
+  .cs_hero.cs_style_6 .cs_hero_title {
+    transform: translateX(-50px);
+    opacity: 0;
+    transition: all 0.8s ease-in-out;
+    transition-delay: 0.5s;
+  }
+
+  .cs_hero.cs_style_6 .cs_hero_subtitle {
+    opacity: 0;
+    position: relative;
+    top: 30px;
+    transition: all 0.4s ease-in-out;
+  }
+
+  .cs_hero_btn_group {
+    opacity: 0;
+    position: relative;
+    top: 30px;
+    transition: all 0.4s ease-in-out;
+  }
+
+  .slick-active {
+    .cs_hero.cs_style_6 .cs_hero_bg {
+      transform: scale(1);
+    }
+
+    .cs_hero.cs_style_6 .cs_hero_title {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+
+    .cs_hero.cs_style_6 .cs_hero_subtitle {
+      opacity: 1;
+      top: 0;
+      transition-delay: 0.9s;
+    }
+
+    .cs_hero_btn_group {
+      opacity: 1;
+      top: 0;
+      transition-delay: 1s;
+    }
+  }
+
+  .cs_slider_arrows.cs_style_1 {
+    width: calc(100% - 60px);
+    justify-content: space-between;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    gap: 20px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.4s ease;
+
+    .cs_slider_arrow {
+      border: none;
+      background-color: var(--white);
+      color: var(--accent);
+    }
+
+    @media (max-width: 991px) {
+      top: initial;
+      left: 50%;
+      bottom: 8%;
+      transform: translate(-50%, -8%);
+      justify-content: center;
+    }
+  }
+
+  &:hover {
+    .cs_slider_arrows.cs_style_1 {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+
+.cs_slider_arrows.cs_style_1 {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  .cs_slider_arrow {
+    width: 50px;
+    height: 50px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.4s ease;
+
+    &.cs_primary_bg {
+      border: none;
+
+      &:hover {
+        background-color: var(--accent_v2);
+        color: var(--white);
+      }
+    }
+
+    &.cs_version_3 {
+      color: var(--accent_v3);
+      border-color: var(--accent_v3);
+      font-size: 22px;
+
+      &:hover {
+        background-color: var(--accent_v3);
+      }
+    }
+
+    &.cs_version_4 {
+      color: var(--accent_v4);
+      border-color: var(--accent_v4);
+      font-size: 22px;
+
+      &:hover {
+        background-color: var(--accent_v4);
+      }
+    }
+
+    &:hover {
+      background-color: var(--accent);
+      color: var(--white);
+    }
+  }
+
+  &.cs_hide_desktop {
+    display: none;
+  }
+
+  @media (max-width: 991px) {
+    &.cs_hide_mobile {
+      display: none;
+    }
+
+    &.cs_hide_desktop {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+  }
+}
+.cs_slider_arrows.cs_color_1.cs_style_1 {
+  .cs_slider_arrow {
+    border-color: var(--accent_v3);
+    color: var(--accent_v3);
+    &:hover {
+      background-color: var(--accent_v3);
+      color: var(--white);
+    }
+  }
+}
+.cs_pagination.cs_style_1 {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  transform: translate(-50%, -6%);
+
+  &.cs_hide_desktop {
+    display: none;
+
+    @media (max-width: 991px) {
+      display: block;
+    }
+  }
+
+  .slick-dots {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0;
+    margin-bottom: 0;
+
+    li button {
+      overflow: hidden;
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: var(--white);
+      font-size: 0px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+
+    .slick-active button {
+      background-color: var(--accent);
+    }
+  }
+}

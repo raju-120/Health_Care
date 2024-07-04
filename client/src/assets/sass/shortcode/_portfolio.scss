@@ -1,0 +1,250 @@
+/*--------------------------------------------------------------
+  18. Portfolio
+----------------------------------------------------------------*/
+.cs_gallery_list {
+  display: grid;
+  gap: 24px;
+
+  .cs_gallery_item {
+    height: 380px;
+
+    > img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cs_gallery_overlay {
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      top: 0;
+      left: 0;
+      transition: all 0.4s ease;
+    }
+
+    .cs_gallery_icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: all 0.5s ease;
+    }
+
+    &:hover {
+      .cs_gallery_overlay {
+        opacity: 1;
+      }
+
+      .cs_gallery_icon {
+        opacity: 1;
+      }
+    }
+  }
+
+  &.cs_version_3 {
+    grid-template-columns: repeat(4, 1fr);
+
+    @media (max-width: 767px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 575px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .cs_gallery_item {
+      height: auto;
+
+      @media (max-width: 575px) {
+        border-radius: 0 !important;
+      }
+
+      &:nth-child(1) {
+        grid-column: auto/span 2;
+        grid-row: auto/span 2;
+        border-radius: 0;
+
+        @media (max-width: 575px) {
+          grid-column: auto/span 1;
+          grid-row: auto/span 1;
+        }
+      }
+
+      &:nth-child(2) {
+        border-radius: 0 0 10px 0;
+      }
+
+      &:nth-child(3) {
+        border-radius: 0 0 0 10px;
+      }
+
+      &:nth-child(4) {
+        border-radius: 0 10px 0 0;
+      }
+
+      &:nth-child(5) {
+        border-radius: 10px 0 0 0;
+      }
+
+      > img {
+        height: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  &.cs_version_4 {
+    grid-template-columns: repeat(3, 1fr);
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: 991px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 767px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .cs_gallery_item {
+      height: auto;
+
+      .cs_gallery_overlay {
+        opacity: 1;
+      }
+
+      &:hover {
+        .cs_gallery_overlay {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}
+
+.cs_project_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  @media (max-width: 991px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 575px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.cs_project.cs_style_1 {
+  display: block;
+  position: relative;
+  overflow: hidden;
+
+  &:first-child {
+    display: flex;
+    align-items: center;
+
+    .cs_project_desc {
+      width: 100%;
+      max-width: 445px;
+      padding: 30px 30px 30px 60px;
+      position: static;
+      visibility: visible;
+      opacity: 1;
+
+      @media (max-width: 1199px) {
+        padding: 30px 20px 40px;
+      }
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cs_project_title {
+    margin-bottom: 24px;
+
+    @media (max-width: 767px) {
+      font-size: 32px;
+    }
+  }
+
+  .cs_project_subtitle {
+    margin-bottom: 31px;
+  }
+
+  .cs_btn.cs_style_1 {
+    border-radius: 0;
+  }
+
+  .cs_project_info {
+    width: 100%;
+    max-width: 386px;
+    padding: 40px 30px;
+    position: absolute;
+    left: 0;
+    bottom: -50px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.4s ease;
+  }
+
+  .cs_project_info_title {
+    margin-bottom: 5px;
+  }
+
+  .cs_project_icon {
+    width: 63px;
+    height: 63px;
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+    font-size: 20px;
+    color: var(--white);
+    transform: scale(0);
+    transition: all 0.4s ease;
+    z-index: 2;
+
+    @media (max-width: 1550px) {
+      top: 30px;
+      right: 30px;
+    }
+  }
+
+  &:hover {
+    .cs_project_info {
+      visibility: visible;
+      opacity: 1;
+      bottom: 0;
+    }
+
+    .cs_project_icon {
+      transform: scale(1);
+    }
+  }
+}
+
+.cs_gallery_shape1 {
+  right: 0;
+  top: 20px;
+}
+
+.cs_gallery_shape2 {
+  left: 0;
+  bottom: 0;
+}
