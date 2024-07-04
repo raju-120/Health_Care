@@ -1,7 +1,7 @@
 /* import MyComponent from "../Pages/Posts/allPosts";
 import Posts from "../Pages/Posts/Posts"; */
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import '../assets/css/style.css';
 import '../assets/css/animate.css';
@@ -39,7 +39,7 @@ export default function CenterSide() {
           </div>
         </div>
         <header className="cs_site_header cs_style_1 cs_sticky_header">
-         <div className="cs_top_header cs_accent_bg_v1">
+         {/* <div className="cs_top_header cs_accent_bg_v1">
       <div className="container">
         <div className="cs_top_header_in">
           <div className="cs_top_header_left">
@@ -62,7 +62,7 @@ export default function CenterSide() {
           </div>
         </div>
       </div>
-    </div> 
+    </div>  */}
     <div className="cs_main_header">
       <div className="container">
         <div className="cs_main_header_in">
