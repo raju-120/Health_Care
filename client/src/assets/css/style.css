@@ -3085,7 +3085,7 @@ a.ui-button:active,
   .cs_site_header.cs_style_1.cs_version_3 {
     overflow: visible;
   }
-  .cs_site_header.cs_style_1.cs_version_3 .cs_nav .cs_nav_list {
+  ..cs_style_1.cs_version_3 .cs_nav .cs_nav_list {
     background-color: var(--accent_v3);
   }
 }
@@ -3135,7 +3135,7 @@ a.ui-button:active,
   color: var(--white);
 }
 .cs_site_header.cs_style_1.cs_landing.cs_gescout_show {
-  margin-top: 0;
+  margin-top: 10;
 }
 .cs_site_header.cs_style_1.cs_landing.cs_gescout_show .cs_site_branding {
   color: var(--primary);

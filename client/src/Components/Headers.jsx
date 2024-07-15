@@ -1,5 +1,21 @@
+
+import { useEffect } from 'react';
+
+import '../assets/css/style.css';
+import '../assets/css/animate.css';
+import '../assets/css/bootstrap.min.css';
+import '../assets/css/animated-text.css';
+import '../assets/css/fontawesome.min.css';
+// import '../assets/css/style.css.map';
+import '../assets/css/odometer.css';
+
+import { initializeJQuery } from '../assets/js/animated-text.min';
+import '../assets/js/main';
+
+
+
 import { Fragment, useState } from 'react';
-import logo from '../assets/logo.jpg';
+import logo from '../assets/images/logo.png';
 import { Link } from 'react-router-dom';
 import { FaTimes } from "react-icons/fa";
 import { CiMenuFries } from "react-icons/ci";
@@ -61,6 +77,7 @@ export default function Headers() {
 
   return (
     <div >
+     {/*  //<!-- Start Preloader --> */}
       <div className="cs_preloader cs_accent_color_v1">
         <div className="cs_preloader_in">
           <div className="cs_wave_first">
@@ -73,76 +90,53 @@ export default function Headers() {
           </div>
         </div>
       </div>
-      <header className="cs_site_header cs_style_1 cs_sticky_header">
-       {/* <div className="cs_top_header cs_accent_bg_v1">
-    <div className="container">
-      <div className="cs_top_header_in">
-        <div className="cs_top_header_left">
-         <div className="cs_top_nav cs_fs_16 cs_white_color">
-            <i className="fa-solid fa-location-dot"></i>5010 Avenue of the Moon New York, NY 10018 US.
-          </div>
-        </div>
-        <div className="cs_top_header_right">
-         <ul className="cs_top_nav  cs_mp0">
-            <li><a href="#">Live Chat </a></li>
-            <li><a href="#">Support</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
-          <div className="cs_social_btns cs_style_1">
-            <a href="https://www.facebook.com/" target="_blank"> <i className="fa-brands fa-facebook-f"></i></a>
-            <a href="https://dribbble.com/" target="_blank"> <i className="fa-brands fa-dribbble"></i></a>
-            <a href="https://twitter.com/" target="_blank"><i className="fa-brands fa-twitter"></i></a>
-            <a href="https://www.instagram.com/" target="_blank"><i className="fa-brands fa-instagram"></i></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>  */}
-  <div className="cs_main_header">
-    <div className="container">
-      <div className="cs_main_header_in">
-        <div className="cs_main_header_left">
-          <a className="cs_site_branding">
-            <img src={logo} alt='logo' className='w-20 h-20 rounded-full'/>
-          </a>
-          <div className="cs_nav cs_primary_font">
-            <ul className="cs_nav_list cs_fs_18">
-              <li><a href="#home">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#services">Services</a></li>
-              <li><a href="#doctors">Doctors</a></li>
-              <li><a href="#gallery">Gallery</a></li>
-              <li><a href="#pricing">Pricing</a></li>
-              <li className="menu_item_has_children"><a href="#blog">Blog</a>
-                <ul>
-                  <li><a href="blog-right-sidebar.html">Blog Right Sidebar</a></li>
-                  <li><a href="blog-left-sidebar.html">Blog Left Sidebar</a></li>
-                  <li><a href="blog-list.html">Blog List</a></li>
-                  <li><a href="blog-grid.html">Blog Grid</a></li>
-                  <li><a href="blog-details-right-sidebar.html">Blog Details Right Sidebar</a></li>
-                  <li><a href="blog-details-left-sidebar.html">Blog Details Left Sidebar</a></li>
-                  <li><a href="blog-details-no-sidebar.html">Blog Details No Sidebar</a></li>
+  {/* <!-- End Preloader --> */}
+      <header className="cs_site_header cs_style_1 cs_sticky_header" style={{padding:"0 100px"}}>      
+      <div className="cs_main_header">
+        <div className="container">
+          <div className="cs_main_header_in">
+            <div className="cs_main_header_left">
+              <Link to='/' className="cs_site_branding">
+                <img src={logo}  />
+              </Link>
+              <div className="cs_nav cs_primary_font">
+                <ul className="cs_nav_list cs_fs_18">
+                  <li><a href="#home">Home</a></li>
+                  <li><a href="#about">About</a></li>
+                  <li><a href="#services">Services</a></li>
+                  <li><a href="#doctors">Doctors</a></li>
+                  <li><a href="#gallery">Gallery</a></li>
+                  <li><a href="#pricing">Pricing</a></li>
+                  <li className="menu_item_has_children"><a href="#blog">Blog</a>
+                    <ul>
+                      <li><a href="blog-right-sidebar.html">Blog Right Sidebar</a></li>
+                      <li><a href="blog-left-sidebar.html">Blog Left Sidebar</a></li>
+                      <li><a href="blog-list.html">Blog List</a></li>
+                      <li><a href="blog-grid.html">Blog Grid</a></li>
+                      <li><a href="blog-details-right-sidebar.html">Blog Details Right Sidebar</a></li>
+                      <li><a href="blog-details-left-sidebar.html">Blog Details Left Sidebar</a></li>
+                      <li><a href="blog-details-no-sidebar.html">Blog Details No Sidebar</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#contact">Contact</a></li>
                 </ul>
-              </li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </div>
-        </div>
-        <div className="cs_main_header_right cs_accent_color_v1">
-          <div className="cs_header_contact">
-            <div className="cs_header_contact_icon text-accent">
-             <img src="assets/images/icons/phone_icon_3.svg" alt="" />
+              </div>
             </div>
-            <div className="cs_header_contact_right">
-              <h3 className="cs_fs_14 cs_normal cs_accent_color_v1 mb-0">Need help?</h3>
-              <h3 className="cs_fs_14 cs_normal cs_accent_color_v1 mb-0">(+800) 1234 5678 90</h3>
+            <div className="cs_main_header_right cs_accent_color_v1">
+              <div className="cs_header_contact">
+                <div className="cs_header_contact_icon text-accent">
+                  <img src="assets/images/icons/phone_icon_3.svg" alt="" />
+                </div>
+                <div className="cs_header_contact_right">
+                  <h3 className="cs_fs_14 cs_normal cs_accent_color_v1 mb-0">Need help?</h3>
+                  <h3 className="cs_fs_14 cs_normal cs_accent_color_v1 mb-0">(+800) 1234 5678 90</h3>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</header>
+    </header>
  {/* <header className='bg-slate-600'>
         <div className='h-30 flex justify-between z-80 text-white lg:py-2 lg:px-20 px-5  py-5'>
           <div className='flex flex-col items-center '>
