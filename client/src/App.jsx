@@ -7,17 +7,15 @@ import SignUp from './Pages/SignUp';
 import Headers from './Components/Headers';
 import Services from './Pages/Services';
 import PrivateRoute from './Components/PrivateRoute';
-import Tips from './Pages/Tips';
+
 import Footer from './Components/Footer';
-import CreateAdvertising from './Pages/Advertising/CreateAdvertising';
+
 import DoctorsSIgnUp from './Pages/DoctorsSIgnUp';
 import DoctorsSignin from './Pages/DoctorsSignin';
 import Doctors from './Pages/Doctors/Doctors';
-//import ChatDashboard from './Pages/ChatDashboard/ChatDashboaard';
+
 import Messenger from './Pages/Messenger/Messenger';
-import Hospital from './Pages/Hospital/Hospital';
-import ServiceDetails from './Pages/ServiceDetails';
-import TipsDetails from './Pages/TipsDetails';
+
 import Appointments from './Pages/Appointments/Appointments';
 import DashboardLayout from './DashboardLayout/DashboardLayout';
 import AdminSignIn from './Pages/Admin/AdminSignIn';
@@ -29,8 +27,15 @@ import RequestAdmin from './Pages/DashboardPages/RequestAdmin';
 import Payment from './Pages/DashboardPages/Payment/Payment';
 import UserList from './Pages/DashboardPages/UserList';
 import DoctorList from './Pages/DashboardPages/DoctorList';
-/* import { paymentLoader } from './Pages/DashboardPages/Payment/paymentLoader'; */
+import BloodDonner from './Pages/BloodDonner';
 
+/* import { paymentLoader } from './Pages/DashboardPages/Payment/paymentLoader'; 
+import Hospital from './Pages/Hospital/Hospital';
+import ServiceDetails from './Pages/ServiceDetails';
+import TipsDetails from './Pages/TipsDetails';
+import CreateAdvertising from './Pages/Advertising/CreateAdvertising';
+import Tips from './Pages/Tips';*/
+//import ChatDashboard from './Pages/ChatDashboard/ChatDashboaard';
 
 
 export default function App() {
@@ -56,14 +61,15 @@ export default function App() {
       <Route path='/' element={<Home />}/>
       <Route path='/about' element={<About />}/>
       <Route path='/service' element={<Services />}/>
-      <Route path='/tips' element={<Tips />}/>
-      
       <Route path='/appointment' element={<Appointments />}/>
-      <Route path='/create-advertising' element={ <CreateAdvertising /> }/>
+      <Route path='/donner' element={<BloodDonner />}/>
       <Route path='/doctorlists' element={<Doctors />} />
+      
+      {/* <Route path='/tips' element={<Tips />}/>
+      <Route path='/create-advertising' element={ <CreateAdvertising /> }/>
       <Route path='/hospitallists' element={<Hospital />} />
       <Route path='/service/:id' element={<ServiceDetails />} />
-      <Route path='/solution/:id' element={<TipsDetails />} />
+      <Route path='/solution/:id' element={<TipsDetails />} /> */}
       {/* <Route path='/service/:id' element={<ServiceDetails />} /> */}
       
 

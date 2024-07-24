@@ -22,6 +22,9 @@ import { CiMenuFries } from "react-icons/ci";
 import {useSelector} from 'react-redux';
 import { BsMessenger } from "react-icons/bs";
 
+import Image from '../assets/images/icons/phone_icon_3.svg';
+
+
 export default function Headers() {
 
   const {currentUser} = useSelector(state=>state?.user);
@@ -90,7 +93,7 @@ export default function Headers() {
           </div>
         </div>
       </div>
-  {/* <!-- End Preloader --> */}
+    {/* <!-- End Preloader --> */}
       <header className="cs_site_header cs_style_1 cs_sticky_header" style={{padding:"0 100px"}}>      
       <div className="cs_main_header">
         <div className="container">
@@ -100,14 +103,17 @@ export default function Headers() {
                 <img src={logo}  />
               </Link>
               <div className="cs_nav cs_primary_font">
-                <ul className="cs_nav_list cs_fs_18">
-                  <li><a href="#home">Home</a></li>
-                  <li><a href="#about">About</a></li>
-                  <li><a href="#services">Services</a></li>
-                  <li><a href="#doctors">Doctors</a></li>
-                  <li><a href="#gallery">Gallery</a></li>
-                  <li><a href="#pricing">Pricing</a></li>
-                  <li className="menu_item_has_children"><a href="#blog">Blog</a>
+                
+                <ul className="cs_nav_list cs_fs_28">
+                  <li><Link to='/'><a>Home</a></Link></li>
+                  <li><Link to='/about'><a>About</a></Link></li>
+                  <li><Link to='/appointment'><a>Appointment</a></Link></li>
+                  <li><Link to='/doctorlists'><a>Doctors</a></Link></li>
+                  <li><Link to='/service'><a>Services</a></Link></li>
+                  <li><Link to='/donner'><a>Blood</a></Link></li>
+                  
+
+                  {/* <li className="menu_item_has_children"><a href="#blog">Blog</a>
                     <ul>
                       <li><a href="blog-right-sidebar.html">Blog Right Sidebar</a></li>
                       <li><a href="blog-left-sidebar.html">Blog Left Sidebar</a></li>
@@ -117,19 +123,17 @@ export default function Headers() {
                       <li><a href="blog-details-left-sidebar.html">Blog Details Left Sidebar</a></li>
                       <li><a href="blog-details-no-sidebar.html">Blog Details No Sidebar</a></li>
                     </ul>
-                  </li>
-                  <li><a href="#contact">Contact</a></li>
+                  </li> */}
+                  
                 </ul>
               </div>
             </div>
             <div className="cs_main_header_right cs_accent_color_v1">
               <div className="cs_header_contact">
-                <div className="cs_header_contact_icon text-accent">
-                  <img src="assets/images/icons/phone_icon_3.svg" alt="" />
-                </div>
                 <div className="cs_header_contact_right">
-                  <h3 className="cs_fs_14 cs_normal cs_accent_color_v1 mb-0">Need help?</h3>
-                  <h3 className="cs_fs_14 cs_normal cs_accent_color_v1 mb-0">(+800) 1234 5678 90</h3>
+                  <Link to='/sign-in'>
+                    <button className='ml-6 w-full text-lg p-2 btn btn-outline btn-success'>Login</button>
+                  </Link>
                 </div>
               </div>
             </div>

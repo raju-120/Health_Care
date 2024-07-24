@@ -97,6 +97,7 @@ function Appointments() {
     const updatedSlots = [...appointmentSlots, formData.appointmentSlots];
     setAppointmentSlots(updatedSlots);
 
+  
     const appointmentData = {
       ...formData,
       permission: 'progress',
