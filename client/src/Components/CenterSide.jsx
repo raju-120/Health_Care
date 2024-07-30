@@ -11,9 +11,18 @@ import '../assets/css/fontawesome.min.css';
 // import '../assets/css/style.css.map';
 import '../assets/css/odometer.css';
 
+
+/* JS Part */
 import { initializeJQuery } from '../assets/js/animated-text.min';
-import '../assets/js/main';
-import '../assets/js/odometer';
+import '../assets/js/main.js';
+import '../assets/js/odometer.js';
+import '../assets/js/animated-text.min.js'
+// import '../assets/js/light_gallery.min.js'
+// import '../assets/js/ripple.min.js'
+// import '../assets/js/select2.min.js'
+
+// import '../assets/js/isotope.pkg.min.js'
+// import '../assets/js/light_gallery.min.js'
 
 
 /* import leftImag from '../assets/images/about_left.png';

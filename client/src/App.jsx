@@ -64,6 +64,7 @@ export default function App() {
       <Route path='/appointment' element={<Appointments />}/>
       <Route path='/donner' element={<BloodDonner />}/>
       <Route path='/doctorlists' element={<Doctors />} />
+      <Route path='/doctorlists/:id' element={<DoctorList />} />
       
       {/* <Route path='/tips' element={<Tips />}/>
       <Route path='/create-advertising' element={ <CreateAdvertising /> }/>

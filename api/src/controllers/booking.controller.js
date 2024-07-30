@@ -89,13 +89,13 @@ const getBooking = asyncHandler(async (req, res) => {
     const { status } = req.body;
   
     console.log("Updating appointment with id:", id);
-    console.log("New status:", status); // Check status here
+    console.log("New status:", status); 
   
     if (!status) {
       return res.status(400).json({ message: 'Status is required' });
     }
   
-    if (req.user.role !== 'system-admin' && req.user.role !== 'admin') {
+    if (req.user.role !== 'system-admin' && req.user.role !== 'admin' ) {
       throw new ApiError(403, "Forbidden: You don't have permission to update this appointment");
     }
   

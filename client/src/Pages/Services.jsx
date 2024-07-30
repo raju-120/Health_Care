@@ -504,7 +504,7 @@ export default function Services() {
 
 
 
-    <script src="../client/src/assets/js/main.js"></script>
+    {/* <script src="../client/src/assets/js/main.js"></script>
     <script src="../client/src/assets/js/isotope.pkg.min.js"></script>
     <script src="../client/src/assets/js/jquery-3.6.0.min.js"></script>
     <script src="../client/src/assets/js/jquery-timepicker.min.js"></script>
@@ -515,7 +515,7 @@ export default function Services() {
     <script src="../client/src/assets/js/ripple.min.js"></script>
     <script src="../client/src/assets/js/select2.min.js"></script>
     <script src="../client/src/assets/js/wow.min.js"></script>
-    <script src="../client/src/assets/js/YTPlayer.min.js"></script>
+    <script src="../client/src/assets/js/YTPlayer.min.js"></script> */}
 
 
     {/* <div className='mb-24'>

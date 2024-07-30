@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import {  toast, Toaster } from "react-hot-toast";
 
+import { event } from "jquery";
+
 function Appointments() {
   const { currentUser } = useSelector(state => state.user);
   const [error, setError] = useState(false);
@@ -17,6 +19,12 @@ function Appointments() {
   const [selectedDate, setSelectedDate] = useState("");
   const [fullyBooked, setFullyBooked] = useState(false);
   const [appointmentSlots, setAppointmentSlots] = useState([]);
+
+  const [name, setName] = useState('');
+
+
+
+
 
   console.log("Current User: ", currentUser?.data?.user?.email);
   console.log("Current User: ", currentUser?.data?.user?._id);
@@ -37,6 +45,9 @@ function Appointments() {
   const handleChange = (e) => {
     e.preventDefault();
     const { id, value } = e.target;
+    setName(event.target.id= e.target.value)
+    
+
 
     if (id === "appointmentSlots") {
       setFormData({
@@ -89,6 +100,19 @@ function Appointments() {
       gender: e.target.value,
     });
   };
+
+
+  const handleKeyPress = (event) => {
+    const charCode = event.which || event.keyCode;
+    const charStr = String.fromCharCode(charCode);
+    const regex = "/^[a-zA-Z]*$/";
+
+    if (!regex.test(charStr)) {
+      event.preventDefault();
+    }
+  };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -173,7 +197,14 @@ function Appointments() {
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
             <h1 className="lg:w-1/3 text-left">Patient Name:</h1>
             <div className="lg:w-2/3">
-              <input type="text" placeholder="Full Name" id="name" className="input input-bordered w-full" onChange={handleChange} />
+            <input 
+              type="text" 
+              placeholder="Full Name" 
+              id="name" 
+              value={name}
+              className="input input-bordered w-full" 
+              onKeyPress={handleKeyPress} 
+              onChange={handleChange} />
             </div>
           </div>
 

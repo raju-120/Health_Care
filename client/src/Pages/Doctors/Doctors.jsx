@@ -19,12 +19,12 @@ export default function Doctors() {
   const [selectedDate, setSelectedDate] = useState("");
   const [fullyBooked, setFullyBooked] = useState(false);
   const [appointmentSlots, setAppointmentSlots] = useState([]);
-
+ 
 
  const [allData, setAllData] = useState([]); 
  console.log(allData);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const getAllDoctor = async () => {
       try {
         const res = await fetch("/api/auth/doctors", {
@@ -37,15 +37,15 @@ export default function Doctors() {
         if (!data.success) {
           console.log(data.message);
         } else {
-          setAllData(data.data); // Assuming data contains a field 'data' with the list of doctors
+          setAllData(data.data);
         }
       } catch (error) {
         console.error("Error fetching doctors:", error);
       }
     };
 
-    getAllDoctor(); // Call the function
-  }, []);
+    getAllDoctor(); 
+  }, []); */
 
   console.log(allData); 
 
@@ -133,20 +133,13 @@ export default function Doctors() {
         </section>
 
 
-        {/* <div className="col-md-12 position-relative">
-          <form className="cs_contact_form row cs_gap_y_24" id="cs_form">
-            <div className="col-md-6 position-relative">
-              <input type="text" name="fname"  className="cs_form_field cs_radius_5" required/>
-              <label>First Name</label>
-            </div>
-            </form>
-        </div>  */}
+        
 
       </div>
-      <div className='grid lg:grid-cols-3 sm:grid-cols-1 gap-6 lg:ml-24 lg:mr-24'>
+      <div className='grid gap-6 grid-cols-1 md:grid-col-2 lg:grid-cols-3 lg:m-24'>
           {allData?.map((data) =>
           <DoctorsCard
-            key={data?._id}
+            key={data?.id}
             data= {data}
           ></DoctorsCard>)}
       </div> 
