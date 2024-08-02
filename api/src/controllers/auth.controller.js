@@ -181,6 +181,7 @@ const signup = asyncHandler(async(req, res) =>{
 
 const signin = asyncHandler(async(req, res) =>{
     const {email, password} = req.body;
+    console.log('Sign in', req.body);
     
     if(!email && !password){
         throw new ApiError(400, "Email & Password required!");
@@ -196,8 +197,8 @@ const signin = asyncHandler(async(req, res) =>{
         new ApiError(404, "User password won't matched!");
     };
 
-    const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id);
-    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+    const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user?._id);
+    const loggedInUser = await User.findById(user?._id).select("-password -refreshToken");
 
     const options = {
         httpOnly: true,

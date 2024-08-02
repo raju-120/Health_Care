@@ -1,7 +1,7 @@
 /* import MyComponent from "../Pages/Posts/allPosts";
 import Posts from "../Pages/Posts/Posts"; */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import '../assets/css/style.css';
 import '../assets/css/animate.css';
@@ -17,6 +17,7 @@ import { initializeJQuery } from '../assets/js/animated-text.min';
 import '../assets/js/main.js';
 import '../assets/js/odometer.js';
 import '../assets/js/animated-text.min.js'
+
 // import '../assets/js/light_gallery.min.js'
 // import '../assets/js/ripple.min.js'
 // import '../assets/js/select2.min.js'
@@ -52,14 +53,113 @@ import Avatar5 from '../assets/images/avatar_5.png';
 import Avatar6 from '../assets/images/avatar_6.png';
 import Avatar8 from '../assets/images/avatar_8.png';
 import { Link } from 'react-router-dom';
+import { motion, useAnimation } from 'framer-motion';
+import 'odometer/themes/odometer-theme-default.css';
+import Odometer from 'odometer';
+
+//import Odometer from 'odometer';
 //import Avatar from '../';
 
 
 export default function CenterSide() {
+  const controls = useAnimation();
 
   useEffect(() => {
     initializeJQuery();
   }, []);
+
+
+/* part - 1 */
+
+const odometerPart1Ref = useRef(null);
+  useEffect(() => {
+    if (odometerPart1Ref.current) {
+      const odometer = new Odometer({
+        el: odometerPart1Ref.current,
+        value: 0,
+        format: '',
+        theme: 'default',
+        duration: 2000, // Duration of the animation in milliseconds
+      });
+
+      setTimeout(() => {
+        odometer.update(230);
+      }, 1000);
+    }
+  }, []);
+
+
+  
+
+
+  /* part - 2 */
+  const odometerPart2Ref = useRef(null);
+  useEffect(() => {
+    if (odometerPart2Ref.current) {
+      const odometer = new Odometer({
+        el: odometerPart2Ref.current,
+        value: 0,
+        format: '',
+        theme: 'default',
+        duration: 2000, // Duration of the animation in milliseconds
+      });
+
+      setTimeout(() => {
+        odometer.update("2000");
+      }, 1000);
+    }
+  }, []);
+
+
+
+
+  /* part - 3 */
+
+
+  const odometerPart3Ref = useRef(null);
+  useEffect(() => {
+    if (odometerPart3Ref.current) {
+      const odometer = new Odometer({
+        el: odometerPart3Ref.current,
+        value: 0,
+        format: '',
+        theme: 'default',
+        duration: 2000, // Duration of the animation in milliseconds
+      });
+
+      setTimeout(() => {
+        odometer.update(99);
+      }, 1000);
+    }
+  }, []);
+
+
+  /* part - 4 */
+  const odometerRef = useRef(null);
+
+  useEffect(() => {
+    if (odometerRef.current) {
+      const odometer = new Odometer({
+        el: odometerRef.current,
+        value: 0,
+        format: '',
+        theme: 'default',
+        duration: 2000, // Duration of the animation in milliseconds
+      });
+
+      setTimeout(() => {
+        odometer.update(125);
+      }, 1000);
+    }
+  }, []);
+
+
+
+
+  const variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
 
   return (
@@ -138,58 +238,188 @@ export default function CenterSide() {
       <section className="cs_counting cs_bg_filed cs_primary_bg" data-src={dataSrc}>
         <div className="cs_height_133 cs_height_lg_80"></div>
         <div className="container-fluid">
-          <div className="row cs_gap_y_40 align-items-center justify-content-between">
-            <div className="col-xl-3 col-md-6">
-              <div className="cs_funfact cs_style_1">
-                <div className="cs_funfact_icon cs_center">
-                  <img src={Icons} alt="Icon"/>
-                </div>
-                <div className="cs_funfact_text">
-                  <h2 className="cs_counter_number cs_fs_65 cs_white_color d-flex align-items-center cs_semibold"><span
-                      data-count-to="230" className="odometer"></span>+</h2>
-                  <p className="cs_counter_title cs_fs_24 cs_semibold cs_white_color mb-0">Specialised Support</p>
-                </div>
+          <div className="row cs_gap_y_40 align-items-center justify-content-between m-10">
+
+            {/* part 1 */}
+            <div className="col-xl-3 col-md-6 flex">
+              <div className="cs_funfact_icon cs_center">
+                <img className='w-24 p-2 mr-2 shadow-lg shadow-gray-700 bg-white  rounded-xl' src={Icons} alt="Icon3" />
+              </div>
+              <div className="cs_funfact_text">
+                <h2 className="cs_counter_number cs_fs_65 cs_white_color d-flex align-items-center cs_semibold">
+                  <span ref={odometerPart1Ref} className="odometer"></span>+
+                </h2>
+                <p className="cs_counter_title cs_fs_24 cs_semibold cs_white_color mb-0">Specialised Support</p>
               </div>
             </div>
-            <div className="col-xl-3 col-md-6">
-              <div className="cs_funfact cs_style_1">
-                <div className="cs_funfact_icon cs_center">
-                  <img src={Icons2} alt="Icon2"/>
-                </div>
-                <div className="cs_funfact_text">
-                  <h2 className="cs_counter_number cs_fs_65 cs_white_color d-flex align-items-center cs_semibold"><span data-count-to="2" className="odometer"></span>K+</h2>
-                  <p className="cs_counter_title cs_fs_24 cs_semibold cs_white_color mb-0">Happy Patients</p>
-                </div>
+
+              {/* part -2 */}
+
+            <div className="col-xl-3 col-md-6 flex">
+              <div className="cs_funfact_icon cs_center">
+                <img className='w-24 p-2 mr-2 shadow-lg shadow-gray-700 bg-white  rounded-xl' src={Icons2} alt="Icon3" />
+              </div>
+              <div className="cs_funfact_text">
+                <h2 className="cs_counter_number cs_fs_65 cs_white_color d-flex align-items-center cs_semibold">
+                  <span ref={odometerPart2Ref} className="odometer"></span>+
+                </h2>
+                <p className="cs_counter_title cs_fs_24 cs_semibold cs_white_color mb-0">Happy Patients</p>
               </div>
             </div>
-            <div className="col-xl-3 col-md-6">
-              <div className="cs_funfact cs_style_1">
-                <div className="cs_funfact_icon cs_center">
-                  <img src={Icon3} alt="Icon3"/>
-                </div>
-                <div className="cs_funfact_text">
-                  <h2 className="cs_counter_number cs_fs_65 cs_white_color d-flex align-items-center cs_semibold"><span
-                      data-count-to="99" className="odometer"></span>+</h2>
-                  <p className="cs_counter_title cs_fs_24 cs_semibold cs_white_color mb-0">Qualified Doctors</p>
-                </div>
+
+
+            {/* Part 3 */}
+
+            <div className="col-xl-3 col-md-6 flex">
+              <div className="cs_funfact_icon cs_center">
+                <img className='w-24 p-2 mr-2 shadow-lg shadow-gray-700 bg-white  rounded-xl' src={Icon3} alt="Icon3" />
+              </div>
+              <div className="cs_funfact_text">
+                <h2 className="cs_counter_number cs_fs_65 cs_white_color d-flex align-items-center cs_semibold">
+                  <span ref={odometerPart3Ref} className="odometer"></span>+
+                </h2>
+                <p className="cs_counter_title cs_fs_24 cs_semibold cs_white_color mb-0">Qualified Doctors</p>
               </div>
             </div>
-            <div className="col-xl-3 col-md-6">
-              <div className="cs_funfact cs_style_1">
-                <div className="cs_funfact_icon cs_center">
-                  <img src={Icon4} alt="Icon4"/>
-                </div>
-                <div className="cs_funfact_text">
-                  <h2 className="cs_counter_number cs_fs_65 cs_white_color d-flex align-items-center cs_semibold"><span
-                      data-count-to="125" className="odometer"></span>+</h2>
-                  <p className="cs_counter_title cs_fs_24 cs_semibold cs_white_color mb-0">Hospital Rooms</p>
-                </div>
+
+            {/* part 4  */}
+
+            <div className="col-xl-3 col-md-6 flex">
+              <div className="cs_funfact_icon cs_center">
+                <img className='w-24 p-2 mr-2 shadow-lg shadow-gray-700 bg-white rounded-xl' src={Icon4} alt="Icon4" />
+              </div>
+              <div className="cs_funfact_text">
+                <h2 className="cs_counter_number cs_fs_65 cs_white_color d-flex align-items-center cs_semibold">
+                  <span ref={odometerRef} className="odometer"></span>+
+                </h2>
+                <p className="cs_counter_title cs_fs_24 cs_semibold cs_white_color mb-0">Hospital Rooms</p>
               </div>
             </div>
+
           </div>
         </div>
         <div className="cs_height_133 cs_height_lg_80"></div>
       </section>
+    {/*   <section className="bg-cover bg-center bg-primary py-20" style={{ backgroundImage: `url(${dataSrc})` }}>
+      <div className="container mx-auto">
+        <div className="flex flex-wrap gap-y-10 items-center justify-between">
+          <div className="w-full md:w-1/2 xl:w-1/4">
+            <motion.div 
+              animate="visible" 
+              transition={{ duration: 0.7 }} 
+              variants={variants} 
+              className="text-center p-5 bg-white rounded-lg shadow-md"
+            >
+              <div className="mb-4">
+                <img src={Icons} alt="Icon" className="mx-auto"/>
+              </div>
+              <h2 className="text-5xl font-semibold text-white flex items-center justify-center mb-2">
+                <span data-count-to="230" className="odometer"></span>+
+              </h2>
+              <p className="text-xl font-semibold text-white">Specialised Support</p>
+            </motion.div>
+          </div>
+          <div className="w-full md:w-1/2 xl:w-1/4">
+            <motion.div 
+              initial="hidden" 
+              animate="visible" 
+              transition={{ duration: 0.5, delay: 0.2 }} 
+              variants={variants} 
+              className="text-center p-5 bg-white rounded-lg shadow-md"
+            >
+              <div className="mb-4">
+                <img src={Icons2} alt="Icon2" className="mx-auto"/>
+              </div>
+              <h2 className="text-5xl font-semibold text-white flex items-center justify-center mb-2">
+                <span data-count-to="2000" className="odometer"></span>K+
+              </h2>
+              <p className="text-xl font-semibold text-black">Happy Patients</p>
+            </motion.div>
+          </div>
+          <div className="w-full md:w-1/2 xl:w-1/4">
+            <motion.div 
+              initial="hidden" 
+              animate="visible" 
+              transition={{ duration: 0.5, delay: 0.4 }} 
+              variants={variants} 
+              className="text-center p-5 bg-white rounded-lg shadow-md"
+            >
+              <div className="mb-4">
+                <img src={Icon3} alt="Icon3" className="mx-auto"/>
+              </div>
+              <h2 className="text-5xl font-semibold text-white flex items-center justify-center mb-2">
+                <span data-count-to="99" className="odometer"></span>+
+              </h2>
+              <p className="text-xl font-semibold text-white">Qualified Doctors</p>
+            </motion.div>
+          </div>
+          <div className="w-full md:w-1/2 xl:w-1/4">
+            <motion.div 
+              initial="hidden" 
+              animate="visible" 
+              transition={{ duration: 0.5, delay: 0.6 }} 
+              variants={variants} 
+              className="text-center p-5 bg-white rounded-lg shadow-md"
+            >
+              <div className="mb-4">
+                <img src={Icon4} alt="Icon4" className="mx-auto"/>
+              </div>
+              <h2 className="text-5xl font-semibold text-white flex items-center justify-center mb-2">
+                <span data-count-to="125" className="odometer"></span>+
+              </h2>
+              <p className="text-xl font-semibold text-white">Hospital Rooms</p>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </section> */}
+    {/* <div className='flex-1 text-center font-secondary lg:text-left'>
+            <h1>Hi. My name is</h1>
+            <motion.h1 
+              variants={fadeIn('up', 0.3)} 
+              initial='hidden'
+              whileInView={'show'} 
+              viewport={{once: false, amount: 0.7}} 
+              className='text-[30px] font-bold leading-[1] lg:text-[60px]'
+             >
+              AsfaK Hossain Raju
+              </motion.h1>
+            
+            <motion.div 
+              variants={fadeIn('up', 0.5)} 
+              initial='hidden'
+              whileInView={'show'} 
+              viewport={{once: false, amount: 0.7}} 
+              className='mb-6 text-[20px] lg:text-[40px] font-secondary
+              font-semibold uppercase leading-[1]'>
+              <span className='mr-4'>I am a </span> 
+              <TypeAnimation 
+                sequence={[
+                  'Mern-Stack Developer',
+                  2000,
+                ]}
+                speed={50}
+                className='text-accent'
+                wrapper='span'
+                repeat={Infinity}
+              />
+            </motion.div></div> 
+            
+            
+
+<div className="cs_funfact cs_style_1">
+                <div className="cs_funfact_icon cs_center">
+                  <img src={Icon3} alt="Icon3"/>
+                </div>
+                <div className="cs_funfact_text">
+                  <h2 className="cs_counter_number cs_fs_65 cs_white_color d-flex align-items-center cs_semibold">
+                    <span data-count-to="99" className="odometer"></span>+</h2>
+                  <p className="cs_counter_title cs_fs_24 cs_semibold cs_white_color mb-0">Qualified Doctors</p>
+                </div>
+              </div>
+
+            
+            */}
 
 
       

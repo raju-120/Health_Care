@@ -28,8 +28,9 @@ import Image from '../assets/images/icons/phone_icon_3.svg';
 export default function Headers() {
 
   const {currentUser} = useSelector(state=>state?.user);
+  console.log("User", currentUser);
 
-  const menu =<Fragment>
+  /* const menu =<Fragment>
     <div className='top-28 w-full left-0 right-0 bg-slate-900 lg:hidden block absolute'>
       
       <ul className='text-center text-lg p-10 flex flex-col gap-2 text-white uppercase'>
@@ -63,7 +64,7 @@ export default function Headers() {
         
       </ul>
     </div>
-  </Fragment>
+  </Fragment> */
 
   /* const anotherMenu = <Fragment>
           <ul className='flex gap-8 item-center text-zinc-200 uppercase text-xl'>
@@ -131,9 +132,29 @@ export default function Headers() {
             <div className="cs_main_header_right cs_accent_color_v1">
               <div className="cs_header_contact">
                 <div className="cs_header_contact_right">
-                  <Link to='/sign-in'>
-                    <button className='ml-6 w-full text-lg p-2 btn btn-outline btn-success'>Login</button>
-                  </Link>
+                {
+                currentUser ? (
+                    <div className="dropdown dropdown-end">
+                      <div tabIndex={0} role="button" className="rounded-btn mt-2">
+                        <img src={currentUser?.data?.user?.avatar} className='w-16 h-16 rounded-full' alt='profile'/>
+                      </div>
+                      <ul
+                        tabIndex={0}
+                        className="text-center text-xl menu dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-3 shadow">
+                        <Link to="/dashboard">
+                          <h1 className='mb-2'>Dashboard</h1>
+                        </Link>
+                        <button className='btn btn-warning text-centet text-lg btn-md'>Signout</button>
+                      </ul>
+                    </div>
+                  
+                  
+                ) : (
+                  <ul className='flex gap-8 item-center text-zinc-200 uppercase text-xl'>
+                    <li className='hover:text-gray-700 uppercase'>Sign In</li>
+                  </ul>
+                )
+              }
                 </div>
               </div>
             </div>

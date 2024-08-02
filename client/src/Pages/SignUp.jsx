@@ -51,7 +51,7 @@ export default function SignUp() {
   return (
     <div>
       <div className="max-w-full py-5">
-        <h1 className="text-4xl font-semibold text-center my-10 uppercase">Sign UP</h1>
+        <h1 className="text-4xl font-semibold text-center my-10 uppercase">User Sign UP</h1>
         <div className="lg:flex justify-around">
           <div className="lg:ml-20">
             <img src={logo} alt="login-image" className="shadow-2xl rounded-xl " />
@@ -99,11 +99,11 @@ export default function SignUp() {
               </span>
             </p>
             
-            <p className='ml-2 text-lg mt-2'> Are you a Doctor? Please 
+           {/*  <p className='ml-2 text-lg mt-2'> Are you a Doctor? Please 
                 <Link to='/doctors-sign-up'>
                   <span className='text-blue-500 ml-2 font-semibold uppercase'>Click Here</span>
                 </Link>
-            </p>
+            </p> */}
             
             {error && <p className="text-red-500">{error}</p>}
           </div>

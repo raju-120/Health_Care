@@ -14,8 +14,17 @@
     "@stripe/stripe-js": "^4.0.0",
     "aos": "^3.0.0-beta.6",
     "axios": "^1.7.0",
+    "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
     "firebase": "^10.8.1",
+    "font-awesome": "^4.7.0",
+    "framer-motion": "^11.3.21",
+    "isotope-layout": "^3.0.6",
+    "jquery": "^3.7.1",
+    "jquery-timepicker": "^1.3.3",
+    "jquery-ui": "^1.13.3",
+    "lightgallery": "^2.7.2",
+    "odometer": "^0.4.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
@@ -28,8 +37,13 @@
     "react-toastify": "^10.0.5",
     "redux-persist": "^6.0.0",
     "regex": "^3.0.0",
+    "ripple-effect": "^1.0.5",
+    "select2": "^4.1.0-rc.0",
+    "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.7.5",
     "swiper": "^11.1.3",
+    "wowjs": "^1.1.3",
+    "ytplayer": "^1.0.0",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
@@ -46,7 +60,7 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "postcss": "^8.4.35",
     "react-modal": "^3.16.1",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^3.4.7",
     "vite": "^5.1.4"
   }
 }

@@ -12,6 +12,7 @@ const sendMessage = async (req, res) => {
             receiverusername
         });
 
+    
         await newMessage.save();
 
         res.status(201).json(newMessage);

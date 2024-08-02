@@ -55,7 +55,7 @@ export default function DashboardLayout() {
         
 
   return (
-    <div>
+    <div className='mt-20'>
         <div className="drawer lg:drawer-open">
                 <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
                 <div className="drawer-content flex flex-col justify">
