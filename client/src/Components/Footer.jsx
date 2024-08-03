@@ -74,8 +74,8 @@ export default function Footer() {
             <div className="cs_footer_bottom">
             <div className="container">
                 <div className="cs_footer_bottom_text">
-                <div className="cs-copyright cs_fs_18 cs_white_color text-center">All Right Reserved Copyright &copy; 2024 <a
-                    href="https://themeforest.net/user/laralink" target="_blank" className="cs_profile_link cs_accent_color_v1">Raju</a>
+                <div className="cs-copyright cs_fs_18 cs_white_color text-center">All Right Reserved Copyright &copy; 2024 
+                    <a href="https://github.com/raju-120/Health_Care" target="_blank" className="cs_profile_link cs_accent_color_v1">Raju</a>
                 </div>
                 
                 </div>

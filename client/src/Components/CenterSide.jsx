@@ -1,7 +1,7 @@
 /* import MyComponent from "../Pages/Posts/allPosts";
 import Posts from "../Pages/Posts/Posts"; */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import '../assets/css/style.css';
 import '../assets/css/animate.css';
@@ -38,12 +38,12 @@ import Icon4 from '../assets/images/icons/funfact_icon_4.png';
 import Icons5 from '../assets/images/icons/envelop_icon.png';
 
 import Icon6 from '../assets/images/avatar_2.png';
-import Icon7 from '../assets/images/avatar_3.png';
+import Icon7 from '../assets/images/icons/quote_icon2.svg';
 import Icon8 from '../assets/images/avatar_7.png';
 import Icon9 from '../assets/images/avatar_4.png';
 import Icon10 from '../assets/images/avatar_5.png';
-import Icon11 from '../assets/images/avatar_6.png';
-import Icon12 from '../assets/images/avatar_8.png';
+import Icon11 from '../assets/images/testimonial_shape3.svg';
+import Icon12 from '../assets/images/testimonial_shape2.svg';
 
 import Avatar9 from '../assets/images/avatar_9.png';
 import Avatar3 from '../assets/images/avatar_3.png';
@@ -52,6 +52,9 @@ import Avatar4 from '../assets/images/avatar_4.png';
 import Avatar5 from '../assets/images/avatar_5.png';
 import Avatar6 from '../assets/images/avatar_6.png';
 import Avatar8 from '../assets/images/avatar_8.png';
+
+
+
 import { Link } from 'react-router-dom';
 import { motion, useAnimation } from 'framer-motion';
 import 'odometer/themes/odometer-theme-default.css';
@@ -61,8 +64,62 @@ import Odometer from 'odometer';
 //import Avatar from '../';
 
 
+
+const testimonials = [
+  {
+    img: Icon6,
+    name: 'Dr. Luiz Frank',
+    title: 'Dental Surgery',
+    quote: 'Dialect is excellent - short and sweet and effective lessons and great quick review which is key to remembering. I love it! I’m learning Dutch!! I enjoy the dialogues and scenarios, which include helpful phrases that can be used in various situations.',
+  },
+  {
+    img: Icon8,
+    name: 'Dr. Selina Gomez',
+    title: 'Neouro Surgery',
+    quote: 'Dialect is excellent - short and sweet and effective lessons and great quick review which is key to remembering. I love it! I’m learning Dutch!! I enjoy the dialogues and scenarios, which include helpful phrases that can be used in various situations.',
+  },
+  {
+    img: Icon9,
+    name: 'Dr. Michel Jhonson',
+    title: 'Cardiologist',
+    quote: 'Dialect is excellent - short and sweet and effective lessons and great quick review which is key to remembering. I love it! I’m learning Dutch!! I enjoy the dialogues and scenarios, which include helpful phrases that can be used in various situations.',
+  },
+  {
+    img: Icon10,
+    name: 'Dr. Nadim Kamal',
+    title: 'Dry Eye Surgery',
+    quote: 'Dialect is excellent - short and sweet and effective lessons and great quick review which is key to remembering. I love it! I’m learning Dutch!! I enjoy the dialogues and scenarios, which include helpful phrases that can be used in various situations.',
+  },
+];
+
+
+
+
 export default function CenterSide() {
   const controls = useAnimation();
+
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const handlePrevClick = () => {
+    setCurrentSlide((prevSlide) => (prevSlide === 0 ? testimonials.length - 1 : prevSlide - 1));
+  };
+
+  const handleNextClick = () => {
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % testimonials.length);
+  };
+
+  const getVisibleTestimonials = () => {
+    const visible = [];
+    for (let i = 0; i < 4; i++) {
+      visible.push(testimonials[(currentSlide + i) % testimonials.length]);
+    }
+    return visible;
+  };
+
+  const visibleTestimonials = getVisibleTestimonials();
+
+
 
   useEffect(() => {
     initializeJQuery();
@@ -88,10 +145,6 @@ const odometerPart1Ref = useRef(null);
     }
   }, []);
 
-
-  
-
-
   /* part - 2 */
   const odometerPart2Ref = useRef(null);
   useEffect(() => {
@@ -109,8 +162,6 @@ const odometerPart1Ref = useRef(null);
       }, 1000);
     }
   }, []);
-
-
 
 
   /* part - 3 */
@@ -300,266 +351,61 @@ const odometerPart1Ref = useRef(null);
         </div>
         <div className="cs_height_133 cs_height_lg_80"></div>
       </section>
-    {/*   <section className="bg-cover bg-center bg-primary py-20" style={{ backgroundImage: `url(${dataSrc})` }}>
-      <div className="container mx-auto">
-        <div className="flex flex-wrap gap-y-10 items-center justify-between">
-          <div className="w-full md:w-1/2 xl:w-1/4">
-            <motion.div 
-              animate="visible" 
-              transition={{ duration: 0.7 }} 
-              variants={variants} 
-              className="text-center p-5 bg-white rounded-lg shadow-md"
-            >
-              <div className="mb-4">
-                <img src={Icons} alt="Icon" className="mx-auto"/>
-              </div>
-              <h2 className="text-5xl font-semibold text-white flex items-center justify-center mb-2">
-                <span data-count-to="230" className="odometer"></span>+
-              </h2>
-              <p className="text-xl font-semibold text-white">Specialised Support</p>
-            </motion.div>
+
+
+    {/* <!-- Start Testimonial Section --> */}
+
+  <section className="cs_slider cs_style_1 cs_testimonial_slider cs_accent_v4_light position-relative overflow-hidden">
+      <div className="cs_height_120 cs_height_lg_80"></div>
+
+      <div className="container position-relative z-2">
+        <div className="cs_slider_heading d-flex align-items-center justify-content-between">
+          <div className="cs_section_heading cs_style_1">
+            <h3 className="cs_section_title_up cs_semibold cs_fs_24 cs_accent_color_v4">Our Testimonial</h3>
+            <h2 className="cs_section_title cs_semibold cs_fs_45 mb-0">What Our Clients Says</h2>
           </div>
-          <div className="w-full md:w-1/2 xl:w-1/4">
-            <motion.div 
-              initial="hidden" 
-              animate="visible" 
-              transition={{ duration: 0.5, delay: 0.2 }} 
-              variants={variants} 
-              className="text-center p-5 bg-white rounded-lg shadow-md"
-            >
-              <div className="mb-4">
-                <img src={Icons2} alt="Icon2" className="mx-auto"/>
-              </div>
-              <h2 className="text-5xl font-semibold text-white flex items-center justify-center mb-2">
-                <span data-count-to="2000" className="odometer"></span>K+
-              </h2>
-              <p className="text-xl font-semibold text-black">Happy Patients</p>
-            </motion.div>
+          <div className="cs_slider_arrows cs_style_1 cs_hide_mobile wow fadeInUp">
+            <div className="cs_left_arrow cs_slider_arrow cs_version_4 cs_center slick-arrow" onClick={handlePrevClick}>
+              <i className="fa-solid fa-chevron-left"></i>
+            </div>
+            <div className="cs_right_arrow cs_slider_arrow cs_version_4 cs_center slick-arrow" onClick={handleNextClick}>
+              <i className="fa-solid fa-chevron-right"></i>
+            </div>
           </div>
-          <div className="w-full md:w-1/2 xl:w-1/4">
-            <motion.div 
-              initial="hidden" 
-              animate="visible" 
-              transition={{ duration: 0.5, delay: 0.4 }} 
-              variants={variants} 
-              className="text-center p-5 bg-white rounded-lg shadow-md"
-            >
-              <div className="mb-4">
-                <img src={Icon3} alt="Icon3" className="mx-auto"/>
+        </div>
+        <div className="cs_height_40 cs_height_lg_20"></div>
+        <div className="cs_slider_container">
+          <div className="flex ml-2 gap-4">
+            {visibleTestimonials.map((testimonial, index) => (
+              <div className="cs_testimonial cs_style_3 cs_white_bg cs_radius_2 position-relative" key={index}>
+                <div className="cs_avatar">
+                  <div className="cs_avatar_thumb cs_radius_50 overflow-hidden">
+                    <img src={testimonial.img} alt="Avatar" />
+                  </div>
+                  <div className="cs_avatar_info">
+                    <h3 className="cs_avatar_title cs_fs_24 cs_semibold">{testimonial.name}</h3>
+                    <p className="cs_avatar_subtitle cs_medium mb-0">{testimonial.title}</p>
+                  </div>
+                </div>
+                <blockquote>{testimonial.quote}</blockquote>
+                <hr />
+                <div className="cs_quote_shape position-absolute">
+                  <img src={Icon7} alt="Icon" />
+                </div>
               </div>
-              <h2 className="text-5xl font-semibold text-white flex items-center justify-center mb-2">
-                <span data-count-to="99" className="odometer"></span>+
-              </h2>
-              <p className="text-xl font-semibold text-white">Qualified Doctors</p>
-            </motion.div>
-          </div>
-          <div className="w-full md:w-1/2 xl:w-1/4">
-            <motion.div 
-              initial="hidden" 
-              animate="visible" 
-              transition={{ duration: 0.5, delay: 0.6 }} 
-              variants={variants} 
-              className="text-center p-5 bg-white rounded-lg shadow-md"
-            >
-              <div className="mb-4">
-                <img src={Icon4} alt="Icon4" className="mx-auto"/>
-              </div>
-              <h2 className="text-5xl font-semibold text-white flex items-center justify-center mb-2">
-                <span data-count-to="125" className="odometer"></span>+
-              </h2>
-              <p className="text-xl font-semibold text-white">Hospital Rooms</p>
-            </motion.div>
+            ))}
           </div>
         </div>
       </div>
-    </section> */}
-    {/* <div className='flex-1 text-center font-secondary lg:text-left'>
-            <h1>Hi. My name is</h1>
-            <motion.h1 
-              variants={fadeIn('up', 0.3)} 
-              initial='hidden'
-              whileInView={'show'} 
-              viewport={{once: false, amount: 0.7}} 
-              className='text-[30px] font-bold leading-[1] lg:text-[60px]'
-             >
-              AsfaK Hossain Raju
-              </motion.h1>
-            
-            <motion.div 
-              variants={fadeIn('up', 0.5)} 
-              initial='hidden'
-              whileInView={'show'} 
-              viewport={{once: false, amount: 0.7}} 
-              className='mb-6 text-[20px] lg:text-[40px] font-secondary
-              font-semibold uppercase leading-[1]'>
-              <span className='mr-4'>I am a </span> 
-              <TypeAnimation 
-                sequence={[
-                  'Mern-Stack Developer',
-                  2000,
-                ]}
-                speed={50}
-                className='text-accent'
-                wrapper='span'
-                repeat={Infinity}
-              />
-            </motion.div></div> 
-            
-            
-
-<div className="cs_funfact cs_style_1">
-                <div className="cs_funfact_icon cs_center">
-                  <img src={Icon3} alt="Icon3"/>
-                </div>
-                <div className="cs_funfact_text">
-                  <h2 className="cs_counter_number cs_fs_65 cs_white_color d-flex align-items-center cs_semibold">
-                    <span data-count-to="99" className="odometer"></span>+</h2>
-                  <p className="cs_counter_title cs_fs_24 cs_semibold cs_white_color mb-0">Qualified Doctors</p>
-                </div>
-              </div>
-
-            
-            */}
-
-
-      
-    {/* <!-- Start Testimonial Section --> */}
-    <section>
-      <div className="cs_height_120 cs_height_lg_80"></div>
-        <div className="container">
-            <div className="cs_section_heading cs_style_1 text-center">
-              <h3 className="cs_section_title_up cs_accent_color_v1 cs_semibold cs_fs_24">What Client is Say</h3>
-              <h2 className="cs_section_title cs_semibold cs_fs_45 wow fadeInUp mb-0">Valueable Words From Customers</h2>
-            </div>
-            <div className="cs_tabs position-relative">
-              <ul className="cs_tab_links cs_style_2 cs_mp0">
-                <li className="active"><a href="#tab_1"><img src={Icon6} alt="Icon6"/></a></li>
-                <li><a href="#tab_2"> <img src={Icon7} alt="Icon7"/></a></li>
-                <li><a href="#tab_3"><img src={Icon8} alt="Icon8"/></a></li>
-                <li><a href="#tab_4"><img src={Icon9} alt="Icon9"/></a></li>
-                <li><a href="#tab_5"><img src={Icon10} alt="Icon10"/></a></li>
-                <li><a href="#tab_6"><img src={Icon11} alt="Icon11"/></a></li>
-                <li><a href="#tab_7"><img src={Icon12} alt="Icon12"/></a></li>
-              </ul>
-              <div className="cs_height_50 cs_height_lg_30"></div>
-              <div className="tab-content">
-                <div id="tab_1" className="cs_tab active">
-                <div className="cs_testimonial cs_style_1">
-                  <div className="cs_testimonial_thumb cs_center">
-                    <img src={Avatar9} alt="Avatar"/>
-                  </div>
-                  <div className="cs_testimonial_info cs_accent_bg_v1 cs_white_color cs_radius_5 text-center">
-                    <blockquote>We are very pleased with the way Besnik handled our purchase of a lake home. He was prompt, friendly, and very knowledgeable. He followed up on any and all concerns.</blockquote>
-                    <h3 className="cs_testimonial_title cs_fs_24 cs_medium cs_white_color">Becky Nelson</h3>
-                    <div className="cs_rating_container">
-                      <div className="cs_rating" data-rating="5">
-                        <div className="cs_rating_percentage"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <div id="tab_2" className="cs_tab">
-                <div className="cs_testimonial cs_style_1">
-                  <div className="cs_testimonial_thumb cs_center">
-                    <img src={Avatar3} alt="Avatar"/>
-                  </div>
-                  <div className="cs_testimonial_info cs_accent_bg_v1 cs_white_color cs_radius_5 text-center">
-                    <blockquote>"We are very pleased with the way Besnik handled our purchase of a lake home. He was prompt, friendly, and very knowledgeable. He followed up on any and all concerns.</blockquote>
-                    <h3 className="cs_testimonial_title cs_fs_24 cs_medium cs_white_color">Becky Nelson</h3>
-                    <div className="cs_rating_container">
-                      <div className="cs_rating" data-rating="4">
-                        <div className="cs_rating_percentage"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <div id="tab_3" className="cs_tab">
-                <div className="cs_testimonial cs_style_1">
-                  <div className="cs_testimonial_thumb cs_center">
-                    <img src={Avatar7} alt="Avatar"/>
-                  </div>
-                  <div className="cs_testimonial_info cs_accent_bg_v1 cs_white_color cs_radius_5 text-center">
-                    <blockquote>We are very pleased with the way Besnik handled our purchase of a lake home. He was prompt, friendly, and very knowledgeable. He followed up on any and all concerns.</blockquote>
-                    <h3 className="cs_testimonial_title cs_fs_24 cs_medium cs_white_color">Becky Nelson</h3>
-                    <div className="cs_rating_container">
-                      <div className="cs_rating" data-rating="5">
-                        <div className="cs_rating_percentage"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <div id="tab_4" className="cs_tab">
-                <div className="cs_testimonial cs_style_1">
-                  <div className="cs_testimonial_thumb cs_center">
-                    <img src={Avatar4} alt="Avatar"/>
-                  </div>
-                  <div className="cs_testimonial_info cs_accent_bg_v1 cs_white_color cs_radius_5 text-center">
-                    <blockquote>We are very pleased with the way Besnik handled our purchase of a lake home. He was prompt, friendly, and very knowledgeable. He followed up on any and all concerns.</blockquote>
-                    <h3 className="cs_testimonial_title cs_fs_24 cs_medium cs_white_color">Becky Nelson</h3>
-                    <div className="cs_rating_container">
-                      <div className="cs_rating" data-rating="5">
-                        <div className="cs_rating_percentage"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <div id="tab_5" className="cs_tab">
-                <div className="cs_testimonial cs_style_1">
-                  <div className="cs_testimonial_thumb cs_center">
-                    <img src={Avatar5} alt="Avatar"/>
-                  </div>
-                  <div className="cs_testimonial_info cs_accent_bg_v1 cs_white_color cs_radius_5 text-center">
-                    <blockquote>We are very pleased with the way Besnik handled our purchase of a lake home. He was prompt, friendly, and very knowledgeable. He followed up on any and all concerns.</blockquote>
-                    <h3 className="cs_testimonial_title cs_fs_24 cs_medium cs_white_color">Becky Nelson</h3>
-                    <div className="cs_rating_container">
-                      <div className="cs_rating" data-rating="5">
-                        <div className="cs_rating_percentage"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <div id="tab_6" className="cs_tab">
-                <div className="cs_testimonial cs_style_1">
-                  <div className="cs_testimonial_thumb cs_center">
-                    <img src={Avatar6} alt="Avatar"/>
-                  </div>
-                  <div className="cs_testimonial_info cs_accent_bg_v1 cs_white_color cs_radius_5 text-center">
-                    <blockquote>We are very pleased with the way Besnik handled our purchase of a lake home. He was prompt, friendly, and very knowledgeable. He followed up on any and all concerns.</blockquote>
-                    <h3 className="cs_testimonial_title cs_fs_24 cs_medium cs_white_color">Becky Nelson</h3>
-                    <div className="cs_rating_container">
-                      <div className="cs_rating" data-rating="5">
-                        <div className="cs_rating_percentage"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <div id="tab_7" className="cs_tab">
-                <div className="cs_testimonial cs_style_1">
-                  <div className="cs_testimonial_thumb cs_center">
-                    <img src={Avatar8} alt="Avatar"/>
-                  </div>
-                  <div className="cs_testimonial_info cs_accent_bg_v1 cs_white_color cs_radius_5 text-center">
-                    <blockquote>We are very pleased with the way Besnik handled our purchase of a lake home. He was prompt, friendly, and very knowledgeable. He followed up on any and all concerns.</blockquote>
-                    <h3 className="cs_testimonial_title cs_fs_24 cs_medium cs_white_color">Becky Nelson</h3>
-                    <div className="cs_rating_container">
-                      <div className="cs_rating" data-rating="5">
-                        <div className="cs_rating_percentage"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-              </div>
-            </div>
-        </div>
-      <div className="cs_height_120 cs_height_lg_80"></div>
+      <div className="cs_testimonial_shape3 position-absolute wow fadeInLeft">
+        <img src={Icon11} alt="Shape Image" />
+      </div>
+      <div className="cs_testimonial_shape4 position-absolute">
+        <img src={Icon12} alt="Shape Image" />
+      </div>
+      <div className="cs_height_100 cs_height_lg_60"></div>
     </section>
+
   {/* <!-- End Testimonial Section --> */}
 
 
@@ -589,14 +435,6 @@ const odometerPart1Ref = useRef(null);
             <div className="col-md-6 position-relative">
               <input type="text" name="email" className="cs_form_field cs_radius_5" required/>
               <label>Email Address</label>
-            </div>
-            <div className="col-md-6 position-relative">
-              <input type="text" name="website" className="cs_form_field cs_radius_5" required/>
-              <label>Website</label>
-            </div>
-            <div className="col-md-6 position-relative">
-              <input type="text" name="subject" className="cs_form_field cs_radius_5" required />
-              <label>Subject</label>
             </div>
             <div className="col-md-12 position-relative">
               <textarea name="message" rows="6" className="cs_form_field cs_radius_5" required></textarea>
