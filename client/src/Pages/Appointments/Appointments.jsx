@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import {  toast, Toaster } from "react-hot-toast";
 
-import { event } from "jquery";
+/* import { event } from "jquery"; */
 
 function Appointments() {
   const { currentUser } = useSelector(state => state.user);
@@ -20,14 +20,17 @@ function Appointments() {
   const [fullyBooked, setFullyBooked] = useState(false);
   const [appointmentSlots, setAppointmentSlots] = useState([]);
 
-  const [name, setName] = useState('');
+  const [nameError, setNameError] = useState(''); // Error specific to name field
 
 
 
 
 
-  console.log("Current User: ", currentUser?.data?.user?.email);
+/*   console.log("Current User: ", currentUser?.data?.user?.email);
   console.log("Current User: ", currentUser?.data?.user?._id);
+  console.log("Department: ", deptData);
+  console.log("Doctors: ", doctors); */
+  console.log("formdata: ", formData);
 
   useEffect(() => {
     const getDepartment = async () => {
@@ -45,8 +48,14 @@ function Appointments() {
   const handleChange = (e) => {
     e.preventDefault();
     const { id, value } = e.target;
-    setName(event.target.id= e.target.value)
-    
+    /* if (id === "name") {
+      const regex = /^[A-Za-z\s]*$/;
+      if (!regex.test(value)) {
+        setNameError('Please enter only alphabetic characters and spaces');
+      } else {
+        setNameError('');
+      }
+    }
 
 
     if (id === "appointmentSlots") {
@@ -59,7 +68,22 @@ function Appointments() {
         ...formData,
         [id]: value,
         bill: doctorBill,
-      });
+      }); */
+      if (id === "name") {
+        const regex = /^[A-Za-z\s]*$/;
+        if (regex.test(value)) {
+          setError('');
+          setFormData({ ...formData, [id]: value });
+        } else {
+          setError('Please enter only alphabetic characters and spaces');
+          setFormData({ ...formData, [id]: value.replace(/[^A-Za-z\s]/g, '') });
+        }
+      } else {
+        setFormData({
+          ...formData,
+          [id]: value,
+          bill: doctorBill,
+        });
 
       if (id === "department") {
         const selectedDept = deptData.find((dept) => dept.deptname === value);
@@ -102,7 +126,7 @@ function Appointments() {
   };
 
 
-  const handleKeyPress = (event) => {
+ /*  const handleKeyPress = (event) => {
     const charCode = event.which || event.keyCode;
     const charStr = String.fromCharCode(charCode);
     const regex = "/^[a-zA-Z]*$/";
@@ -110,7 +134,7 @@ function Appointments() {
     if (!regex.test(charStr)) {
       event.preventDefault();
     }
-  };
+  }; */
 
 
 
@@ -198,13 +222,15 @@ function Appointments() {
             <h1 className="lg:w-1/3 text-left">Patient Name:</h1>
             <div className="lg:w-2/3">
             <input 
-              type="text" 
+              type="name" 
               placeholder="Full Name" 
               id="name" 
-              value={name}
               className="input input-bordered w-full" 
-              onKeyPress={handleKeyPress} 
+              /* pattern="[A-Za-z\s]+"
+              title="Please enter only alphabetic characters and spaces" */
+              value={formData.name || ''}
               onChange={handleChange} />
+              {error && <p className="text-red-500 mt-4">{error?.message}</p>}
             </div>
           </div>
 
@@ -260,7 +286,7 @@ function Appointments() {
             <div className="lg:w-2/3">
               <select id="doctor" onChange={handleChange} className="input input-bordered w-full">
                 <option value="">Choose doctor</option>
-                {doctors.map((doctor, index) => (
+                {doctors?.map((doctor, index) => (
                   <option key={index} value={doctor.docname}>{doctor.docname}</option>
                 ))}
               </select>
@@ -306,7 +332,7 @@ function Appointments() {
           <button type="submit" className="mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             {loading ? 'Submitting...' : 'Submit'}
           </button>
-          {error && <p className="text-red-500 mt-4">{error}</p>}
+          {error && <p className="text-red-500 mt-4">{error?.message}</p>}
         </form>
       </div>
       <Toaster position="center-top"/>
