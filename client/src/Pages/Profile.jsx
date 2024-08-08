@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 
 export default function Profile() {
 
-  const {currentUser} = useSelector(state => state.user);
+  const {currentUser} = useSelector(state => state?.user);
   const fileRef = useRef(null);
   const [file,setFile] = useState(undefined);
   const [formData, setFormData] = useState({});
@@ -20,9 +20,10 @@ export default function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log('Current User ID: ', `${currentUser?.data?.user?._id}`) 
-  console.log(formData);
+  console.log("Data",formData);
+  //console.log('Current User ID: ', `${currentUser?.data?.user?._id}`) 
  
+
 
   const handleChange = (e) =>{
     setFormData({
@@ -167,7 +168,6 @@ export default function Profile() {
     console.log(currentUser)
     if( currentUser?.data?.user?.role === 'doctor' )
       {
-        console.log(formData)
       try{
         dispatch(signOutUserStart());
         const res = await fetch('/api/auth/docsignout',{
@@ -236,27 +236,26 @@ export default function Profile() {
       }
     }
     else{
-      console.log(formData)
-        try{
-          dispatch(signOutUserStart());
-          const res = await fetch('/api/auth/signout',{
-            method:'POST',
-            headers: {
-              'Content-type' : 'application/json'
-            },
-            body: JSON.stringify(formData)
-          });
-          const data = await res.json();
-          console.log(data)
-          if(data.success === false){
-            dispatch(signOutUserFailure(data.message));
-            return;
-          }
-          dispatch(signOutUserSuccess(data.message));
-          navigate('/sign-in');
-        }catch(error){
-          dispatch(signOutUserFailure(error.message));
+      try{
+        dispatch(signOutUserStart());
+        const res = await fetch('/api/auth/signout',{
+          method:'POST',
+          headers: {
+            'Content-type' : 'application/json'
+          },
+          body: JSON.stringify(currentUser)
+        });
+        const data = await res.json();
+        console.log(data)
+        if(data.success === false){
+          dispatch(signOutUserFailure(data.message));
+          return;
         }
+        dispatch(signOutUserSuccess(data.message));
+        navigate('/sign-in');
+      }catch(error){
+        dispatch(signOutUserFailure(error.message));
+      }
     }
   };
 

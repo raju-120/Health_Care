@@ -225,12 +225,13 @@ function Appointments() {
               type="name" 
               placeholder="Full Name" 
               id="name" 
-              className="input input-bordered w-full" 
+              className="input input-bordered w-full"
+              required 
               /* pattern="[A-Za-z\s]+"
               title="Please enter only alphabetic characters and spaces" */
               value={formData.name || ''}
               onChange={handleChange} />
-              {error && <p className="text-red-500 mt-4">{error?.message}</p>}
+              {error && <p className="text-red-500 mt-4">{"Please enter only alphabetic characters"}</p>}
             </div>
           </div>
 
@@ -238,7 +239,7 @@ function Appointments() {
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
             <h1 className="lg:w-1/3 text-left">Date of Birth:</h1>
             <div className="lg:w-2/3">
-              <input type="date" id="dateOfBirth" onChange={handleChange} className="input input-bordered w-full" />
+              <input type="date" id="dateOfBirth" onChange={handleChange} className="input input-bordered w-full" required />
             </div>
           </div>
 
@@ -249,11 +250,11 @@ function Appointments() {
               <div className="flex gap-4">
                 <label className="flex items-center">
                   <span>Male</span>
-                  <input type="radio" name="gender" value="Male" className="m-2" onChange={handleGenderChange} />
+                  <input type="radio" name="gender" value="Male" className="m-2" onChange={handleGenderChange} required />
                 </label>
                 <label className="flex items-center">
                   <span>Female</span>
-                  <input type="radio" name="gender" value="Female" className="m-2" onChange={handleGenderChange} />
+                  <input type="radio" name="gender" value="Female" className="m-2" onChange={handleGenderChange} required />
                 </label>
               </div>
             </div>
@@ -263,7 +264,7 @@ function Appointments() {
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
             <h1 className="lg:w-1/3 text-left">Mobile :</h1>
             <div className="lg:w-2/3">
-              <input type="number" placeholder="Number" id="phone" onChange={handleChange} className="input input-bordered w-full" />
+              <input type="number" placeholder="Number" id="phone" onChange={handleChange} className="input input-bordered w-full" required />
             </div>
           </div>
 
@@ -271,7 +272,7 @@ function Appointments() {
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
             <h1 className="lg:w-1/3 text-left">Department :</h1>
             <div className="lg:w-2/3">
-              <select id="department" onChange={handleChange} className="input input-bordered w-full">
+              <select id="department" onChange={handleChange} className="input input-bordered w-full" required >
                 <option value="">Choose department</option>
                 {deptData?.map((dept, index) => (
                   <option key={index} value={dept?.deptname}>{dept?.deptname}</option>
@@ -284,7 +285,7 @@ function Appointments() {
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
             <h1 className="lg:w-1/3 text-left">Doctor :</h1>
             <div className="lg:w-2/3">
-              <select id="doctor" onChange={handleChange} className="input input-bordered w-full">
+              <select id="doctor" onChange={handleChange} className="input input-bordered w-full" required >
                 <option value="">Choose doctor</option>
                 {doctors?.map((doctor, index) => (
                   <option key={index} value={doctor.docname}>{doctor.docname}</option>
@@ -297,7 +298,7 @@ function Appointments() {
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
             <h1 className="lg:w-1/3 text-left">Appointment Date :</h1>
             <div className="lg:w-2/3">
-              <input type="date" id="date" onChange={handleChange} className="input input-bordered w-full" />
+              <input type="date" id="date" onChange={handleChange} className="input input-bordered w-full" required />
             </div>
           </div>
 
@@ -309,7 +310,7 @@ function Appointments() {
                 {fullyBooked ? (
                   <p className="text-red-500">All slots for this date are booked. Please choose another date.</p>
                 ) : (
-                  <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full">
+                  <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required >
                     <option value="">Choose Time Slot</option>
                     {filteredTimeSlots.map((slot, index) => (
                       <option key={index} value={slot}>{slot}</option>
@@ -324,7 +325,7 @@ function Appointments() {
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
             <h1 className="lg:w-1/3 text-left">Doctors Bill:</h1>
             <div className="lg:w-2/3">
-              <input type="text" id="price" onChange={handleChange} value={`$ ${doctorBill}`} readOnly className="input input-bordered w-full bg-gray-200" />
+              <input type="text" id="price" onChange={handleChange} value={`$ ${doctorBill}`} readOnly className="input input-bordered w-full bg-gray-200" required />
             </div>
           </div>
 

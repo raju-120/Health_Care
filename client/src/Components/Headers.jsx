@@ -136,16 +136,16 @@ export default function Headers() {
                 currentUser ? (
                     <div className="dropdown dropdown-end">
                       <div tabIndex={0} role="button" className="rounded-btn mt-2">
-                        <img src={currentUser?.data?.user?.avatar} className='w-16 h-16 rounded-full' alt='profile'/>
+                        <Link to='/dashboard'><img src={currentUser?.data?.user?.avatar} className='w-16 h-16 rounded-full' alt='profile'/></Link>
                       </div>
-                      <ul
+                      {/* <ul
                         tabIndex={0}
                         className="text-center text-xl menu dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-3 shadow">
                         <Link to="/dashboard">
                           <h1 className='mb-2'>Dashboard</h1>
                         </Link>
                         <button className='btn btn-warning text-centet text-lg btn-md'>Signout</button>
-                      </ul>
+                      </ul> */}
                     </div>
                   
                   
