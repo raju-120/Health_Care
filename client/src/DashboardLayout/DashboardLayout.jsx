@@ -42,12 +42,13 @@ export default function DashboardLayout() {
                                 currentUser?.data?.user?.role=== "system-admin" &&
                                 (
                                     <>
-                                        <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/profile'>Profile</Link></li>
-                                        <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/users'>users List</Link></li>
-                                        <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/doctors'>Doctor List</Link></li>
-                                        <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/request'>All Appointment List</Link></li>
-                                        <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/adminlist'>Admin List</Link></li>
-                                        <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/addAdmin'>Add Admin</Link></li>
+                                        <li className='mb-2 mt-8 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/profile'>Profile</Link></li>
+                                        <li className='mb-2 mt-8 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/request'>Request Appointment List</Link></li>
+                                        <li className='mb-2 mt-8 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/users'>users List</Link></li>
+                                        <li className='mb-2 mt-8 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/doctors'>Doctor List</Link></li>
+                                        <li className='mb-2 mt-8 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/reg-doctors'>Add Doctor</Link></li>
+                                        <li className='mb-2 mt-8 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/adminlist'>Admin List</Link></li>
+                                        <li className='mb-2 mt-8 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/addAdmin'>Add Admin</Link></li>
                                     </>
                                 )
                             }
@@ -63,7 +64,7 @@ export default function DashboardLayout() {
                 </div> 
                 <div className="drawer-side">
                     <label htmlFor="dashboard-drawer" className="drawer-overlay"></label> 
-                    <ul className="menu p-8 w-72 h-full bg-zinc-500 rounded-lg text-base-content">
+                    <ul className="menu p-4 w-84 h-full bg-zinc-500 rounded-lg text-base-content">
                         {menuItems}
                         
                     </ul>

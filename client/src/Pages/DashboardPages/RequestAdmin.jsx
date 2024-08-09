@@ -55,7 +55,7 @@ export default function RequestAdmin() {
 
     return (
       <div>
-      <div className="m-4 p-5 bg-stone-200 rounded-md">
+      <div className="m-4 p-2 bg-stone-200 rounded-md">
       <div className="overflow-x-auto">
         <table className="table">
           {/* head */}

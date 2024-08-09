@@ -106,12 +106,12 @@ export default function Headers() {
               <div className="cs_nav cs_primary_font">
                 
                 <ul className="cs_nav_list cs_fs_28">
-                  <li><Link to='/'><a>Home</a></Link></li>
-                  <li><Link to='/about'><a>About</a></Link></li>
-                  <li><Link to='/appointment'><a>Appointment</a></Link></li>
-                  <li><Link to='/doctorlists'><a>Doctors</a></Link></li>
-                  <li><Link to='/service'><a>Services</a></Link></li>
-                  <li><Link to='/donner'><a>Blood</a></Link></li>
+                  <li><Link to='/'><>Home</></Link></li>
+                  <li><Link to='/about'><>About</></Link></li>
+                  <li><Link to='/appointment'><>Appointment</></Link></li>
+                  <li><Link to='/doctorlists'><>Doctors</></Link></li>
+                  <li><Link to='/service'><>Services</></Link></li>
+                  <li><Link to='/donner'><>Blood</></Link></li>
                   
 
                   {/* <li className="menu_item_has_children"><a href="#blog">Blog</a>
@@ -150,8 +150,8 @@ export default function Headers() {
                   
                   
                 ) : (
-                  <ul className='flex gap-8 item-center text-zinc-200 uppercase text-xl'>
-                    <li className='hover:text-gray-700 uppercase'>Sign In</li>
+                  <ul className='flex gap-8 item-center  uppercase text-xl'>
+                    <button className='text-2xl font-semibold hover:opacity-50'>Sign In</button>
                   </ul>
                 )
               }

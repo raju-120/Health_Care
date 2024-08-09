@@ -109,7 +109,7 @@ export default function SignIn() {
       toast.success("System Admin Login Successful");
       navigate('/');
     } catch(error){
-      dispatch(signInFailure(error.message))
+      dispatch(signInFailure(error?.message))
     }
   }
 
@@ -132,7 +132,7 @@ export default function SignIn() {
             Doctor Login
           </button>
           <button
-            className={`px-4 py-2 rounded ${loginType === 'admin' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            className={`px-4 py-2 rounded ${loginType === 'system-admin' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
             onClick={() => handleToggle('system-admin')}
           >
             System Admin
@@ -210,7 +210,7 @@ export default function SignIn() {
         {loginType === 'system-admin' && (
           <div>
             <h2 className="text-2xl font-bold mb-4 text-center">Admin Login</h2>
-            <form onSubmit={handleDoctorSubmit}>
+            <form onSubmit={handleAdminSubmit}>
               <div className="mb-4">
                 <label className="block mb-2">Email</label>
                 <input 
@@ -223,10 +223,14 @@ export default function SignIn() {
               </div>
               <div className="mb-4">
                 <label className="block mb-2">Password</label>
-                <input type="password" className="w-full p-2 border border-gray-300 rounded" />
+                <input  type="password" 
+                  id='password'
+                  placeholder='password'
+                  className="w-full p-2 border border-gray-300 rounded"
+                  onChange={handleChange} />
               </div>
               <button className="w-full bg-blue-500 text-white py-2 rounded">
-                 Login
+                 Admin Login
               </button>
               {error && <p className='text-red-500 font-lg mt-2'>{error?.message}</p>}
             </form>

@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "departmentname": [
       " Medicine & Nephrology",
       "Cardiology",
@@ -17,12 +18,30 @@
       "Neurology",
       "Dental",
       "Neurology"
-    ],
+    ]
+  },
+  {
+    "id": 2,
     "designation": [
-      "Professor",
-      "Associate Professor",
-      "Consultant"
-    ],
+     {
+      "id": 10,
+      "desiname":  "Professor"
+     },
+     {
+      "id": 11,
+      "desiname":  "Associate Professor"
+     },
+      
+     {
+      "id": 12,
+      "desiname":  "Consultant"
+     }
+      
+      
+    ]
+  },
+  {
+    "id": 3,
     "instute": [
       "Dhaka Medical College",
       "Sir Salimullah Medical College",
@@ -61,57 +80,61 @@
       "Naogaon Medical College",
       "Chandpur Medical College",
       "Bangabandhu Medical College"
-    ],
-    "specialty" : [
-"Acupuncture Specialist",
-"Anesthesiology (Pain) Specialist",
-"Breast Specialist",
-"Cancer Specialist",
-"Cancer Surgery Specialist",
-"Cardiovascular & Thoracic Surgery Specialist",
-"Cardiology Specialist",
-"Chest & Asthma Specialist",
-"Child Specialist",
-"Child Cardiology Specialist",
-"Child Gastroenterologist",
-"Child Neurology Specialist",
-"Colorectal Surgery Specialist",
-"Colorectal Surgery (Female) Specialist",
-"Dental Specialist",
-"Endocrinology (Diabetes & Hormone) Specialist",
-"Dietitian/Nutritionist",
-"ENT Specialist",
-"Eye Specialist",
-"Neuro-opthalmologist",
-"Gastroenterology Specialist",
-"General & Laparoscopic Surgery Specialist",
-"Gynecology & Obstetrics Specialist",
-"Gynecological Oncologist",
-"Hematology (Blood) Specialist",
-"Pediatric Hematologist",
-"Hepatobiliary Surgery Specialist",
-"Homeopathy Doctor",
-"Infertility Specialist",
-"Kidney Specialist",
-"Liver Specialist",
-"Medicine Specialist",
-"Neurology/Neuromedicine Specialist",
-"Neurosurgery Specialist",
-"Normal Delivery Specialist",
-"Occupational Therapist",
-"Orthopedic Specialist",
-"Pediatric Nephrologist",
-"Pediatric Orthopedic Surgeon",
-"Pediatric Surgery Specialist",
-"Physical Medicine Specialist",
-"Physiotherapy Specialist",
-"Plastic Surgery Specialist",
-"Psychiatry (Mental) Specialist",
-"Psychologist/Psychotherapist",
-"Rheumatology Specialist",
-"Sex Specialist",
-"Skin Specialist",
-"Urology Specialist",
-"Vascular Surgery Specialist"    ]
+    ]
+  },
+  {
+    "id": 4,
+    "specialty": [
+      "Acupuncture Specialist",
+      "Anesthesiology (Pain) Specialist",
+      "Breast Specialist",
+      "Cancer Specialist",
+      "Cancer Surgery Specialist",
+      "Cardiovascular & Thoracic Surgery Specialist",
+      "Cardiology Specialist",
+      "Chest & Asthma Specialist",
+      "Child Specialist",
+      "Child Cardiology Specialist",
+      "Child Gastroenterologist",
+      "Child Neurology Specialist",
+      "Colorectal Surgery Specialist",
+      "Colorectal Surgery (Female) Specialist",
+      "Dental Specialist",
+      "Endocrinology (Diabetes & Hormone) Specialist",
+      "Dietitian/Nutritionist",
+      "ENT Specialist",
+      "Eye Specialist",
+      "Neuro-opthalmologist",
+      "Gastroenterology Specialist",
+      "General & Laparoscopic Surgery Specialist",
+      "Gynecology & Obstetrics Specialist",
+      "Gynecological Oncologist",
+      "Hematology (Blood) Specialist",
+      "Pediatric Hematologist",
+      "Hepatobiliary Surgery Specialist",
+      "Homeopathy Doctor",
+      "Infertility Specialist",
+      "Kidney Specialist",
+      "Liver Specialist",
+      "Medicine Specialist",
+      "Neurology/Neuromedicine Specialist",
+      "Neurosurgery Specialist",
+      "Normal Delivery Specialist",
+      "Occupational Therapist",
+      "Orthopedic Specialist",
+      "Pediatric Nephrologist",
+      "Pediatric Orthopedic Surgeon",
+      "Pediatric Surgery Specialist",
+      "Physical Medicine Specialist",
+      "Physiotherapy Specialist",
+      "Plastic Surgery Specialist",
+      "Psychiatry (Mental) Specialist",
+      "Psychologist/Psychotherapist",
+      "Rheumatology Specialist",
+      "Sex Specialist",
+      "Skin Specialist",
+      "Urology Specialist",
+      "Vascular Surgery Specialist"
+    ]
   }
 ]

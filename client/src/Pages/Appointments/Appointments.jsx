@@ -24,8 +24,6 @@ function Appointments() {
 
 
 
-
-
 /*   console.log("Current User: ", currentUser?.data?.user?.email);
   console.log("Current User: ", currentUser?.data?.user?._id);
   console.log("Department: ", deptData);
