@@ -45,7 +45,7 @@ router.route('/users').get(getAllUsers);
 
 //Doctors sections
 
-router.route('/doctorsignup').post(doctorSignUp);
+router.route('/doctorsignup').post(adminUpload,doctorSignUp);
 router.route('/doctorssignin').post(doctorSignIn);
 router.route('/doctors').get(getAllDoctors);
 router.route('/doctors/:id').get(getSpecificDoctor);

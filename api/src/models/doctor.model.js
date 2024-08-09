@@ -50,12 +50,24 @@ const doctorSchema = new Schema({
         type: String,
         required: true,
     },
+    price:{ 
+        type: Number,
+        required: true,
+    },
+    gender:{
+        type: String,
+        required: true,
+    },
+    time: {
+        type: String,
+        required: true,
+    },
     password:{
         type: String,
         required: true,
     },
     avatar:{
-        type: Array,
+        type: String,
         required: true,
     },
     role: { 

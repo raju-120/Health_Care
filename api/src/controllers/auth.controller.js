@@ -309,7 +309,7 @@ const docLogoutUser = asyncHandler (async(req, res) =>{
 
 const doctorSignUp = asyncHandler(async(req, res) =>{
     const {username,email,bmdc,specialty,qualification,designation,institute,
-        department,phone,appointmentnumber,address ,avatar,password} 
+        department,phone,appointmentnumber,address ,avatar,password,time,gender,price} 
         = req.body;
     
     /* if(
@@ -339,7 +339,7 @@ const doctorSignUp = asyncHandler(async(req, res) =>{
         appointmentnumber,
         address,
         avatar,
-        password
+        password,time,gender,price
     });
     const createdUser = await Doctor.findById(docUser._id).select(
         "-password -refreshToken"
@@ -443,7 +443,7 @@ const doctorUpdate = asyncHandler(async (req, res, next) => {
             department,
             phone,
             appointmentnumber,
-            address,
+            address,time,gender,price
         } = req.body;
 
         let updateData = {
@@ -459,7 +459,7 @@ const doctorUpdate = asyncHandler(async (req, res, next) => {
             department,
             phone,
             appointmentnumber,
-            address
+            address,time,gender,price
         };
 
         // Only hash and update the password if it is provided
