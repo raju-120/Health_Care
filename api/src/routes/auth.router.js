@@ -15,7 +15,9 @@ import { docLogoutUser,
     /* refreshDocAccessToken, */ 
     userUpdate, 
     userDelete,
-    doctorDelete} from "../controllers/auth.controller.js";
+    doctorDelete,
+    getDepartments,
+    getDoctorsByDepartment} from "../controllers/auth.controller.js";
 
 import { AdminVerifyJWT, conditionalAuth, docUpVerifyJwt, docVerifyJwt, systemAdminVerifyJWT, verifyJwt } from "../middlewares/auth.middleware.js";
 import { adminDelete, adminLogOut, adminSignIn,adminSignup, getAllAdminList, systemAdminOut, systemAdminSignIn, systemAdminSignup } from "../controllers/adminAuth.controller.js";
@@ -47,8 +49,11 @@ router.route('/users').get(getAllUsers);
 
 router.route('/doctorsignup').post(adminUpload,doctorSignUp);
 router.route('/doctorssignin').post(doctorSignIn);
-router.route('/doctors').get(getAllDoctors);
+//router.route('/doctors').get(getAllDoctors);
 router.route('/doctors/:id').get(getSpecificDoctor);
+
+router.get('/departments', getDepartments);
+router.get('/doctors', getDoctorsByDepartment);
 
 router.route('/google').post(google);
 

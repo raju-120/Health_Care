@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { APIResponse } from "../utils/ApiResponse.js";
 import {User} from "../models/user.model.js";
 import { Doctor } from "../models/doctor.model.js";
+import { Department } from "../models/department.model.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import { cloudinary } from "../utils/cloudinaryConfig.js";
@@ -310,7 +311,7 @@ const docLogoutUser = asyncHandler (async(req, res) =>{
 
 
 
-const doctorSignUp = asyncHandler(async(req, res) =>{
+/* const doctorSignUp = asyncHandler(async(req, res) =>{
     const {username,email,bmdc,specialty,qualification,designation,institute,
         department,phone,appointmentnumber,address,password,time,gender,price} 
         = req.body;
@@ -356,10 +357,6 @@ const doctorSignUp = asyncHandler(async(req, res) =>{
         if(!createdUser) {
             throw new ApiError(500, "Doctor's id not created.There must be fill up all the fields!");
         };
-    
-        /* return res.status(201).json(
-            new APIResponse(200, createdUser, "Doctor registered successfully.")
-        ) */
 
         return res.status(201).json( 
             new APIResponse(200, createdUser, "Doctor registered successfully."));
@@ -368,50 +365,67 @@ const doctorSignUp = asyncHandler(async(req, res) =>{
         console.error('Error during image upload:', error);
         throw new ApiError(500, 'Image upload failed');
       } finally {
-        // Clean up: Delete the temporary file after upload
+
         if (req.file) {
           const fs = require('fs');
-          fs.unlinkSync(req.file.path); // Delete the temporary file
+          fs.unlinkSync(req.file.path); 
         }
       }
+}); */
 
-    
-    /* if(
-        [username,email,bmdc,specialty,qualification,designation,institute,
-            department,phone,appointmentnumber,address,avatar,password].some((field) =>field?.trim() === "")
-    ){
-        throw new ApiError(400, "All the fields are required!")
-    }; */
 
-    
+const doctorSignUp = asyncHandler(async (req, res) => {
+    const { username, email, bmdc, specialty, qualification, designation, institute,
+      department, phone, appointmentnumber, address, password, time, gender, price } = req.body;
+  
+    let avatarUrl = null;
+    const existedUser = await Doctor.findOne({ email });
+    if (existedUser) {
+      throw new ApiError(402, "This email id is already used");
+    }
+  
+    try {
+      if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path, { folder: 'avatars' });
+        avatarUrl = result.secure_url;
+      }
+  
+      const newDoctor = new Doctor({
+        username, email, bmdc, specialty, qualification, designation, institute,
+        department, phone, appointmentnumber, address, avatar: avatarUrl, password, time, gender, price
+      });
+  
+      await newDoctor.save();
+  
+      const createdUser = await Doctor.findById(newDoctor._id).select("-password -refreshToken");
+  
+      if (!createdUser) {
+        throw new ApiError(500, "Doctor's ID not created. All fields must be filled!");
+      }
+  
+      return res.status(201).json(new APIResponse(200, createdUser, "Doctor registered successfully."));
+    } catch (error) {
+      console.error('Error during image upload:', error);
+      throw new ApiError(500, 'Image upload failed');
+    } finally {
+      if (req.file) {
+        const fs = require('fs');
+        fs.unlinkSync(req.file.path);
+      }
+    }
+  });
+  
+const getDepartments = asyncHandler(async (req, res) => {
+    const departments = await Department.find({});
+    res.status(200).json(departments);
+  });
+  
+const getDoctorsByDepartment = asyncHandler(async (req, res) => {
+    const { deptId } = req.query;
+    const doctors = await Doctor.find({ department: deptId }).select("-password -refreshToken");
+    res.status(200).json(doctors);
+  });
 
-    /* const docUser = await Doctor.create({
-        username,
-        email,
-        bmdc,
-        specialty,
-        qualification,
-        designation,
-        institute,
-        department,
-        phone,
-        appointmentnumber,
-        address,
-        avatar,
-        password,time,gender,price
-    });
-    const createdUser = await Doctor.findById(docUser._id).select(
-        "-password -refreshToken"
-    )
-
-    if(!createdUser) {
-        throw new ApiError(500, "Doctor's id not created.There must be fill up all the fields!");
-    };
-
-    return res.status(201).json(
-        new APIResponse(200, createdUser, "Doctor registered successfully.")
-    ) */
-});
 
 const doctorSignIn = asyncHandler(async(req, res)=>{
     const {email, password } = req.body;
@@ -637,4 +651,6 @@ export {
         getAllUsers,
         userDelete,
         doctorDelete
+        getDepartments,
+        getDoctorsByDepartment,
     };
