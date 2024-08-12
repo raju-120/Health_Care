@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {  toast, Toaster } from "react-hot-toast";
 
 export default function AddDoctor() {
   const [formData, setFormData] = useState({});
@@ -12,6 +13,7 @@ export default function AddDoctor() {
 
   console.log("List: ", deptData);
   console.log("Data: ", formData);
+  console.log("avatar", file)
 
 
   useEffect(() => {
@@ -68,7 +70,7 @@ export default function AddDoctor() {
   };
 
 
-  const handleSubmit = async (e) => {
+  /* const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
@@ -78,9 +80,9 @@ export default function AddDoctor() {
       setLoading(false);
       setError(error.message);
     }
-  }; 
+  };  */
 
-  /* const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
@@ -89,13 +91,24 @@ export default function AddDoctor() {
       const formDataToSend = new FormData();
       formDataToSend.append("username", formData.username);
       formDataToSend.append("email", formData.email);
+      formDataToSend.append("bmdc", formData.bmdc);
+      formDataToSend.append("department", formData.department);
+      formDataToSend.append("designation", formData.designation);
+      formDataToSend.append("qualification", formData.qualification);
+      formDataToSend.append("specialty", formData.specialty);
+      formDataToSend.append("address", formData.address);
+      formDataToSend.append("phone", formData.phone);
+      formDataToSend.append("appointmentnumber", formData.appointmentnumber);
+      formDataToSend.append("price", formData.price);
+      formDataToSend.append("time", formData.time);
+      formDataToSend.append("gender", formData.gender);
+      formDataToSend.append("institute", formData.institute);
       formDataToSend.append("password", formData.password);
-      formDataToSend.append("role", "admin");
       if (file) {
         formDataToSend.append("avatar", file);
       }
       console.log('Form data: ', formDataToSend);
-      const res = await fetch('/api/auth/adminsignup', {
+      const res = await fetch('/api/auth/doctorsignup', {
         method: 'POST',
         body: formDataToSend,
       });
@@ -106,15 +119,23 @@ export default function AddDoctor() {
         setError(data.message);
         return;
       }
+      toast.success("Doctor Registration successfully Complete!", {
+        position: "top-center",
+        duration: 5000,
+        style: {
+          background: "#4CAF50",
+          color: "white",
+        },
+      });
       
       setLoading(false);
       setError(null);
-      navigate('/dashboard/adminlist');
+      navigate('/dashboard/doctors');
     } catch (error) {
       setLoading(false);
       setError(error.message);
     }
-  }; */
+  }; 
 
   return (
     <div>
@@ -141,7 +162,7 @@ export default function AddDoctor() {
                 className="border p-3 rounded-lg"
                 required
               />
-
+                {/* BMDC & Department */}
               <div className="flex gap-2"> 
                 <div className="w-1/2">
                   <input
@@ -151,7 +172,7 @@ export default function AddDoctor() {
                     onChange={handleChange}
                     className="w-full border p-3 rounded-lg"
                     maxLength={7}
-                    pattern="/[a-zA-Z][a-zA-Z0-9]*$/"
+/*                     pattern="/[a-zA-Z][a-zA-Z0-9]*$/" */
                     required
                   />
                 </div>
@@ -171,7 +192,7 @@ export default function AddDoctor() {
                   </select>
                 </div>
               </div>
-
+                {/* Designation & qualification */}
               <div className="flex gap-2">
                 <div className="w-1/2">
                 {/* <input
@@ -184,7 +205,7 @@ export default function AddDoctor() {
                   <select id="designation" onChange={handleChange} className="select select-bordered w-full border rounded-lg" required>
                     <option  defaultValue>Choose Designation</option>
                     <option>Professor</option>
-                    <option>Associate Professor</option>
+                    <option>Assistant Professor</option>
                     <option>Consultant</option>
                   </select>
                   
@@ -200,7 +221,7 @@ export default function AddDoctor() {
                   />
                 </div>
               </div>
-              
+              {/* specialty & address */}
               <div className="flex gap-2">
                 <div className="w-1/2">
                   {/* <input
@@ -228,7 +249,7 @@ export default function AddDoctor() {
                   />
                 </div>
               </div>
-
+                {/* phone & appointmentnumber */}
               <div className="flex gap-2">
                 <div className="w-1/2">
                   <input
@@ -251,12 +272,12 @@ export default function AddDoctor() {
                   />
                 </div>
               </div>
-
+              {/* price & time */}
               <div className="flex gap-2">
                 <div className="w-1/2">
                   <input
                     type="number"
-                    id="bill"
+                    id="price"
                     placeholder="Charge per Visit"
                     onChange={handleChange}
                     className="w-full border p-3 rounded-lg"
@@ -281,7 +302,7 @@ export default function AddDoctor() {
                   </select>
                 </div>
               </div>
-              
+              {/* gender */}
               <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3">
                 <h1 className="lg:w-1/3 text-left text-2xl font-semibold">Gender :</h1>
                 <div className="lg:w-2/3">
@@ -332,10 +353,11 @@ export default function AddDoctor() {
                 {loading ? 'Loading...' : 'Register Doctor'}
               </button>
             </form>
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-red-500">{error.message}</p>}
           </div>
         </div>
       </div>
+      <Toaster position="center-top"/>
     </div>
   )
 }
