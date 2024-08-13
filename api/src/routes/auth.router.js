@@ -49,11 +49,11 @@ router.route('/users').get(getAllUsers);
 
 router.route('/doctorsignup').post(adminUpload,doctorSignUp);
 router.route('/doctorssignin').post(doctorSignIn);
-//router.route('/doctors').get(getAllDoctors);
 router.route('/doctors/:id').get(getSpecificDoctor);
+router.route('/doctors').get(getAllDoctors);
+//router.get('/doctors', getDoctorsByDepartment);
 
 router.get('/departments', getDepartments);
-router.get('/doctors', getDoctorsByDepartment);
 
 router.route('/google').post(google);
 

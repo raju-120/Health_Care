@@ -378,12 +378,13 @@ const doctorSignUp = asyncHandler(async (req, res) => {
     const { username, email, bmdc, specialty, qualification, designation, institute,
       department, phone, appointmentnumber, address, password, time, gender, price } = req.body;
   
-    let avatarUrl = null;
     const existedUser = await Doctor.findOne({ email });
     if (existedUser) {
-      throw new ApiError(402, "This email id is already used");
+    throw new ApiError(402, "This email id is already used");
     }
-  
+
+    let avatarUrl = null;
+    
     try {
       if (req.file) {
         const result = await cloudinary.uploader.upload(req.file.path, { folder: 'avatars' });
@@ -414,15 +415,39 @@ const doctorSignUp = asyncHandler(async (req, res) => {
       }
     }
   });
+
+  const seedDepartments = async () => {
+    const departmentCount = await Department.countDocuments();
+    if (departmentCount === 0) {
+      const defaultDepartments = [
+        { deptname: 'Cardiology' },
+        { deptname: 'Neurology' },
+        { deptname: 'Orthopedics' },
+        { deptname: 'CHILDREN SPECIALIST' },
+        { deptname: 'DIABETES & ENDOCRINOLOGY' },
+        { deptname: 'ENT' },
+        { deptname: 'DENTISTRY' },
+        { deptname: 'DERMATOLOGY' },
+        { deptname: 'GENERAL SURGERY' },
+        { deptname: 'MEDICINE SPECIALIST' },
+        { deptname: 'NEUROSURGERY' },
+      ];
   
+      await Department.insertMany(defaultDepartments);
+      console.log('Default departments added to the database');
+    } else {
+      console.log('Departments already exist in the database');
+    }
+  };  
+
 const getDepartments = asyncHandler(async (req, res) => {
     const departments = await Department.find({});
     res.status(200).json(departments);
   });
   
 const getDoctorsByDepartment = asyncHandler(async (req, res) => {
-    const { deptId } = req.query;
-    const doctors = await Doctor.find({ department: deptId }).select("-password -refreshToken");
+    const { deptname } = req.query;
+    const doctors = await Doctor.find({ department: deptname }).select("-password -refreshToken");
     res.status(200).json(doctors);
   });
 
@@ -650,7 +675,8 @@ export {
         getSpecificDoctor,
         getAllUsers,
         userDelete,
-        doctorDelete
-        getDepartments,
+        doctorDelete,
         getDoctorsByDepartment,
+        getDepartments,
+        seedDepartments
     };
