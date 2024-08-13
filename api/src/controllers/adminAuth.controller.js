@@ -194,6 +194,7 @@ const systemAdminSignIn = asyncHandler(async (req, res, next) => {
 });
 
 const systemAdminOut = asyncHandler(async (req, res) => {
+    console.log("System Admin", req?.body);
     await SystemAdmin.findByIdAndUpdate(
         req?.user._id,
         {

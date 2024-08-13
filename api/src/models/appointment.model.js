@@ -38,9 +38,13 @@ const appointmentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    appointmentSlots: {
+    /* appointmentSlots: {
         type: String,
         required: true,
+    }, */
+    docapporve:{
+        type: String,
+        default: 'pending'
     },
     price: {
         type: Number,

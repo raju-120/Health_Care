@@ -9,13 +9,13 @@ const booking = asyncHandler(async (req, res) => {
     try {
         const {
             name, dateOfBirth, gender, phone,
-            department, doctor, date, appointmentSlots,
+            department, doctor, date, 
             price, permission,uId,email
         } = req.body;
 
         const newAppointment = new Appointment({
             name, dateOfBirth, gender, phone,
-            department, doctor, date, appointmentSlots,
+            department, doctor, date, 
             price, permission,uId,email
         });
 

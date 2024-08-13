@@ -140,13 +140,14 @@ function Appointments() {
     e.preventDefault();
     console.log("Form Data:", formData);
 
-    const updatedSlots = [...appointmentSlots, formData.appointmentSlots];
-    setAppointmentSlots(updatedSlots);
+    /* const updatedSlots = [...appointmentSlots, formData.appointmentSlots];
+    setAppointmentSlots(updatedSlots); */
 
   
     const appointmentData = {
       ...formData,
       permission: 'progress',
+      docapprove: 'pending',
       price: doctorBill,
       uId: currentUser?.data?.user?._id,
       email: currentUser?.data?.user?.email,
@@ -301,7 +302,7 @@ function Appointments() {
           </div>
 
           {/* Time */}
-          {selectedDoctor && (
+          {/* {selectedDoctor && (
             <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
               <h1 className="lg:w-1/3 text-left">Time :</h1>
               <div className="lg:w-2/3">
@@ -317,7 +318,7 @@ function Appointments() {
                 )}
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Doctors Bill */}
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">

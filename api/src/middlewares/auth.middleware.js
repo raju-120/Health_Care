@@ -149,7 +149,8 @@ export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
 
 export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
-        const token = req.cookies?.accessToken;
+        console.log("TOken", req?.body?.data?.accessToken);
+        const token = req?.body?.data?.accessToken;
         //console.log('Token Secret:', process.env.ACCESS_TOKEN_SECRET);
         //console.log('Token:', token);
 
@@ -186,3 +187,22 @@ export const conditionalAuth = (req, res, next) => {
   
 
 
+ /*  TOken {
+    statusCode: 200,
+    data: {
+      user: {
+        _id: '667400be1964800764cb62a3',
+        username: 'System Admin',
+        email: 'systemadmin@gmail.com',
+        role: 'system-admin',
+        createdAt: '2024-06-20T10:13:18.808Z',
+        updatedAt: '2024-08-08T15:12:52.165Z',
+        __v: 0,
+        avatar: 'https://i.ibb.co/nCVy9M0/adminphoto.jpg'
+      },
+      accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Njc0MDBiZTE5NjQ4MDA3NjRjYjYyYTMiLCJlbWFpbCI6InN5c3RlbWFkbWluQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiU3lzdGVtIEFkbWluIiwiaWF0IjoxNzIzMTMwMDM1LCJleHAiOjE3MjMzMDI4MzV9.R80ZxjeVM6p_ZbxAIsoxjxqtYMID5g8BdjVmTqqcdNk',
+      refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Njc0MDBiZTE5NjQ4MDA3NjRjYjYyYTMiLCJpYXQiOjE3MjMxMzAwMzUsImV4cCI6MTcyNDQyNjAzNX0.BYixFq-eQhyo-EJaJEpMj3nMRWb6z7uoCyQh2uppFUQ'
+    },
+    message: 'System logged in successfully',
+    success: true
+  } */
