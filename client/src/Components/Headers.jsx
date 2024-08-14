@@ -136,7 +136,7 @@ export default function Headers() {
                 currentUser ? (
                     <div className="dropdown dropdown-end">
                       <div tabIndex={0} role="button" className="rounded-btn mt-2">
-                        <Link to='/dashboard'><img src={currentUser?.data?.user?.avatar} className='w-16 h-16 rounded-full' alt='profile'/></Link>
+                        <Link to='/dashboard/profile'><img src={currentUser?.data?.user?.avatar} className='w-16 h-16 rounded-full' alt='profile'/></Link>
                       </div>
                       {/* <ul
                         tabIndex={0}

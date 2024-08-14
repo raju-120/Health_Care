@@ -64,7 +64,7 @@ export default function DashboardLayout() {
                 </div> 
                 <div className="drawer-side">
                     <label htmlFor="dashboard-drawer" className="drawer-overlay"></label> 
-                    <ul className="menu p-4 w-84 h-full bg-zinc-500 rounded-lg text-base-content">
+                    <ul className="menu p-8 w-84 h-full bg-zinc-500 rounded-lg text-base-content">
                         {menuItems}
                         
                     </ul>

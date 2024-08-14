@@ -19,21 +19,38 @@ function Appointments() {
   const [selectedDate, setSelectedDate] = useState("");
   const [fullyBooked, setFullyBooked] = useState(false);
   const [appointmentSlots, setAppointmentSlots] = useState([]);
+  const [selectedDept, setSelectedDept] = useState('');
+  const [filteredDoctors, setFilteredDoctors] = useState([]);
 
-  const [nameError, setNameError] = useState(''); // Error specific to name field
+ /*  const [nameError, setNameError] = useState(''); // Error specific to name field */
 
 
 
-/*   console.log("Current User: ", currentUser?.data?.user?.email);
+/*console.log("Current User: ", currentUser?.data?.user?.email);
   console.log("Current User: ", currentUser?.data?.user?._id);
-  console.log("Department: ", deptData);
   console.log("Doctors: ", doctors); */
   console.log("formdata: ", formData);
+  /* console.log("Doctors: ", doctors?.data);
+  console.log("Department: ", deptData);
+  console.log("Price: ", doctorBill); */
+
+  useEffect(() => {
+    const getDoctor = async () => {
+      try {
+        const res = await fetch("/api/auth/doctors");
+        const data = await res.json();
+        setDoctors(data);
+      } catch (error) {
+        console.log('Error fetching departments:', error.message);
+      }
+    };
+    getDoctor();
+  }, []);
 
   useEffect(() => {
     const getDepartment = async () => {
       try {
-        const res = await fetch("department.json");
+        const res = await fetch("/api/auth/departments");
         const data = await res.json();
         setDeptData(data);
       } catch (error) {
@@ -46,27 +63,7 @@ function Appointments() {
   const handleChange = (e) => {
     e.preventDefault();
     const { id, value } = e.target;
-    /* if (id === "name") {
-      const regex = /^[A-Za-z\s]*$/;
-      if (!regex.test(value)) {
-        setNameError('Please enter only alphabetic characters and spaces');
-      } else {
-        setNameError('');
-      }
-    }
-
-
-    if (id === "appointmentSlots") {
-      setFormData({
-        ...formData,
-        [id]: value,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [id]: value,
-        bill: doctorBill,
-      }); */
+    
       if (id === "name") {
         const regex = /^[A-Za-z\s]*$/;
         if (regex.test(value)) {
@@ -82,8 +79,14 @@ function Appointments() {
           [id]: value,
           bill: doctorBill,
         });
-
-      if (id === "department") {
+        if (id === 'department') {
+          setSelectedDept(value);
+        } else if (id === 'doctor') {
+          const doctor = doctors?.data?.find(doc => doc?.username === value);
+          setSelectedDoctor(doctor);
+          setDoctorBill(doctor?.price || '');
+        }
+      /* if (id === "department") {
         const selectedDept = deptData.find((dept) => dept.deptname === value);
         if (selectedDept) {
           setDoctors(selectedDept.doctors);
@@ -112,9 +115,18 @@ function Appointments() {
         setSelectedDate(value);
         setFullyBooked(false);
         setAppointmentSlots([]);
-      }
+      } */
     }
   };
+
+  useEffect(() => {
+    if (selectedDept) {
+      const filtered = doctors?.data?.filter(doctor => doctor.department === selectedDept);
+      setFilteredDoctors(filtered);
+    } else {
+      setFilteredDoctors([]);
+    }
+  }, [selectedDept, doctors]);
 
   const handleGenderChange = (e) => {
     setFormData({
@@ -122,18 +134,6 @@ function Appointments() {
       gender: e.target.value,
     });
   };
-
-
- /*  const handleKeyPress = (event) => {
-    const charCode = event.which || event.keyCode;
-    const charStr = String.fromCharCode(charCode);
-    const regex = "/^[a-zA-Z]*$/";
-
-    if (!regex.test(charStr)) {
-      event.preventDefault();
-    }
-  }; */
-
 
 
   const handleSubmit = async (e) => {
@@ -286,8 +286,10 @@ function Appointments() {
             <div className="lg:w-2/3">
               <select id="doctor" onChange={handleChange} className="input input-bordered w-full" required >
                 <option value="">Choose doctor</option>
-                {doctors?.map((doctor, index) => (
-                  <option key={index} value={doctor.docname}>{doctor.docname}</option>
+                {filteredDoctors?.map((doctor) => (
+                  <option key={doctor?._id} value={doctor?.username}>
+                    {doctor?.username}
+                  </option>
                 ))}
               </select>
             </div>

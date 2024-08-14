@@ -420,9 +420,9 @@ const doctorSignUp = asyncHandler(async (req, res) => {
     const departmentCount = await Department.countDocuments();
     if (departmentCount === 0) {
       const defaultDepartments = [
-        { deptname: 'Cardiology' },
-        { deptname: 'Neurology' },
-        { deptname: 'Orthopedics' },
+        { deptname: 'CARDIOLOGY' },
+        { deptname: 'NEUROLOGY' },
+        { deptname: 'ORTHOPEDICS' },
         { deptname: 'CHILDREN SPECIALIST' },
         { deptname: 'DIABETES & ENDOCRINOLOGY' },
         { deptname: 'ENT' },
@@ -432,7 +432,6 @@ const doctorSignUp = asyncHandler(async (req, res) => {
         { deptname: 'MEDICINE SPECIALIST' },
         { deptname: 'NEUROSURGERY' },
       ];
-  
       await Department.insertMany(defaultDepartments);
       console.log('Default departments added to the database');
     } else {
