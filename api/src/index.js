@@ -16,6 +16,7 @@ import commentsRouter from "./routes/comment.routes.js";
 import MessageRouter from "./routes/message.routes.js";
 import AdvertiseRouter from "./routes/advertise.route.js";
 import Appointments from "./routes/booking.route.js";
+import Payment from './routes/payment.route.js';
 
 
 
@@ -91,6 +92,7 @@ app.use("/api/comments", commentsRouter);
 app.use("/api/message", MessageRouter);
 app.use("/api/add", AdvertiseRouter);
 app.use("/api/appointment",Appointments );
+app.use("/api/payment", Payment);
 
 
 dotenv.config({

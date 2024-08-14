@@ -17,7 +17,7 @@ export default function Payment() {
                 const response = await fetch(`/api/appointment/booking/${id}`);
                 if (response.ok) {
                     const data = await response.json();
-                    setBooking(data.data); 
+                    setBooking(data?.data); 
                 } else {
                     const errorText = await response.text();
                     console.error('Failed to fetch booking data:', errorText);
@@ -34,7 +34,7 @@ export default function Payment() {
         <div className='mx-auto mt-14'>
             <h2 className='text-3xl mb-3 mt-5'>Payment for {booking?.department} </h2>
             <p className="text-xl mt-10">
-                Please pay <strong> {booking?.price} TK </strong> for your appointment on <strong>{booking?.date}</strong> at  <strong>{booking?.appointmentSlots} </strong>
+                Please pay <strong> {booking?.price} TK </strong> for your appointment on <strong>{booking?.date}</strong> to  <strong>{booking?.doctor} </strong>
             </p>
             <div className='mt-10 w-96'>
                 <Elements stripe={stripePromise}>

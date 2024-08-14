@@ -18,6 +18,14 @@ const paymentSchema = new Schema({
         type: String,
         required: true
     },
+    doctor:{
+        type: String,
+        required: true,
+    },
+    date:{
+        type: String,
+        required: true,
+    },
     pname:{
         type: String,
         required: true

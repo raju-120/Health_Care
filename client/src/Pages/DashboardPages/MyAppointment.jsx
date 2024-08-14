@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 export default function MyAppointment() {
   const {currentUser} = useSelector(state => state?.user)
@@ -80,9 +80,11 @@ export default function MyAppointment() {
                       Pay
                     </button>
                     ) : (
-                    <span className='text-green-500'>
-                      Paid
-                    </span>
+                    <Link to='/dashboard/invoice'>
+                      <span className='text-green-500'>
+                        Invoice
+                      </span>
+                    </Link>
                   )}
                 </>
 

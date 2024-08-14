@@ -9,8 +9,9 @@ export default function CheckOutForm({ booking }) {
     const [transactionId, setTransactionId] = useState('');
     const [clientSecret, setClientSecret] = useState('');
 
-    const { price, email, name, _id } = booking;
-    
+    const { price, email, name, _id, doctor,date} = booking;
+    console.log("Appointment ID: ", email);
+     console.log("Doctor Name: ", doctor); 
     const stripe = useStripe();
     const elements = useElements();
 
@@ -79,6 +80,8 @@ export default function CheckOutForm({ booking }) {
                 pname: name,
                 transactionId: paymentIntent.id,
                 email,
+                doctor,
+                date,
                 bookingId: _id
             };
             fetch('/api/appointment/booking/payment', {

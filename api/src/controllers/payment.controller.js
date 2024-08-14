@@ -3,6 +3,7 @@ import { Payment } from "../models/payment.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import Stripe from "stripe";
 import mongoose from "mongoose";
+import { APIResponse } from "../utils/ApiResponse.js";
 
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -12,7 +13,7 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const { ObjectId } = mongoose.Types;
 
 const paymentIntent = asyncHandler(async(req, res) =>{
-    //console.log("payment Intent: ", req.body)
+    console.log("payment Intent: ", req.body)
     const booking = req.body;
     const price =  booking.price;
     const amount = price * 100;
@@ -63,7 +64,16 @@ const paymentIntent = asyncHandler(async(req, res) =>{
         }
     });
 
+const getAllPaytmentLists = asyncHandler(async(req, res) =>{
+    const query = {}
+    const result = await Payment.find(query);
+    res.status(201).json(
+        new APIResponse(201, result, 'ALL Payment list Found Successfully.')
+    )
+})
+
 export {
     paymentIntent,
-    payment
+    payment,
+    getAllPaytmentLists
 }
