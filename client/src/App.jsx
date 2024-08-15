@@ -30,6 +30,7 @@ import DoctorList from './Pages/DashboardPages/DoctorList';
 import BloodDonner from './Pages/BloodDonner';
 import AddDoctor from './Pages/DashboardPages/AddDoctor';
 import PaymentInvoice from './Pages/DashboardPages/Payment/PaymentInvoice';
+import AppointmentRequestDoctor from './Pages/DashboardPages/AppointmentRequestDoctor';
 
 /* import { paymentLoader } from './Pages/DashboardPages/Payment/paymentLoader'; 
 import Hospital from './Pages/Hospital/Hospital';
@@ -88,6 +89,7 @@ export default function App() {
         <Route path='/dashboard/adminlist' element={<AdminList />} /> 
         <Route path='/dashboard/addAdmin' element={<AddAdmin />} />  
         <Route path='/dashboard/request' element={<RequestAdmin />} />  
+        <Route path='/dashboard/docrequest' element={<AppointmentRequestDoctor />} />  
         <Route path='/dashboard/Payment/:id' element={<Payment />}/>
         <Route path='/dashboard/invoice/:id' element={<PaymentInvoice />}/>
       </Route> 

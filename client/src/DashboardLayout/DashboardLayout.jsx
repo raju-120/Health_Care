@@ -23,6 +23,7 @@ export default function DashboardLayout() {
                                     <>
                                         <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/profile'>Profile</Link></li>
                                         <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard'>My Appointment</Link></li>
+                                        <li className='mb-2 mt-10 text-lg text-black bg-white rounded-lg hover:opacity-50' ><Link to='/dashboard/docrequest'>Appointment Request</Link></li>
                                     </>
                                 )
                             }
@@ -64,7 +65,7 @@ export default function DashboardLayout() {
                 </div> 
                 <div className="drawer-side">
                     <label htmlFor="dashboard-drawer" className="drawer-overlay"></label> 
-                    <ul className="menu p-8 w-84 h-full bg-zinc-500 rounded-lg text-base-content">
+                    <ul className="menu p-8 w-96 h-full relevent bg-zinc-500 rounded-lg text-base-content">
                         {menuItems}
                         
                     </ul>

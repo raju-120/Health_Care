@@ -64,7 +64,7 @@ export default function MyAppointment() {
               <th className="text-xl font-semibold text-black">Doctor Name</th>
               <th className="text-xl font-semibold text-black">Department</th>
               <th className="text-xl font-semibold text-black">Date</th>
-              <th className="text-xl font-semibold text-black">Slot</th>
+              {/* <th className="text-xl font-semibold text-black">Slot</th> */}
               <th className="text-xl font-semibold text-black">Bill</th>
               <th className="text-xl font-semibold text-black">Action</th>
             </tr>
@@ -82,7 +82,7 @@ export default function MyAppointment() {
                 <td className="text-md">{data?.doctor}</td>
                 <td className="text-md">{data?.department}</td>
                 <td className="text-md">{data?.date}</td>
-                <td className="text-md">{data?.appointmentSlots}</td>
+                {/* <td className="text-md">{data?.appointmentSlots}</td> */}
                 <td className="text-lg">
                 <>
                   {data?.price && !data?.paid ? (
