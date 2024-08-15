@@ -31,15 +31,15 @@ export default function PaymentInvoice() {
         <>
             {specificID && (
                 <div className="container">
-                    <div className="container mt-14 p-20" ref={componentRef}>
-                        <div className="row">
-                            <div className="md:col-12">
-                                <div className="row">
-                                    <div className="col-md-4">
-                                        <Barcode value={specificID?.transactionId || "http://evercare.com/invoice"} width={1} height={50} displayValue={false} />
+                    <div className="container lg:mt-14 lg:p-20 mt-5" ref={componentRef}>
+                        <div className="">
+                            <div className="">
+                                <div className="flex justify-between ">
+                                    <div >
+                                        <Barcode className="lg:w-96 w-56" value={specificID?.transactionId || "http://evercare.com/invoice"}  displayValue={false} />
                                     </div>
-                                    <div className="col-md-8 text-right">
-                                        <img src={logo} alt="Logo" />
+                                    <div className=" text-right">
+                                        <img src={logo} alt="Logo" className=""/>
                                         <p className="mt-2">Appointment Number: +96578955</p>
                                         <p>Email: evencare@gmail.com</p>
                                         <p>Address: Vungchung</p>
@@ -66,8 +66,8 @@ export default function PaymentInvoice() {
                                 </thead>
                                 <tbody>
                                     <tr className="hover">
-                                        <td className="text-xl font-semibold">{specificID?.pname}</td>
-                                        <td className="text-lg font-semibold">{specificID?.doctor}</td>
+                                        <td className="lg:text-xl font-semibold">{specificID?.pname}</td>
+                                        <td className="lg:text-lg font-semibold">{specificID?.doctor}</td>
                                         <td>{specificID?.date}</td>
                                         <td>{specificID?.transactionId}</td>
                                         <td>{specificID?.price} TK</td>
