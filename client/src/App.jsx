@@ -89,7 +89,7 @@ export default function App() {
         <Route path='/dashboard/addAdmin' element={<AddAdmin />} />  
         <Route path='/dashboard/request' element={<RequestAdmin />} />  
         <Route path='/dashboard/Payment/:id' element={<Payment />}/>
-        <Route path='/dashboard/invoice' element={<PaymentInvoice />}/>
+        <Route path='/dashboard/invoice/:id' element={<PaymentInvoice />}/>
       </Route> 
 
     </Route>

@@ -70,10 +70,28 @@ const getAllPaytmentLists = asyncHandler(async(req, res) =>{
     res.status(201).json(
         new APIResponse(201, result, 'ALL Payment list Found Successfully.')
     )
-})
+});
+
+const specificPaymentID = asyncHandler(async (req, res) => {
+    console.log("DATA", req.params)
+    const { id } = req.params;
+
+    try {
+        const payment = await Payment.findOne({ bookingId: id });  
+
+        if (!payment) {
+            return res.status(404).json({ message: 'Payment not found for this booking ID' });
+        }
+
+        res.status(200).json(payment);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 export {
     paymentIntent,
     payment,
-    getAllPaytmentLists
+    getAllPaytmentLists,
+    specificPaymentID
 }

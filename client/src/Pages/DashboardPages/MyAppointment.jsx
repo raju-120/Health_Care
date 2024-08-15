@@ -42,6 +42,16 @@ export default function MyAppointment() {
     }
   };
 
+  const handleClickInvoice = (e, _id) =>{
+    e.preventDefault();
+    console.log("first", _id)
+    if(_id){
+      navigate(`/dashboard/invoice/${_id}`)
+    }else {
+      console.error('Payment is not complete');
+    }
+  }
+
   return (
     <div>
       <div className="m-4 p-3 bg-stone-200 rounded-md">
@@ -80,11 +90,12 @@ export default function MyAppointment() {
                       Pay
                     </button>
                     ) : (
-                    <Link to='/dashboard/invoice'>
+                    <button onClick={(e) => handleClickInvoice(e, data?._id)}>
                       <span className='text-green-500'>
                         Invoice
                       </span>
-                    </Link>
+                    </button>
+                    
                   )}
                 </>
 

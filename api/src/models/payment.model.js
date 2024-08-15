@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const paymentSchema = new Schema({
     bookingId:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Appointment',
         required: true
     },
