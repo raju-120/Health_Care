@@ -58,6 +58,10 @@ const appointmentSchema = new mongoose.Schema({
         type: String,
         default: 'pending', 
     },
+    friend: {
+        type: String,
+        default: 'pending', 
+    },
     paid: { type: Boolean, default: false },
 }, { timestamps: true });
 

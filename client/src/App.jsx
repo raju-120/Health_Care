@@ -23,7 +23,6 @@ import SystemAdminSignIn from './Pages/Admin/SystemAdminSignIn';
 import AdminList from './Pages/DashboardPages/AdminList';
 import AddAdmin from './Pages/DashboardPages/AddAdmin';
 import MyAppointment from './Pages/DashboardPages/MyAppointment';
-import RequestAdmin from './Pages/DashboardPages/RequestAdmin';
 import Payment from './Pages/DashboardPages/Payment/Payment';
 import UserList from './Pages/DashboardPages/UserList';
 import DoctorList from './Pages/DashboardPages/DoctorList';
@@ -31,8 +30,10 @@ import BloodDonner from './Pages/BloodDonner';
 import AddDoctor from './Pages/DashboardPages/AddDoctor';
 import PaymentInvoice from './Pages/DashboardPages/Payment/PaymentInvoice';
 import AppointmentRequestDoctor from './Pages/DashboardPages/AppointmentRequestDoctor';
+import RequestAppointmentToAdmin from './Pages/DashboardPages/RequestAppointmentToAdmin';
 
 /* import { paymentLoader } from './Pages/DashboardPages/Payment/paymentLoader'; 
+import RequestAdmin from './Pages/DashboardPages/RequestAdmin';
 import Hospital from './Pages/Hospital/Hospital';
 import ServiceDetails from './Pages/ServiceDetails';
 import TipsDetails from './Pages/TipsDetails';
@@ -76,7 +77,6 @@ export default function App() {
       <Route path='/solution/:id' element={<TipsDetails />} /> */}
       {/* <Route path='/service/:id' element={<ServiceDetails />} /> */}
       
-
       {/* Messenger options */}
       <Route path='/chat' element={ < Messenger /> } />
 
@@ -88,7 +88,7 @@ export default function App() {
         <Route path='/dashboard/reg-doctors' element={<AddDoctor />}/>
         <Route path='/dashboard/adminlist' element={<AdminList />} /> 
         <Route path='/dashboard/addAdmin' element={<AddAdmin />} />  
-        <Route path='/dashboard/request' element={<RequestAdmin />} />  
+        <Route path='/dashboard/request' element={<RequestAppointmentToAdmin />} />  
         <Route path='/dashboard/docrequest' element={<AppointmentRequestDoctor />} />  
         <Route path='/dashboard/Payment/:id' element={<Payment />}/>
         <Route path='/dashboard/invoice/:id' element={<PaymentInvoice />}/>

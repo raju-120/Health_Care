@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {useSelector} from "react-redux";
-import {Link, useNavigate} from "react-router-dom";
+import {/* Link, */ useNavigate} from "react-router-dom";
 
 export default function MyAppointment() {
   const {currentUser} = useSelector(state => state?.user)
