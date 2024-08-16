@@ -1,13 +1,14 @@
 import { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
 import { BsMessenger } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 
 export default function AppointmentRequestDoctor() {
 
     const {currentUser} = useSelector((state) => state.user);
     const [allData, setAllData] = useState([]);
-    console.log("User", currentUser?.data?.user);
+    console.log("User", currentUser?.data);
     console.log("Data", allData);
 
     useEffect(() => {
@@ -44,8 +45,10 @@ export default function AppointmentRequestDoctor() {
             },
             body: JSON.stringify(
               { 
+                status: "pending",
                 docapporve: "approved",
                 friend: "approved",
+                accessToken: currentUser?.data?.accessToken
               }) 
           });
     
@@ -110,9 +113,11 @@ export default function AppointmentRequestDoctor() {
                           )
                           :
                           (
-                            <span className='text-green-500'>
-                              <BsMessenger />
-                            </span>
+                            <Link to='/chat'>
+                              <span className='text-green-500 text-2xl hover:opacity-50'>
+                                <BsMessenger />
+                              </span>
+                            </Link>
                           )
                         }
                       </>

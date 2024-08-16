@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import {useSelector} from "react-redux";
-import {/* Link, */ useNavigate} from "react-router-dom";
+import {Link,  useNavigate} from "react-router-dom";
+import { BsMessenger } from "react-icons/bs";
 
 export default function MyAppointment() {
   const {currentUser} = useSelector(state => state?.user)
   const [allData, setAllData] = useState([]);
   const navigate = useNavigate();
 
-  console.log("user: " , currentUser?.data?.user?.email);
+  //console.log("user: " , currentUser?.data?.user?.email);
+  console.log("Data: " , allData);
 
   useEffect(() => {
     const getAllAdmins = async () => {
@@ -64,8 +66,8 @@ export default function MyAppointment() {
               <th className="text-xl font-semibold text-black">Doctor Name</th>
               <th className="text-xl font-semibold text-black">Department</th>
               <th className="text-xl font-semibold text-black">Date</th>
-              {/* <th className="text-xl font-semibold text-black">Slot</th> */}
               <th className="text-xl font-semibold text-black">Bill</th>
+              <th className="text-xl font-semibold text-black">Talk</th> 
               <th className="text-xl font-semibold text-black">Action</th>
             </tr>
           </thead>
@@ -100,6 +102,28 @@ export default function MyAppointment() {
                 </>
 
                 </td>
+
+                <td>
+                      <>
+                        {
+                          data?.friend === 'pending' ? 
+                          (
+                            <span className='text-red-500'>
+                              {data?.friend}
+                            </span>
+                          )
+                          :
+                          (
+                            <Link to='/chat'>
+                              <span className='text-green-500 text-2xl hover:opacity-50'>
+                                <BsMessenger />
+                              </span>
+                            </Link>
+                          )
+                        }
+                      </>
+                    </td>
+
                 <td className="text-lg ">
                   {currentUser?.data?.user?.role === 'admin' || currentUser?.data?.user?.role === 'systemAdmin' ? (
                     <button className="bg-orange-600 p-1 rounded hover:opacity-75">

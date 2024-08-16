@@ -38,7 +38,11 @@ export default function RequestAppointmentToAdmin() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${currentUser?.data?.accessToken}` 
         },
-        body: JSON.stringify({ status: "approved" }) 
+        body: JSON.stringify(
+          {
+            status: "approved",
+            accessToken:currentUser?.data?.accessToken 
+          }) 
       });
 
       if (!response.ok) {

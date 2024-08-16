@@ -86,7 +86,7 @@ const getBooking = asyncHandler(async (req, res) => {
 
   const updateAppointmentStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status,docapporve,friend } = req.body;
   
     console.log("Updating appointment with id:", id);
     console.log("New status:", status); 
@@ -95,12 +95,12 @@ const getBooking = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: 'Status is required' });
     }
   
-    if (req.user.role !== 'system-admin' && req.user.role !== 'admin' ) {
+    if (req.user.role !== 'system-admin' && req.user.role !== 'admin' && req.user.role !=='doctor' ) {
       throw new ApiError(403, "Forbidden: You don't have permission to update this appointment");
     }
   
     try {
-      const appointment = await Appointment.findByIdAndUpdate(id, { status }, { new: true });
+      const appointment = await Appointment.findByIdAndUpdate(id, { status,docapporve,friend }, { new: true });
   
       if (!appointment) {
         console.log("Appointment not found for id:", id);

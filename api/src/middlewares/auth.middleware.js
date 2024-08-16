@@ -106,9 +106,8 @@ export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
         
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         
-        /* console.log('I am here for decoded token', decodedToken);*/
         const user = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
-       /*  console.log('I am here', doctor); */
+       
         if ( !user) {
             throw new ApiError(401, "Invalid Access Token")
         }
@@ -119,6 +118,8 @@ export const docUpVerifyJwt = asyncHandler(async(req, _, next) => {
         throw new ApiError(401, error?.message || "Invalid access token");
     };
 });
+
+
 
 
 export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
@@ -145,14 +146,31 @@ export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
     }
 });
 
-
+export const docApproveVerifyJwt = asyncHandler(async(req, _, next) => {
+    try {
+        const token = req.body?.accessToken;
+        
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        
+        const user = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
+        console.log("TOken: ", user )
+       
+        /* if ( !user) {
+            throw new ApiError(401, "Invalid Access Token")
+        }  */
+        req.user = user;
+        
+        next();
+    } catch (error) {
+        throw new ApiError(401, error?.message || "Invalid access token");
+    };
+});
 
 export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
-        console.log("TOken", req?.body?.data?.accessToken);
-        const token = req?.body?.data?.accessToken;
-        //console.log('Token Secret:', process.env.ACCESS_TOKEN_SECRET);
-        //console.log('Token:', token);
+        const token = req?.body?.accessToken;
+        console.log("TOken", token);
+        
 
         if (!token) {
             throw new ApiError(401, "Unauthorized request");
