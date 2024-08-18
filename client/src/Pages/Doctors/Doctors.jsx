@@ -222,10 +222,10 @@ export default function Doctors() {
       <div>
         {filteredDoctors && filteredDoctors.length > 0 ? (
           filteredDoctors.map((doctor) => {
-            console.log("Modal",doctor); // Log the doctor object to see its structure
+            console.log("Modal",doctor); 
             return (
-              <div key={doctor?._id || doctor?.data?._id}> {/* Adjust this key based on the correct ID path */}
-                <h1>Username: {doctor?.data?.username}</h1> {/* Adjust this path based on the structure */}
+              <div key={doctor?._id || doctor?.data?._id}> 
+                <h1>Username: {doctor?.data?.username}</h1> 
               </div>
             );
           })

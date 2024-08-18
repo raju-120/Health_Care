@@ -93,7 +93,7 @@ export default function MyAppointment() {
                     </button>
                     ) : (
                     <button onClick={(e) => handleClickInvoice(e, data?._id)}>
-                      <span className='text-green-500'>
+                      <span className='text-green-500 hover:opacity-50'>
                         Invoice
                       </span>
                     </button>

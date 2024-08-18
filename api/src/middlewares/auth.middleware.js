@@ -194,6 +194,34 @@ export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
     }
 });
 
+export const systemAdminJWTLOgout = asyncHandler(async (req, _, next) => {
+    try {
+        const token = req?.body?.data?.accessToken;
+        console.log("TOken", token);
+        
+
+        if (!token) {
+            throw new ApiError(401, "Unauthorized request");
+        }
+
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        //console.log('Decoded Token:', decodedToken);
+
+        const user = await SystemAdmin.findById(decodedToken?._id).select("-password -refreshToken");
+        //console.log('User:', user);
+
+        if (!user) {
+            throw new ApiError(401, "Invalid Access Token");
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        console.error('JWT Error:', error);
+        throw new ApiError(401, error?.message || "Invalid access token");
+    }
+});
+
 
 export const conditionalAuth = (req, res, next) => {
     // Assume AdminVerifyJWT and systemAdminVerifyJWT are already defined

@@ -114,8 +114,8 @@ function ChatWindow() {
   };
 
   return (
-    <div className="chat-container">
-      <div className="chat-users bg-gray-300 w-full">
+    <div className="chat-container lg:mt-28 ">
+      <div className="chat-users bg-gray-300 w-full rounded-lg h-full">
         <h2 className="text-blue-500">Available Users</h2>
         <ul>
           {doctors.map((user) => (
@@ -126,7 +126,7 @@ function ChatWindow() {
         </ul>
       </div>
 
-      <div className="chat-messages h-full mt-5">
+      <div className="chat-messages h-full ">
         <h2 className="text-lg font-semibold">Chat with <span className="lg:text-2xl text-blue-500">{selectedUser ? selectedUser?.username : "..."}</span></h2>
         <div className="chat-window">
           {selectedUser && (
@@ -138,7 +138,7 @@ function ChatWindow() {
                   </div>
                 ))}
               </div>
-              <div className="chat-input">
+              <div className="chat-input gap-2">
                 <input
                   type="text"
                   placeholder="Type your message..."
@@ -147,18 +147,41 @@ function ChatWindow() {
                   onKeyPress={(event) => { event.key === "Enter" && handleSendMessage() }}
                 />
                 <button onClick={handleSendMessage}>Send</button>
-                <button onClick={() => setModalOpen(true)}>Prescribe Medicine</button>
+                {
+                  currentUser?.data?.user?.role === 'doctor' && 
+                  <button  onClick={() => setModalOpen(true)}>Prescribe Medicine</button>
+                }
               </div>
             </>
           )}
         </div>
       </div>
 
-      <PrescriptionModal
-        isOpen={isModalOpen}
-        onRequestClose={() => setModalOpen(false)}
-        onSubmit={handlePrescribe}
-      />
+      {
+        <div>
+          <PrescriptionModal
+            isOpen={isModalOpen}
+            onRequestClose={() => setModalOpen(false)}
+            onSubmit={handlePrescribe}
+            
+          />
+        </div>
+        }
+
+   
+        {/* <button className="btn" onClick={()=>document.getElementById('my_modal_4').showModal()}>open modal</button>
+        <dialog id="my_modal_4" className="modal">
+          <div className="modal-box w-11/12 max-w-5xl">
+            <h3 className="font-bold text-lg">Hello!</h3>
+            <p className="py-4">Click the button below to close</p>
+            <div className="modal-action">
+              <form method="dialog">
+                
+                <button className="btn">Close</button>
+              </form>
+            </div>
+          </div>
+        </dialog> */}
     </div>
   );
 }
