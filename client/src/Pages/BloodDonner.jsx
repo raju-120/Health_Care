@@ -1,100 +1,117 @@
-import React,{useState} from 'react'
+import {useEffect, useState} from 'react'
 
 export default function BloodDonner() {
 
-  const [formData, setFormData] = useState({});
-  const [deptData, setDeptData] = useState([]);
-  const [doctors, setDoctors] = useState([]);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [selectedDoctorSlots, setSelectedDoctorSlots] = useState([]);
-  const [doctorBill, setDoctorBill] = useState(0);
-  const [selectedDate, setSelectedDate] = useState("");
-  const [fullyBooked, setFullyBooked] = useState(false);
-  const [appointmentSlots, setAppointmentSlots] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [bloodDonors, setBloodDonors] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
+  useEffect(() => {
+    const fetchBloodDonors = async () => {
+      try {
+        const response = await fetch(`/api/donner/blooddonnerlist`);
 
-  const handleChange = (e) => {
-    e.preventDefault();
-    const { id, value } = e.target;
-
-    if (id === "appointmentSlots") {
-      setFormData({
-        ...formData,
-        [id]: value,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [id]: value,
-        bill: doctorBill,
-      });
-
-      if (id === "department") {
-        const selectedDept = deptData.find((dept) => dept.deptname === value);
-        if (selectedDept) {
-          setDoctors(selectedDept.doctors);
-          setSelectedDoctor(null);
-          setSelectedDoctorSlots([]);
-          setDoctorBill(0);
-          setSelectedDate("");
-          setFullyBooked(false);
-          setAppointmentSlots([]);
-        } else {
-          setDoctors([]);
-          setSelectedDoctor(null);
-          setSelectedDoctorSlots([]);
-          setDoctorBill(0);
-          setSelectedDate("");
-          setFullyBooked(false);
-          setAppointmentSlots([]);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
-      } else if (id === "doctor") {
-        const selectedDoc = doctors.find((doc) => doc.docname === value);
-        setSelectedDoctor(selectedDoc);
-        setSelectedDoctorSlots(selectedDoc.slots);
-        setDoctorBill(selectedDoc.bill);
-        setAppointmentSlots([]);
-      } else if (id === "date") {
-        setSelectedDate(value);
-        setFullyBooked(false);
-        setAppointmentSlots([]);
+
+        const data = await response.json();
+        setBloodDonors(data?.data || []);
+        setFilteredData(data?.data || []);
+      } catch (error) {
+        console.error('Error fetching blood donors:', error);
       }
-    }
+    };
+
+    fetchBloodDonors();
+  }, []);
+
+  const handleSearchChange = (e) => {
+    const term = e.target.value.trim().toLowerCase();
+    setSearchTerm(term);
+
+    setFilteredData(
+      bloodDonors?.filter((donor) =>
+        donor.bloodgroup.toLowerCase().includes(term)
+      )
+    );
   };
+
+  const handleSearchClick = () => {
+    const trimmedSearchTerm = searchTerm.trim().toLowerCase();
+    const filtered = bloodDonors?.filter((donor) =>
+      donor.bloodgroup.toLowerCase().includes(trimmedSearchTerm)
+    );
+    setFilteredData(filtered);
+  };
+
 
   return (
     <div className='Items-center text-center m-24 mt-5'>
-      <section id="services">
-        <div className="cs_height_120 cs_height_lg_80"></div>
-          <div className="container">
-            <div className="cs_section_heading cs_style_1 text-center">
-              <h3 className="cs_section_title_up cs_accent_color_v1 cs_semibold cs_fs_24">Here is our Blood Donner list</h3>
-              <h2 className="cs_section_title cs_semibold cs_fs_45 wow fadeInUp mb-0">You can reach out to them <br/> To Our Blood Donner</h2>
+    <section id="services">
+      <div className="cs_height_120 cs_height_lg_80"></div>
+      <div className="container">
+        <div className="cs_section_heading cs_style_1 text-center">
+          <h3 className="cs_section_title_up cs_accent_color_v1 cs_semibold cs_fs_24">Here is our Blood Donor list</h3>
+          <h2 className="cs_section_title cs_semibold cs_fs_45 wow fadeInUp mb-0">You can reach out to them <br /> To Our Blood Donor</h2>
+        </div>
+        <div className="cs_height_63 cs_height_lg_40"></div>
+      </div>
+      <div className="cs_height_120 cs_height_lg_80"></div>
+    </section>
+
+    {/* Donor List search section by blood group */}
+    <section className="mb-24 mt-[-7em]">
+      <div className="container lg:max-w-[1250px] mx-auto px-5">
+        <form className="w-full" onSubmit={(e) => e.preventDefault()}>
+          <div className="mb-8">
+            <div className="relative flex items-center">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                placeholder="Search by Blood Group"
+                className="w-full p-3 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button 
+                type="button" 
+                onClick={handleSearchClick}
+                className="bg-blue-500 text-white p-3 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <i className="fa-solid fa-magnifying-glass"></i>
+              </button>
             </div>
-            <div className="cs_height_63 cs_height_lg_40"></div>
           </div>
-        <div className="cs_height_120 cs_height_lg_80"></div>
-      </section>
 
-        {/* Doctors search section by department */}
-
-        <section className=" mb-24 mt-[-7em] ">
-          <div className="container lg:max-w-[1050px] ">
-            <form className=" col-lg-12">
-              <div className="cs_height_0 cs_height_lg_50"></div>
-              <div className="cs_sidebar cs_style_1">
-              <div className="cs_sidebar_widget cs_radius_5 cs_search">
-                <div className="cs_search_box cs_radius_5">
-                  <input type="text" placeholder="Search by Blood Group"/>
-                  <span className="cs_search_icon cs_accent_bg_v1 cs_white_color">
-                    <button><i className="fa-solid fa-magnifying-glass"></i></button>
-                  </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredData.map((donor, index) => (
+              <div 
+                key={index} 
+                className="bg-white text-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300"
+              >
+                <div className="text-center">
+                  <p className="text-xl font-semibold mb-2">
+                    {donor.firstname} {donor.lastname}
+                  </p>
+                  <p className="text-lg mb-1">
+                    <span className="font-medium text-red-500">Blood Group:</span> {donor.bloodgroup}
+                  </p>
+                  <p className="text-lg mb-1">
+                    <span className="font-medium">Contact:</span> +880 {donor.phone}
+                  </p>
+                  <p className="text-lg mb-1">
+                    <span className="font-medium">Area:</span> {donor.area}
+                  </p>
+                  <p className="text-lg">
+                    <span className="font-medium">Last Donated Date:</span> {donor.lastdonatedate}
+                  </p>
                 </div>
               </div>
-              </div>
-            </form>
+            ))}
           </div>
-        </section>
+        </form>
+      </div>
+    </section>
 
 
     {/*Donner Regististration  section*/}
@@ -132,9 +149,13 @@ export default function BloodDonner() {
               <input type="text" name="LDD" className="cs_form_field cs_radius_5" required />
               <label>Last Donate date</label>
             </div>
-            <div className="col-md-12 position-relative">
-              <textarea name="message" rows="6" className="cs_form_field cs_radius_5" required></textarea>
+            <div className="col-md-6 position-relative">
+              <textarea name="message"  className="cs_form_field cs_radius_5" required></textarea>
               <label>Prefference Area that you can donate.</label>
+            </div>
+            <div className="col-md-6 position-relative">
+            <input type="text" name="LDD" className="cs_form_field cs_radius_5" required />
+              <label>Blood Group</label>
             </div>
             <div className="col-md-12 text-md-center">
               <button type="submit" className="w-full btn bg-sky-500 text-white cs_fs_24 cs_semibold">Register as Donner</button>

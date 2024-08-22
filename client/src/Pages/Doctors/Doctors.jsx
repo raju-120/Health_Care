@@ -209,34 +209,35 @@ export default function Doctors() {
 
       {/* Modal to display doctors */}
       {selectedDept && (
-  <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-      <h2 className="text-xl font-semibold mb-4">Doctors in {selectedDept}</h2>
-      <button
-        onClick={closeModal}
-        className="absolute top-40 btn-primary text-white bg-red-500 p-2 rounded-full"
-        
-      >
-        X
-      </button>
-      <div>
-        {filteredDoctors && filteredDoctors.length > 0 ? (
-          filteredDoctors.map((doctor) => {
-            console.log("Modal",doctor); 
-            return (
-              <div key={doctor?._id || doctor?.data?._id}> 
-                <h1>Username: {doctor?.data?.username}</h1> 
-              </div>
-            );
-          })
-        ) : (
-          <p>No doctors found for this department.</p>
-        )}
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg max-w-lg w-full">
+              <h2 className="text-xl font-semibold mb-4">Doctors in {selectedDept}</h2>
+              <button
+                onClick={closeModal}
+                className="absolute top-40 btn-primary text-white bg-red-500 p-2 rounded-full"
+                
+              >
+                X
+              </button>
+              <div>
+                {filteredDoctors && filteredDoctors.length > 0 ? (
+                  filteredDoctors.map((doctor) => {
+                    console.log("Modal",doctor); 
+                    return (
+                      <div key={doctor?._id || doctor?.data?._id}> 
+                        <h1>Username: {doctor?.data?.username}</h1> 
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p>No doctors found for this department.</p>
+                )}
 
-      </div>
-    </div>
-  </div>
-)}
+              </div>
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 }
