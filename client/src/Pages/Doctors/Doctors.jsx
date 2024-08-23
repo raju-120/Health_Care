@@ -209,35 +209,51 @@ export default function Doctors() {
 
       {/* Modal to display doctors */}
       {selectedDept && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-              <h2 className="text-xl font-semibold mb-4">Doctors in {selectedDept}</h2>
-              <button
-                onClick={closeModal}
-                className="absolute top-40 btn-primary text-white bg-red-500 p-2 rounded-full"
-                
-              >
-                X
-              </button>
-              <div>
-                {filteredDoctors && filteredDoctors.length > 0 ? (
-                  filteredDoctors.map((doctor) => {
-                    console.log("Modal",doctor); 
-                    return (
-                      <div key={doctor?._id || doctor?.data?._id}> 
-                        <h1>Username: {doctor?.data?.username}</h1> 
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p>No doctors found for this department.</p>
-                )}
-
+  <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+    <div className="relative bg-white p-6 rounded-lg max-w-lg w-full shadow-lg">
+      <h2 className="text-2xl font-semibold mb-4">Doctors in {selectedDept}</h2>
+      <button
+        onClick={closeModal}
+        className="absolute top-4 right-4 text-white bg-red-500 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-300"
+      >
+        X
+      </button>
+      <div className="mt-4 space-y-4">
+        {filteredDoctors && filteredDoctors.length > 0 ? (
+          filteredDoctors.map((doctor) => (
+            <div
+              key={doctor?._id || doctor?.data?._id}
+              className="p-4 border rounded-lg shadow-sm"
+            >
+              <div className="flex justify-between">
+                <div>
+                    <img src={doctor?.avatar[0]} alt="image" className="w-48 rounded-xl" />
+                </div>
+                <div>
+                  <h3 className="text-lg">Name: <span className="font-semibold">{doctor?.username}</span></h3>
+                  <p>BMDC Code: {doctor?.bmdc} </p>
+                  <p>Gender: {doctor?.gender} </p>
+                  <p>Specialty: <span className="text-md">{doctor?.specialty}</span> </p>
+                  
+                </div>
+              </div>
+              <div className="mt-3">
+                <p>Qualification: {doctor?.qualification} </p>
+                <p>Department: {doctor?.department} </p>
+                <p>Designation: {doctor?.designation} </p>
+                <p>Institute Name: {doctor?.institute} </p>
+                <p className="text-center">Appointment Number: <span className="font-bold">{doctor?.appointmentnumber}</span> </p>
               </div>
             </div>
-          </div>
-        )
-      }
+          ))
+        ) : (
+          <p className="text-gray-500">No doctors found for this department.</p>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

@@ -1,35 +1,46 @@
 import {useEffect, useState} from 'react'
+import toast from 'react-hot-toast';
 
 export default function BloodDonner() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [bloodDonors, setBloodDonors] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [formData, setFormData] = useState({
+    firstname: '',
+    lastname: '',
+    phone: '',
+    email: '',
+    division: '',
+    lastdonatedate: '',
+    area: '',
+    bloodgroup: '',
+  });
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch Blood Donors Function
+  const fetchBloodDonors = async () => {
+    try {
+      const response = await fetch(`/api/donner/blooddonnerlist`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setBloodDonors(data?.data || []);
+      setFilteredData(data?.data || []);
+    } catch (error) {
+      console.error('Error fetching blood donors:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchBloodDonors = async () => {
-      try {
-        const response = await fetch(`/api/donner/blooddonnerlist`);
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        setBloodDonors(data?.data || []);
-        setFilteredData(data?.data || []);
-      } catch (error) {
-        console.error('Error fetching blood donors:', error);
-      }
-    };
-
     fetchBloodDonors();
   }, []);
 
   const handleSearchChange = (e) => {
     const term = e.target.value.trim().toLowerCase();
     setSearchTerm(term);
-
     setFilteredData(
       bloodDonors?.filter((donor) =>
         donor.bloodgroup.toLowerCase().includes(term)
@@ -43,6 +54,59 @@ export default function BloodDonner() {
       donor.bloodgroup.toLowerCase().includes(trimmedSearchTerm)
     );
     setFilteredData(filtered);
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const res = await fetch('/api/donner/blooddonner', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (data.success === false) {
+        setLoading(false);
+        setError(data.message);
+        return;
+      }
+
+      // Clear the form data
+      setFormData({
+        firstname: '',
+        lastname: '',
+        phone: '',
+        email: '',
+        division: '',
+        lastdonatedate: '',
+        area: '',
+        bloodgroup: '',
+      });
+
+      // Show success message
+      toast.success('Blood Donor registered successfully.');
+
+      // Fetch the updated blood donors list
+      await fetchBloodDonors();
+
+      setLoading(false);
+      setError(null);
+    } catch (error) {
+      console.log("Data is corrupted", error.message);
+      setLoading(false);
+      setError("Something went wrong. Please try again.");
+    }
   };
 
 
@@ -124,43 +188,111 @@ export default function BloodDonner() {
             <h2 className="cs_section_title cs_semibold cs_fs_45 mb-0">Please Register as a Donner</h2>
           </div>
           <div className="cs_height_45 cs_height_lg_30"></div>
-          <form className="cs_contact_form row cs_gap_y_24" id="cs_form">
+
+          <form onSubmit={handleSubmit} className="cs_contact_form row cs_gap_y_24" id="cs_form">
             <div className="col-md-6 position-relative">
-              <input type="text" name="fname"  className="cs_form_field cs_radius_5" required/>
+              <input 
+                type="text" 
+                id='firstname'
+                name="firstname" 
+                onChange={handleChange} 
+                className="cs_form_field cs_radius_5" 
+                required
+              />
               <label>First Name</label>
             </div>
+
             <div className="col-md-6 position-relative">
-              <input type="text" name="lname" className="cs_form_field cs_radius_5" required/>
+              <input 
+                type="text" 
+                name="lastname" 
+                id="lastname"
+                onChange={handleChange} 
+                className="cs_form_field cs_radius_5" 
+                required
+              />
               <label>Last Name</label>
             </div>
+
             <div className="col-md-6 position-relative">
-              <input type="text" name="phone" className="cs_form_field cs_radius_5" required/>
+              <input 
+                type="text" 
+                name="phone" 
+                id="phone"
+                onChange={handleChange} 
+                className="cs_form_field cs_radius_5" 
+                required
+              />
               <label>Phone</label>
             </div>
+
             <div className="col-md-6 position-relative">
-              <input type="text" name="email" className="cs_form_field cs_radius_5" required/>
+              <input 
+                type="text" 
+                name="email" 
+                id="email"
+                onChange={handleChange} 
+                className="cs_form_field cs_radius_5"
+                required
+              />
               <label>Email Address</label>
             </div>
+
             <div className="col-md-6 position-relative">
-              <input type="text" name="division" className="cs_form_field cs_radius_5" required/>
+              <input 
+                type="text" 
+                name="division" 
+                id="division"
+                onChange={handleChange} 
+                className="cs_form_field cs_radius_5" 
+                required
+              />
               <label>Divion</label>
             </div>
+
             <div className="col-md-6 position-relative">
-              <input type="text" name="LDD" className="cs_form_field cs_radius_5" required />
+              <input 
+                type="date" 
+                name="lastdonatedate"
+                id="lastdonatedate"
+                onChange={handleChange}  
+                className="cs_form_field cs_radius_5"
+                required 
+              />
               <label>Last Donate date</label>
             </div>
+
             <div className="col-md-6 position-relative">
-              <textarea name="message"  className="cs_form_field cs_radius_5" required></textarea>
+              <textarea 
+                name="area"  
+                id="area"
+                onChange={handleChange} 
+                className="cs_form_field cs_radius_5" 
+                required 
+              />
               <label>Prefference Area that you can donate.</label>
             </div>
+
             <div className="col-md-6 position-relative">
-            <input type="text" name="LDD" className="cs_form_field cs_radius_5" required />
+            <input 
+              type="text" 
+              name="bloodgroup" 
+              id="bloodgroup"
+              onChange={handleChange} 
+              className="cs_form_field cs_radius_5" 
+              required 
+            />
               <label>Blood Group</label>
             </div>
+
             <div className="col-md-12 text-md-center">
-              <button type="submit" className="w-full btn bg-sky-500 text-white cs_fs_24 cs_semibold">Register as Donner</button>
+              <button type="submit" className="w-full btn bg-sky-500 text-white cs_fs_24 cs_semibold">
+                {loading ? 'Loading...' : 'Register as Donner'}
+              </button>
             </div>
+            {error && <p className='text-red-500'>{error.message}</p>}
           </form>
+          
         </div>
         <div className="cs_height_120 cs_height_lg_80"></div>
       </section>
