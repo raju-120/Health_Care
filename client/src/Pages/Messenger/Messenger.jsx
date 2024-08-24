@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import io from "socket.io-client";
-import PrescriptionModal from "./prescriptionModal.jsx";
+import PrescriptionModal from "./PrescriptionModal/prescriptionModal.jsx";
 import "./style.css";
 
 const socket = io('http://localhost:5000');
@@ -158,7 +158,7 @@ function ChatWindow() {
       </div>
 
       {
-        <div>
+        <div >
           <PrescriptionModal
             isOpen={isModalOpen}
             onRequestClose={() => setModalOpen(false)}
