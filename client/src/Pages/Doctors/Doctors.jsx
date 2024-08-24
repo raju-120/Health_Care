@@ -227,7 +227,7 @@ export default function Doctors() {
             >
               <div className="flex justify-between">
                 <div>
-                    <img src={doctor?.avatar[0]} alt="image" className="w-48 rounded-xl" />
+                    <img src={doctor?.avatar[0]} alt="image" className="rounded-xl" style={{width: '12rem' , height: '10rem'}} />
                 </div>
                 <div>
                   <h3 className="text-lg">Name: <span className="font-semibold">{doctor?.username}</span></h3>
@@ -242,7 +242,7 @@ export default function Doctors() {
                 <p>Department: {doctor?.department} </p>
                 <p>Designation: {doctor?.designation} </p>
                 <p>Institute Name: {doctor?.institute} </p>
-                <p className="text-center">Appointment Number: <span className="font-bold">{doctor?.appointmentnumber}</span> </p>
+                <p className="text-center">Appointment Number: <span className="font-bold">+{doctor?.appointmentnumber}</span> </p>
               </div>
             </div>
           ))

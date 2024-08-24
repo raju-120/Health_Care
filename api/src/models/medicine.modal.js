@@ -1,11 +1,11 @@
-import mongoose, { mongo, Schema } from "mongoose";
+import mongoose, {  Schema } from "mongoose";
 
 const medicineSchema = new Schema({
-    name:{
+    medicinename:{
         type: String,
         required: true
     }
-});
+},{timestamps: true});
 
 
 export const Medicine = mongoose.model('Medicine', medicineSchema)
