@@ -4,12 +4,22 @@ const sendMessage = async (req, res) => {
     try {
         const { senderId, receiverId, message, senderusername, receiverusername } = req.body;
 
+        //if pdf
+        let pdfData = null;
+        if(req.file) {
+            pdfData = {
+                data: req.file.buffer, // The raw binary data of the PDF file
+                contentType: req.file.mimetype // The MIME type, e.g., "application/pdf"
+            }
+        }
+
         const newMessage = new Message({
             senderId,
             receiverId,
             message,
             senderusername,
-            receiverusername
+            receiverusername,
+            pdf: pdfData
         });
 
     

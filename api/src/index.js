@@ -51,7 +51,17 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendMessage', async ({ from, to, message, senderusername, receiverusername }) => {
-      const newMessage = new Message({ senderId: from, receiverId: to, message, senderusername, receiverusername });
+      const newMessage = new Message(
+        {
+          senderId: from, 
+          receiverId: to, 
+          message, 
+          senderusername,
+          pdf: {
+            data:  pdfBuffer,
+            contentType: pdfContentType
+          } 
+        });
       await newMessage.save();
       io.to(to).emit('receiveMessage', newMessage);
       io.to(from).emit('receiveMessage', newMessage);

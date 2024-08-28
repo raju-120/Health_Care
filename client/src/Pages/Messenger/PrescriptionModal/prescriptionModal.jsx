@@ -102,22 +102,6 @@ const PrescriptionModal = ({ isOpen, onRequestClose, onSubmit }) => {
             handleSelectMedicine={handleSelectMedicine}
           />
             
-            {/* Self Added Option */}
-
-          {/* <div className="flex justify-between items-center mt-8">
-            <button
-              onClick={handleAddMedicine}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none"
-            >
-              Add Medicine
-            </button>
-            <button
-              onClick={() => { handleSubmit(); onRequestClose(); }}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none"
-            >
-              Send Prescription
-            </button>
-          </div> */}
         </Modal>
       </div>
   </>

@@ -19,6 +19,10 @@ const messageSchema = new mongoose.Schema({
     message: { 
         type: String, required: true 
     },
+    pdf: {
+        data: Buffer,
+        contentType: String
+    }
 }, { timestamps: true });
 
 const Message = mongoose.model('Message', messageSchema);
