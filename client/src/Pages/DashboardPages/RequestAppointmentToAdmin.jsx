@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 export default function RequestAppointmentToAdmin() {
     const {currentUser} = useSelector(state => state.user)
     const [allData, setAllData] = useState([]);
+    const navigate = useNavigate();
 
     console.log("first: ", currentUser?.data?.accessToken);
 
@@ -30,31 +32,52 @@ export default function RequestAppointmentToAdmin() {
     getAllAdmins();
   }, []);
 
-  const handleApprove = async (id) => {
+  const handleClickInvoice = (e, _id) =>{
+    e.preventDefault();
+    console.log("first", _id)
+    if(_id){
+      navigate(`/dashboard/invoice/${_id}`)
+    }else {
+      console.error('Payment is not complete');
+    }
+  }
+
+  const handleApprove = async (id, doctor, date, department, email) => {
     try {
       const response = await fetch(`/api/appointment/booking/update/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser?.data?.accessToken}` 
+          'Authorization': `Bearer ${currentUser?.data?.accessToken}`
         },
-        body: JSON.stringify(
-          {
-            status: "approved",
-            accessToken:currentUser?.data?.accessToken 
-          }) 
+        body: JSON.stringify({
+          doctor,
+          date,
+          department,
+          email,
+          status: "approved",
+          accessToken: currentUser?.data?.accessToken,
+        })
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to update status');
       }
-
+  
       const updatedAppointment = await response.json();
-      setAllData(allData.map(appt => appt._id === id ? updatedAppointment : appt));
+      
+      // Update the state immediately with the new status
+      setAllData(prevData =>
+        prevData.map(appt =>
+          appt._id === id ? { ...appt, ...updatedAppointment } : appt
+        )
+      );
     } catch (error) {
       console.error('Error updating appointment:', error.message);
     }
   };
+  
+  
 
 
     return (
@@ -75,33 +98,46 @@ export default function RequestAppointmentToAdmin() {
                   </tr>
                 </thead>
                 <tbody>
-                  {allData?.map((data) => (
-                    <tr key={data?._id}>
-                      <td>
-                        <div className="flex items-center gap-3">
-                          <div>
-                            <div className="font-semibold text-md">{data?.name}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="text-md">{data?.doctor}</td>
-                      <td className="text-md">{data?.department}</td>
-                      <td className="text-md">{data?.date}</td>
-                      <td className="text-md">{data?.appointmentSlots}</td>
-                      <td className="text-md">
-                      Pay
-                      </td>
-                      <td>
-                        <button
-                            className="bg-green-500 text-white p-2 rounded mr-2"
-                            onClick={() => handleApprove(data?._id)}
-                        >
-                            {data?.status}
-                        </button>
-                        
-                      </td>
-                    </tr>
-                  ))}
+
+                {allData?.map((data) => (
+  <tr key={data?._id}>
+    <td>
+      <div className="flex items-center gap-3">
+        <div>
+          <div className="font-semibold text-md">{data?.name}</div>
+        </div>
+      </div>
+    </td>
+    <td className="text-md">{data?.doctor}</td>
+    <td className="text-md">{data?.department}</td>
+    <td className="text-md">{data?.date}</td>
+    <td className="text-md">{data?.appointmentSlots}</td>
+    <td className="text-lg">
+      <>
+        {data?.price && !data?.paid ? (
+          <button className="hover:opacity-50">
+            Pay
+          </button>
+        ) : (
+          <button onClick={(e) => handleClickInvoice(e, data?._id)}>
+            <span className='text-green-500 hover:opacity-50'>
+              Invoice
+            </span>
+          </button>
+        )}
+      </>
+    </td>
+    <td>
+      <button
+        className="bg-green-500 text-white p-2 rounded mr-2"
+        onClick={() => handleApprove(data?._id, data?.doctor, data?.date, data?.department, data?.email)}
+      >
+        {data?.status === "approved" ? "Approved" : "Approve"}
+      </button>
+    </td>
+  </tr>
+))}
+
                 </tbody>
               </table>
             </div>

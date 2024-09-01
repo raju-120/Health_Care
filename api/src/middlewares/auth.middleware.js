@@ -149,16 +149,19 @@ export const AdminVerifyJWT = asyncHandler(async (req, _, next) => {
 export const docApproveVerifyJwt = asyncHandler(async(req, _, next) => {
     try {
         const token = req.body?.accessToken;
+        //console.log("Doctor Approval: ", req.body?.accessToken);
         
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        //console.log("Doctor JWT Veification: ", decodedToken);
         
         const user = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
-        console.log("TOken: ", user )
+        //console.log("Token from Doctor field: ", user )
        
         /* if ( !user) {
             throw new ApiError(401, "Invalid Access Token")
         }  */
         req.user = user;
+        //console.log("User in doctor field: ", req.user)
         
         next();
     } catch (error) {
@@ -166,10 +169,11 @@ export const docApproveVerifyJwt = asyncHandler(async(req, _, next) => {
     };
 });
 
+
 export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
     try {
         const token = req?.body?.accessToken;
-        console.log("TOken", token);
+        console.log("Token from system admin field: ", req?.body?.accessToken);
         
 
         if (!token) {
@@ -177,7 +181,7 @@ export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
         }
 
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        //console.log('Decoded Token:', decodedToken);
+        console.log('Decoded Token from system admin:', decodedToken);
 
         const user = await SystemAdmin.findById(decodedToken?._id).select("-password -refreshToken");
         //console.log('User:', user);
@@ -193,6 +197,8 @@ export const systemAdminVerifyJWT = asyncHandler(async (req, _, next) => {
         throw new ApiError(401, error?.message || "Invalid access token");
     }
 });
+
+
 
 export const systemAdminJWTLOgout = asyncHandler(async (req, _, next) => {
     try {
@@ -252,3 +258,32 @@ export const conditionalAuth = (req, res, next) => {
     message: 'System logged in successfully',
     success: true
   } */
+
+    /* export const verifyJwtApproval = asyncHandler(async (req, _, next) => {
+    try {
+        const token = req.body?.accessToken;
+        if (!token) {
+            throw new ApiError(401, "Unauthorized request");
+        }
+
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        let user;
+
+        if (decodedToken.role === 'doctor') {
+            user = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
+            console.log("Doctor jwt found:")
+        } else if (decodedToken.role === 'admin') {
+            user = await SystemAdmin.findById(decodedToken?._id).select("-password -refreshToken");
+        }
+
+        if (!user) {
+            throw new ApiError(401, "Invalid Access Token");
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        console.error('JWT Error:', error);
+        throw new ApiError(401, error?.message || "Invalid access token");
+    }
+}); */

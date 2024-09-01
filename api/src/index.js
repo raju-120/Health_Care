@@ -50,17 +50,18 @@ io.on('connection', (socket) => {
       socket.join(userId);
   });
 
-  socket.on('sendMessage', async ({ from, to, message, senderusername, receiverusername }) => {
+  socket.on('sendMessage', async ({ from, to, message, senderusername, receiverusername,pdfBuffer,pdfContentType }) => {
       const newMessage = new Message(
         {
           senderId: from, 
           receiverId: to, 
           message, 
           senderusername,
-          pdf: {
-            data:  pdfBuffer,
-            contentType: pdfContentType
-          } 
+          receiverusername, 
+          pdf: pdfBuffer && pdfContentType  ?{
+            data: Buffer.from(pdfBuffer),
+            contentType: pdfContentType 
+          }: null,
         });
       await newMessage.save();
       io.to(to).emit('receiveMessage', newMessage);
@@ -82,22 +83,7 @@ io.on('connection', (socket) => {
   });
 });
 
-  /* app.get('/messages', async (req, res) => {
-    console.log(req.body)
-    const token = req.headers.authorization.split(' ')[1];
-    try {
-      const { username } = jwt.verify(token, SECRET_KEY);
-      const messages = await Message.find({
-        $or: [{ from: username }, { to: username }],
-      });
-      res.status(200).send(messages);
-    } catch (err) {
-      res.status(401).send('Unauthorized');
-    }
-  }); */
-
-
-/* app.use("/api/user",userRouter); */
+  
 app.use("/api/auth", authRouter);
 app.use("/api/posts", dropPostRouter);
 app.use("/api/comments", commentsRouter);

@@ -2,15 +2,16 @@ import Message from '../models/message.model.js';
 
 const sendMessage = async (req, res) => {
     try {
+        console.log("Request: ",req.body);
         const { senderId, receiverId, message, senderusername, receiverusername } = req.body;
+        
 
-        //if pdf
         let pdfData = null;
-        if(req.file) {
+        if (req.file) {
             pdfData = {
-                data: req.file.buffer, // The raw binary data of the PDF file
-                contentType: req.file.mimetype // The MIME type, e.g., "application/pdf"
-            }
+                data: req.file.buffer,  
+                contentType: req.file.mimetype
+            };
         }
 
         const newMessage = new Message({
@@ -22,7 +23,6 @@ const sendMessage = async (req, res) => {
             pdf: pdfData
         });
 
-    
         await newMessage.save();
 
         res.status(201).json(newMessage);
@@ -31,6 +31,7 @@ const sendMessage = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
 
 const getMessages = async (req, res) => {
     try {

@@ -88,7 +88,7 @@ export default function MyAppointment() {
                 <td className="text-lg">
                 <>
                   {data?.price && !data?.paid ? (
-                    <button onClick={(e) => handleClick(e, data?._id)}>
+                    <button onClick={(e) => handleClick(e, data?._id)} className="hover:opacity-50">
                       Pay
                     </button>
                     ) : (

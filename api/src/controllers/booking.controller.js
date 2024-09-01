@@ -2,6 +2,8 @@ import {Appointment} from "../models/appointment.model.js";
 import { APIResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
+import nodemailer from 'nodemailer';
+import Mailgen from "mailgen";
 /* import mongoose from "mongoose";
 import sendGridMail from "@sendgrid/mail"; */
 
@@ -86,34 +88,94 @@ const getBooking = asyncHandler(async (req, res) => {
 
   const updateAppointmentStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { status,docapporve,friend } = req.body;
-  
-    console.log("Updating appointment with id:", id);
-    console.log("New status:", status); 
-  
+    const { status, docapporve, friend, doctor, date, department, email } = req.body;
+
+    //console.log("Updating appointment with id:", id);
+    //console.log("New status:", status);
+
     if (!status) {
-      return res.status(400).json({ message: 'Status is required' });
+        return res.status(400).json({ message: 'Status is required' });
     }
-  
-    if (req.user.role !== 'system-admin' && req.user.role !== 'admin' && req.user.role !=='doctor' ) {
-      throw new ApiError(403, "Forbidden: You don't have permission to update this appointment");
+
+    if (req.user.role !== 'system-admin' && req.user.role !== 'admin' && req.user.role !== 'doctor') {
+        throw new ApiError(403, "Forbidden: You don't have permission to update this appointment");
     }
-  
+
     try {
-      const appointment = await Appointment.findByIdAndUpdate(id, { status,docapporve,friend }, { new: true });
-  
-      if (!appointment) {
-        console.log("Appointment not found for id:", id);
-        return res.status(404).json({ message: 'Appointment not found' });
-      }
-  
-      console.log("Appointment updated successfully:", appointment);
-      res.status(200).json(appointment);
+        const appointment = await Appointment.findByIdAndUpdate(id, { status, docapporve, friend }, { new: true });
+
+        if (!appointment) {
+            console.log("Appointment not found for id:", id);
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
+
+        //console.log("Appointment updated successfully:", appointment);
+
+        let config = {
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_NODEMAILER,
+                pass: process.env.PASS_NODEMAILER
+            }
+        };
+
+        let transporter = nodemailer.createTransport(config);
+
+        let MailGenerator = new Mailgen({
+            theme: 'default',
+            product: {
+                name: 'Mailgen',
+                link: 'https://mailgen.js/',
+            }
+        });
+
+        let response = {
+            body: {
+                name: doctor,
+                intro: 'Your Appointment has been Approved.',
+                table: {
+                    data: [
+                        {
+                            item: 'Nodemailer Stack Book',
+                            description: `Your appointment with Dr. ${doctor} on ${date} at ${department} has been approved. Please arrive at least 20 minutes before your scheduled time.`
+                        }
+                    ]
+                },
+                outro: 'Thank you for your cooperation.'
+            }
+        };
+
+        let mail = MailGenerator.generate(response);
+        let message = {
+            from: process.env.EMAIL_NODEMAILER,
+            to: email,
+            subject: "Approval of Your Appointment with Doctor",
+            html: mail
+        };
+
+        transporter.sendMail(message)
+            .then(() => {
+                console.log('Email sent successfully');
+                res.status(200).json({
+                    msg: 'Appointment updated and email confirmation sent.',
+                    appointment
+                });
+            })
+            .catch(error => {
+                console.error("Error sending email:", error);
+                res.status(500).json({
+                    msg: 'Appointment updated but failed to send email confirmation.',
+                    appointment,
+                    error
+                });
+            });
+
     } catch (error) {
-      console.error("Error updating appointment:", error);
-      res.status(500).json({ message: 'Internal server error' });
+        console.error("Error updating appointment:", error);
+        res.status(500).json({ message: 'Internal server error' });
     }
-  });
+});
+
 
 
 

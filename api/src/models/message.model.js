@@ -3,21 +3,25 @@ import mongoose from 'mongoose';
 const messageSchema = new mongoose.Schema({
     senderId: { 
         type: mongoose.Schema.Types.ObjectId,
-         ref: 'User' 
-        },
-
-    senderusername: {
-         type: String 
-        },
+        ref: 'User',
+        required: true
+    },
+    senderusername: { 
+        type: String,
+        required: true 
+    },
     receiverId: { 
         type: mongoose.Schema.Types.ObjectId,
-         ref: 'User' 
-        },
+        ref: 'User',
+        required: true
+    },
     receiverusername: { 
-        type: String 
+        type: String,
+        required: true 
     },
     message: { 
-        type: String, required: true 
+        type: String,
+        required: true 
     },
     pdf: {
         data: Buffer,

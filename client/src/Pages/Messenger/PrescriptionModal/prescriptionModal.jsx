@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import MedicineFetchData from './MedicineData/MedicineFetchData';
 import SelectedPrescribeMedicine from './SelectedMedicineModal/SelectedPrescribeMedicine';
 
-const PrescriptionModal = ({ isOpen, onRequestClose, onSubmit }) => {
+const PrescriptionModal = ({ isOpen, onRequestClose, onSubmit,selectedUser }) => {
   const [medicines, setMedicines] = useState([{ name: '', dosage: '' }]);
   const [medicineData, setMedicineData] = useState([]);
 
@@ -92,7 +92,8 @@ const PrescriptionModal = ({ isOpen, onRequestClose, onSubmit }) => {
               </div>
             ))}
           </div> */}
-          <SelectedPrescribeMedicine 
+          <SelectedPrescribeMedicine
+            selectedUser={selectedUser} 
             medicines={medicines}
             handleMedicineChange={handleMedicineChange}
             handleAddMedicine={handleAddMedicine}
