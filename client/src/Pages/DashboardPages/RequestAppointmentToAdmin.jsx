@@ -100,43 +100,43 @@ export default function RequestAppointmentToAdmin() {
                 <tbody>
 
                 {allData?.map((data) => (
-  <tr key={data?._id}>
-    <td>
-      <div className="flex items-center gap-3">
-        <div>
-          <div className="font-semibold text-md">{data?.name}</div>
-        </div>
-      </div>
-    </td>
-    <td className="text-md">{data?.doctor}</td>
-    <td className="text-md">{data?.department}</td>
-    <td className="text-md">{data?.date}</td>
-    <td className="text-md">{data?.appointmentSlots}</td>
-    <td className="text-lg">
-      <>
-        {data?.price && !data?.paid ? (
-          <button className="hover:opacity-50">
-            Pay
-          </button>
-        ) : (
-          <button onClick={(e) => handleClickInvoice(e, data?._id)}>
-            <span className='text-green-500 hover:opacity-50'>
-              Invoice
-            </span>
-          </button>
-        )}
-      </>
-    </td>
-    <td>
-      <button
-        className="bg-green-500 text-white p-2 rounded mr-2"
-        onClick={() => handleApprove(data?._id, data?.doctor, data?.date, data?.department, data?.email)}
-      >
-        {data?.status === "approved" ? "Approved" : "Approve"}
-      </button>
-    </td>
-  </tr>
-))}
+                  <tr key={data?._id}>
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <div>
+                          <div className="font-semibold text-md">{data?.name}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="text-md">{data?.doctor}</td>
+                    <td className="text-md">{data?.department}</td>
+                    <td className="text-md">{data?.date}</td>
+                    <td className="text-md">{data?.appointmentSlots}</td>
+                    <td className="text-lg">
+                      <>
+                        {data?.price && !data?.paid ? (
+                          <button className="hover:opacity-50">
+                            Pay
+                          </button>
+                        ) : (
+                          <button onClick={(e) => handleClickInvoice(e, data?._id)}>
+                            <span className='text-green-500 hover:opacity-50'>
+                              Invoice
+                            </span>
+                          </button>
+                        )}
+                      </>
+                    </td>
+                    <td>
+                    <button
+                              className="bg-green-500 text-white p-2 rounded mr-2"
+                              onClick={() => handleApprove(data?._id, data?.doctor, data?.date, data?.department, data?.email, data?.name)}
+                            >
+                              {data?.status === "approved" ? "Approved" : "Approve"}
+                            </button>
+                    </td>
+                  </tr>
+                ))}
 
                 </tbody>
               </table>

@@ -1,17 +1,20 @@
 import Message from '../models/message.model.js';
+import {cloudinary} from '../utils/cloudinaryConfig.js';
+
 
 const sendMessage = async (req, res) => {
     try {
-        console.log("Request: ",req.body);
         const { senderId, receiverId, message, senderusername, receiverusername } = req.body;
-        
 
-        let pdfData = null;
+        let pdfUrl = null;
         if (req.file) {
-            pdfData = {
-                data: req.file.buffer,  
-                contentType: req.file.mimetype
-            };
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                resource_type: "raw",
+                format: "pdf",
+                folder: "prescriptions"
+            });
+
+            pdfUrl = result.secure_url;
         }
 
         const newMessage = new Message({
@@ -20,7 +23,10 @@ const sendMessage = async (req, res) => {
             message,
             senderusername,
             receiverusername,
-            pdf: pdfData
+            pdf: {
+                url: pdfUrl,
+                contentType: req.file.mimetype
+            }
         });
 
         await newMessage.save();
@@ -31,7 +37,6 @@ const sendMessage = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
-
 
 const getMessages = async (req, res) => {
     try {

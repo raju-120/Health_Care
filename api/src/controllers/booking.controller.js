@@ -88,7 +88,7 @@ const getBooking = asyncHandler(async (req, res) => {
 
   const updateAppointmentStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { status, docapporve, friend, doctor, date, department, email } = req.body;
+    const { status, docapporve, friend, doctor, date, department, email,name } = req.body;
 
     //console.log("Updating appointment with id:", id);
     //console.log("New status:", status);
@@ -111,64 +111,66 @@ const getBooking = asyncHandler(async (req, res) => {
 
         //console.log("Appointment updated successfully:", appointment);
 
-        let config = {
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_NODEMAILER,
-                pass: process.env.PASS_NODEMAILER
-            }
-        };
-
-        let transporter = nodemailer.createTransport(config);
-
-        let MailGenerator = new Mailgen({
-            theme: 'default',
-            product: {
-                name: 'Mailgen',
-                link: 'https://mailgen.js/',
-            }
-        });
-
-        let response = {
-            body: {
-                name: doctor,
-                intro: 'Your Appointment has been Approved.',
-                table: {
-                    data: [
-                        {
-                            item: 'Nodemailer Stack Book',
-                            description: `Your appointment with Dr. ${doctor} on ${date} at ${department} has been approved. Please arrive at least 20 minutes before your scheduled time.`
-                        }
-                    ]
-                },
-                outro: 'Thank you for your cooperation.'
-            }
-        };
-
-        let mail = MailGenerator.generate(response);
-        let message = {
-            from: process.env.EMAIL_NODEMAILER,
-            to: email,
-            subject: "Approval of Your Appointment with Doctor",
-            html: mail
-        };
-
-        transporter.sendMail(message)
-            .then(() => {
-                console.log('Email sent successfully');
-                res.status(200).json({
-                    msg: 'Appointment updated and email confirmation sent.',
-                    appointment
-                });
-            })
-            .catch(error => {
-                console.error("Error sending email:", error);
-                res.status(500).json({
-                    msg: 'Appointment updated but failed to send email confirmation.',
-                    appointment,
-                    error
-                });
+        if(req.user.role === 'system-admin'){
+            let config = {
+                service: 'gmail',
+                auth: {
+                    user: process.env.EMAIL_NODEMAILER,
+                    pass: process.env.PASS_NODEMAILER
+                }
+            };
+    
+            let transporter = nodemailer.createTransport(config);
+    
+            let MailGenerator = new Mailgen({
+                theme: 'default',
+                product: {
+                    name: 'EvenCare',
+                    link: 'https://mailgen.js/',
+                }
             });
+    
+            let response = {
+                body: {
+                    name: name,
+                    intro: 'Your Appointment has been Approved.',
+                    table: {
+                        data: [
+                            {
+                                /* item: 'Nodemailer Stack Book', */
+                                description: `Your appointment with ${doctor} in this ${department} department Date:${date} has been approved. Please arrive at least 20 minutes before your scheduled time.`
+                            }
+                        ]
+                    },
+                    outro: 'Thank you for your cooperation.'
+                }
+            };
+    
+            let mail = MailGenerator.generate(response);
+            let message = {
+                from: process.env.EMAIL_NODEMAILER,
+                to: email,
+                subject: "Approval of Your Appointment with Doctor",
+                html: mail
+            };
+    
+            transporter.sendMail(message)
+                .then(() => {
+                    console.log('Email sent successfully');
+                    res.status(200).json({
+                        msg: 'Appointment updated and email confirmation sent.',
+                        appointment
+                    });
+                })
+                .catch(error => {
+                    console.error("Error sending email:", error);
+                    res.status(500).json({
+                        msg: 'Appointment updated but failed to send email confirmation.',
+                        appointment,
+                        error
+                    });
+                });
+        }
 
     } catch (error) {
         console.error("Error updating appointment:", error);

@@ -71,7 +71,7 @@ export default function AppointmentRequestDoctor() {
           console.error('Error updating appointment:', error.message);
         }
       }; */
-      const handleApprove = async (id, doctor, date, department, email) => {
+      const handleApprove = async (id, doctor, date, department, email,name) => {
         try {
           const response = await fetch(`/api/appointment/booking/update/doctor/${id}`, {
             method: 'PUT',
@@ -83,7 +83,7 @@ export default function AppointmentRequestDoctor() {
               status: "pending",
               docapporve: "approved",
               friend: "approved",
-              doctor, date, department, email,
+              doctor, date, department, email,name,
               accessToken: currentUser?.data?.accessToken
             })
           });
@@ -124,53 +124,64 @@ export default function AppointmentRequestDoctor() {
             </tr>
           </thead>
           <tbody>
-          {allData?.map((data) => (
-  <tr key={data?._id}>
-    <td>
-      <div className="flex items-center gap-3">
-        <div>
-          <div className="font-semibold text-md">{data?.name}</div>
-        </div>
-      </div>
-    </td>
-    <td className="text-md">{data?.doctor}</td>
-    <td className="text-md">{data?.department}</td>
-    <td className="text-md">{data?.date}</td>
-    <td className="text-md">{data?.appointmentSlots}</td>
-    <td>
-          {data?.price && data?.paid ? (
-            <span className='text-green-500'>Paid</span>
-          ) : (
-            <span className='text-red-500'>Not Paid</span>
-          )}
-    </td>
-    <td>
-          {data?.friend === 'pending' ? (
-            <span className='text-red-500'>{data?.friend}</span>
-          ) : (
-            <Link to='/chat'>
-              <span className='text-green-500 text-2xl hover:opacity-50'>
-                <BsMessenger />
-              </span>
-            </Link>
-          )}
-        </td>
-        <td>
-          {data?.docapporve === 'pending' ? (
-            <button
-              className="btn btn-primary text-xs"
-              onClick={() => handleApprove(data?._id, data?.doctor, data?.date, data?.department, data?.email)}
-            >
-              <span className='text-white'>{data?.docapporve}</span>
-            </button>
-          ) : (
-            <span className='text-green-500'>Approved</span>
-          )}
-        </td>
-  </tr>
-))}
+            {allData?.map((data) => (
+              <tr key={data?._id}>
+                <td>
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <div className="font-semibold text-md">{data?.name}</div>
+                    </div>
+                  </div>
+                </td>
+                <td className="text-md">{data?.doctor}</td>
+                <td className="text-md">{data?.department}</td>
+                <td className="text-md">{data?.date}</td>
+                <td className="text-md">{data?.appointmentSlots}</td>
+                <td>
+                      {data?.price && data?.paid ? (
+                        <span className='text-green-500'>Paid</span>
+                      ) : (
+                        <span className='text-red-500'>Not Paid</span>
+                      )}
+                </td>
+                <td>
+                      {data?.friend === 'pending' ? (
+                        <span className='text-red-500'>{data?.friend}</span>
+                      ) : (
+                        <Link to='/chat'>
+                          <span className='text-green-500 text-2xl hover:opacity-50'>
+                            <BsMessenger />
+                          </span>
+                        </Link>
+                      )}
+                    </td>
+                    <td>
+                      {data?.docapporve === 'pending' ? (
+                        <button
+                          className="btn btn-primary text-xs"
+                          onClick={() => handleApprove(data?._id, data?.doctor, data?.date, data?.department, data?.email , data?.name)}
+                        >
+                          <span className='text-white'>{data?.docapporve}</span>
+                        </button>
+                      ) : (
+                        <span className='text-green-500'>Approved</span>
+                      )}
+                    </td>
+              </tr>
+            ))}
 
-          {/* {
+          
+
+          </tbody>
+        </table>
+
+        </div>
+    </div>
+  )
+}
+
+
+{/* {
   allData?.map((data, index) => (
     currentUser?.data?.user?.username === data?.doctor && (
       <tr className="hover" key={data?._id}>
@@ -212,11 +223,3 @@ export default function AppointmentRequestDoctor() {
     )
   ))
 } */}
-
-          </tbody>
-        </table>
-
-        </div>
-    </div>
-  )
-}

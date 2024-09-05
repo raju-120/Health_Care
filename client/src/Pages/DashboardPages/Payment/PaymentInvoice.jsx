@@ -42,7 +42,7 @@ export default function PaymentInvoice() {
                                         <img src={logo} alt="Logo" className=""/>
                                         <p className="mt-2">Appointment Number: +96578955</p>
                                         <p>Email: evencare@gmail.com</p>
-                                        <p>Address: Vungchung</p>
+                                        <p>Address: Plot 81, Block-E, Bashundhara Rd, Dhaka 1229</p>
                                     </div>
                                 </div>
                                 <br />

@@ -1,4 +1,6 @@
 import multer from "multer";
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import {cloudinary }from '../utils/cloudinaryConfig.js';
 
 const storage = multer.diskStorage({
     destination: function(req, file,cb){
@@ -11,5 +13,19 @@ const storage = multer.diskStorage({
     }
 });
 
-export const upload = multer({storage});
+const storagePdf = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'prescriptions',
+        format: async () => 'pdf',
+        public_id: (req, file) => `${Date.now()}-${file.originalname}`,
+    },
+});
+
+export const uploadPdf = multer({
+    storage: storagePdf,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB file size limit
+}).single('pdf');
+
+export const upload = multer({storage/* ,storagePdf */,/* uploadPdf */});
 

@@ -9,6 +9,7 @@ import { Server } from "socket.io";
 import Message from "./models/message.model.js";
 
 
+
 //routes
 import authRouter from "./routes/auth.router.js";
 import dropPostRouter from "./routes/post.routes.js";
@@ -19,6 +20,7 @@ import Appointments from "./routes/booking.route.js";
 import Payment from './routes/payment.route.js';
 import BloodDonner from './routes/bloodDonner.route.js';
 import Medicine from './routes/medicine.route.js';
+/* import { handlePDFUpload } from "./middlewares/multer.middleware.js"; */
 
 
 
@@ -43,45 +45,50 @@ const io = new Server(server, {
 const socketIdMap = new Map();
 
 io.on('connection', (socket) => {
-  console.log(`New client connected: ${socket.id}`);
-
-  socket.on('joinRoom', ({ userId }) => {
-      socketIdMap.set(userId, socket.id);
-      socket.join(userId);
-  });
-
-  socket.on('sendMessage', async ({ from, to, message, senderusername, receiverusername,pdfBuffer,pdfContentType }) => {
-      const newMessage = new Message(
-        {
-          senderId: from, 
-          receiverId: to, 
-          message, 
-          senderusername,
-          receiverusername, 
-          pdf: pdfBuffer && pdfContentType  ?{
-            data: Buffer.from(pdfBuffer),
-            contentType: pdfContentType 
-          }: null,
-        });
-      await newMessage.save();
-      io.to(to).emit('receiveMessage', newMessage);
-      io.to(from).emit('receiveMessage', newMessage);
-  });
-
-  socket.on('messageRead', async ({ messageId, username }) => {
-      await Message.findByIdAndUpdate(messageId, { $addToSet: { readBy: username } });
-  });
-
-  socket.on('disconnect', () => {
-      console.log(`Client disconnected: ${socket.id}`);
-      for (let [userId, id] of socketIdMap.entries()) {
-          if (id === socket.id) {
-              socketIdMap.delete(userId);
-              break;
-          }
-      }
-  });
+    console.log(`New client connected: ${socket.id}`);
+  
+    socket.on('joinRoom', ({ userId }) => {
+        socketIdMap.set(userId, socket.id);
+        socket.join(userId);
+    });
+  
+    socket.on('sendMessage', async ({ from, to, message, senderusername, receiverusername, pdfBuffer, pdfContentType }) => {
+        try {
+            const newMessage = new Message({
+                senderId: from,
+                receiverId: to,
+                message,
+                senderusername,
+                receiverusername,
+                pdf: pdfBuffer && pdfContentType ? {
+                    data: Buffer.from(pdfBuffer),
+                    contentType: pdfContentType
+                } : null,
+            });
+            await newMessage.save();
+    
+            // Emit the message back to both sender and receiver
+            io.to(to).emit('receiveMessage', newMessage);
+            io.to(from).emit('receiveMessage', newMessage);
+        } catch (error) {
+            console.error("Error processing PDF:", error.message);
+        }
+    });
+    
+  
+    socket.on('disconnect', () => {
+        console.log(`Client disconnected: ${socket.id}`);
+        for (let [userId, id] of socketIdMap.entries()) {
+            if (id === socket.id) {
+                socketIdMap.delete(userId);
+                break;
+            }
+        }
+    });
 });
+
+
+  
 
   
 app.use("/api/auth", authRouter);

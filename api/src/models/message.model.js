@@ -24,8 +24,8 @@ const messageSchema = new mongoose.Schema({
         required: true 
     },
     pdf: {
-        data: Buffer,
-        contentType: String
+        url: { type: String },
+        contentType: { type: String }
     }
 }, { timestamps: true });
 
