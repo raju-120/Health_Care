@@ -10,6 +10,10 @@ const appointmentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    docId: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
         required: true,
@@ -38,15 +42,19 @@ const appointmentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    /* appointmentSlots: {
+    appointmentSlots: {
         type: String,
         required: true,
-    }, */
+    },
     docapporve:{
         type: String,
         default: 'pending'
     },
     price: {
+        type: Number,
+        required: true,
+    },
+    advPrice: {
         type: Number,
         required: true,
     },

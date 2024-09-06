@@ -13,26 +13,26 @@ function Appointments() {
   const [formData, setFormData] = useState({});
   const [deptData, setDeptData] = useState([]);
   const [doctors, setDoctors] = useState([]);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedDoctorSlots, setSelectedDoctorSlots] = useState([]);
   const [doctorBill, setDoctorBill] = useState(0);
+  const [doctorAdvBill, setDoctorAdvBill] = useState(0);
   const [selectedDate, setSelectedDate] = useState("");
-  const [fullyBooked, setFullyBooked] = useState(false);
-  const [appointmentSlots, setAppointmentSlots] = useState([]);
   const [selectedDept, setSelectedDept] = useState('');
   const [filteredDoctors, setFilteredDoctors] = useState([]);
+  
+  const [select, setSelect] = useState({
+    isAgrre: false, //check box
+  })
+
+
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [fullyBooked, setFullyBooked] = useState(false);
+  const [appointmentSlots, setAppointmentSlots] = useState([]);
 
  /*  const [nameError, setNameError] = useState(''); // Error specific to name field */
 
-
-
-/*console.log("Current User: ", currentUser?.data?.user?.email);
-  console.log("Current User: ", currentUser?.data?.user?._id);
-  console.log("Doctors: ", doctors); */
   console.log("formdata: ", formData);
-  /* console.log("Doctors: ", doctors?.data);
-  console.log("Department: ", deptData);
-  console.log("Price: ", doctorBill); */
+  
 
   useEffect(() => {
     const getDoctor = async () => {
@@ -73,49 +73,35 @@ function Appointments() {
           setError('Please enter only alphabetic characters and spaces');
           setFormData({ ...formData, [id]: value.replace(/[^A-Za-z\s]/g, '') });
         }
-      } else {
+      } 
+      else {
         setFormData({
           ...formData,
           [id]: value,
-          bill: doctorBill,
+          bill: doctorBill || doctorAdvBill,
         });
         if (id === 'department') {
           setSelectedDept(value);
         } else if (id === 'doctor') {
           const doctor = doctors?.data?.find(doc => doc?.username === value);
+          
           setSelectedDoctor(doctor);
           setDoctorBill(doctor?.price || '');
+          setDoctorAdvBill(doctor?.advPrice || '')
+          
+          if (doctor) {
+            setSelectedDoctor(doctor);
+            setDoctorBill(doctor?.price || '');
+            setDoctorAdvBill(doctor?.advPrice || '');
+
+            // Update formData to include doctorId
+            setFormData(prevState => ({
+                ...prevState,  // Save the doctor's username
+                docId: doctor?._id,     // Save the doctor's ID
+            }));
         }
-      /* if (id === "department") {
-        const selectedDept = deptData.find((dept) => dept.deptname === value);
-        if (selectedDept) {
-          setDoctors(selectedDept.doctors);
-          setSelectedDoctor(null);
-          setSelectedDoctorSlots([]);
-          setDoctorBill(0);
-          setSelectedDate("");
-          setFullyBooked(false);
-          setAppointmentSlots([]);
-        } else {
-          setDoctors([]);
-          setSelectedDoctor(null);
-          setSelectedDoctorSlots([]);
-          setDoctorBill(0);
-          setSelectedDate("");
-          setFullyBooked(false);
-          setAppointmentSlots([]);
         }
-      } else if (id === "doctor") {
-        const selectedDoc = doctors.find((doc) => doc.docname === value);
-        setSelectedDoctor(selectedDoc);
-        setSelectedDoctorSlots(selectedDoc.slots);
-        setDoctorBill(selectedDoc.bill);
-        setAppointmentSlots([]);
-      } else if (id === "date") {
-        setSelectedDate(value);
-        setFullyBooked(false);
-        setAppointmentSlots([]);
-      } */
+      
     }
   };
 
@@ -135,6 +121,18 @@ function Appointments() {
     });
   };
 
+  const handleMettingChange = (e) => {
+    setSelect({
+      ...select,
+      meeting: e.target.value,
+    });
+
+    setFormData({
+      ...formData,
+      meeting: e.target.value,
+    });
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -148,9 +146,11 @@ function Appointments() {
       ...formData,
       permission: 'progress',
       docapprove: 'pending',
-      price: doctorBill,
+      price: doctorBill || doctorAdvBill,
       uId: currentUser?.data?.user?._id,
+      doctorId: formData.docId,
       email: currentUser?.data?.user?.email,
+      meeting: formData.meeting,
     };
 
     console.log("Appointment Data to Submit:", appointmentData);
@@ -194,6 +194,7 @@ function Appointments() {
     setSelectedDoctor(null);
     setSelectedDoctorSlots([]);
     setDoctorBill(0);
+    setDoctorAdvBill(0);
     setSelectedDate("");
     setFullyBooked(false);
   };
@@ -267,68 +268,176 @@ function Appointments() {
             </div>
           </div>
 
-          {/* Department */}
+          {/* Meeting */}
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-            <h1 className="lg:w-1/3 text-left">Department :</h1>
+            <h1 className="lg:w-1/3 text-left">Meeting :</h1>
             <div className="lg:w-2/3">
-              <select id="department" onChange={handleChange} className="input input-bordered w-full" required >
-                <option value="">Choose department</option>
-                {deptData?.map((dept, index) => (
-                  <option key={index} value={dept?.deptname}>{dept?.deptname}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Doctor */}
-          <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-            <h1 className="lg:w-1/3 text-left">Doctor :</h1>
-            <div className="lg:w-2/3">
-              <select id="doctor" onChange={handleChange} className="input input-bordered w-full" required >
-                <option value="">Choose doctor</option>
-                {filteredDoctors?.map((doctor) => (
-                  <option key={doctor?._id} value={doctor?.username}>
-                    {doctor?.username}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Appointment Date */}
-          <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-            <h1 className="lg:w-1/3 text-left">Appointment Date :</h1>
-            <div className="lg:w-2/3">
-              <input type="date" id="date" onChange={handleChange} className="input input-bordered w-full" required />
-            </div>
-          </div>
-
-          {/* Time */}
-          {/* {selectedDoctor && (
-            <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-              <h1 className="lg:w-1/3 text-left">Time :</h1>
-              <div className="lg:w-2/3">
-                {fullyBooked ? (
-                  <p className="text-red-500">All slots for this date are booked. Please choose another date.</p>
-                ) : (
-                  <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required >
-                    <option value="">Choose Time Slot</option>
-                    {filteredTimeSlots.map((slot, index) => (
-                      <option key={index} value={slot}>{slot}</option>
-                    ))}
-                  </select>
-                )}
+              <div className="flex gap-4">
+                <label className="flex items-center">
+                  <span>Face to Face</span>
+                  <input type="radio" name="meeting" value="face-to-face" className="m-2" onChange={handleMettingChange} required />
+                </label>
+                <label className="flex items-center">
+                  <span>Online</span>
+                  <input type="radio" name="meeting" value="online" className="m-2" onChange={handleMettingChange} required />
+                </label>
               </div>
             </div>
-          )} */}
-
-          {/* Doctors Bill */}
-          <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-            <h1 className="lg:w-1/3 text-left">Doctors Bill:</h1>
-            <div className="lg:w-2/3">
-              <input type="text" id="price" onChange={handleChange} value={`$ ${doctorBill}`} readOnly className="input input-bordered w-full bg-gray-200" required />
-            </div>
           </div>
+
+          {
+            select.meeting === 'face-to-face' && 
+            (
+              <>
+                {/* Department */}
+                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                  <h1 className="lg:w-1/3 text-left">Department :</h1>
+                  <div className="lg:w-2/3">
+                    <select id="department" onChange={handleChange} className="input input-bordered w-full" required >
+                      <option value="">Choose department</option>
+                      {deptData?.map((dept, index) => (
+                        <option key={index} value={dept?.deptname}>{dept?.deptname}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                 {/* Doctor */}     
+                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                    <h1 className="lg:w-1/3 text-left">Doctor :</h1>
+                    <div className="lg:w-2/3">
+                      <select id="doctor" onChange={handleChange} className="input input-bordered w-full" required >
+                        <option value="">Choose doctor</option>
+                        {filteredDoctors?.map((doctor) => (
+                          <option key={doctor?._id} value={doctor?.username}>
+                            {doctor?.username}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                </div>
+
+                {/* Appointment Date */}
+                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                  <h1 className="lg:w-1/3 text-left">Appointment Date :</h1>
+                  <div className="lg:w-2/3">
+                    <input 
+                      type="date" 
+                      id="date" 
+                      onChange={handleChange}
+                      className="input input-bordered w-full" 
+                      required 
+                    />
+                  </div>
+                </div>
+
+                {/* Time */}
+               {/*  {selectedDoctor && (
+                  <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                    <h1 className="lg:w-1/3 text-left">Time :</h1>
+                    <div className="lg:w-2/3">
+                      {fullyBooked ? (
+                        <p className="text-red-500">All slots for this date are booked. Please choose another date.</p>
+                      ) : (
+                        <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required >
+                          <option value="">Choose Time Slot</option>
+                          {filteredTimeSlots.map((slot, index) => (
+                            <option key={index} value={slot}>{slot}</option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
+                  </div>
+                )}  */}
+
+                {/* Doctors Bill */}
+                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                  <h1 className="lg:w-1/3 text-left">Advance Bill:</h1>
+                  <div className="lg:w-2/3">
+                    <input type="text" id="price" onChange={handleChange} value={`$ ${doctorAdvBill}`} readOnly className="input input-bordered w-full bg-gray-200" required />
+                  </div>
+                </div>
+              </>
+            )
+          }
+
+          {
+            select.meeting === 'online' && 
+            (
+              <>
+                {/* Department */}
+                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                  <h1 className="lg:w-1/3 text-left">Department :</h1>
+                  <div className="lg:w-2/3">
+                    <select id="department" onChange={handleChange} className="input input-bordered w-full" required >
+                      <option value="">Choose department</option>
+                      {deptData?.map((dept, index) => (
+                        <option key={index} value={dept?.deptname}>{dept?.deptname}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                 {/* Doctor */}     
+                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                    <h1 className="lg:w-1/3 text-left">Doctor :</h1>
+                    <div className="lg:w-2/3">
+                      <select id="doctor" onChange={handleChange} className="input input-bordered w-full" required >
+                        <option value="">Choose doctor</option>
+                        {filteredDoctors?.map((doctor) => (
+                          <option key={doctor?._id} value={doctor?.username}>
+                            {doctor?.username}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                </div>
+
+                {/* Appointment Date */}
+                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                  <h1 className="lg:w-1/3 text-left">Appointment Date :</h1>
+                  <div className="lg:w-2/3">
+                    <input 
+                      type="date" 
+                      id="date" 
+                      onChange={handleChange}
+                      className="input input-bordered w-full" 
+                      required 
+                    />
+                  </div>
+                </div>
+
+                {/* Time */}
+                {/* {selectedDoctor && (
+                  <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                    <h1 className="lg:w-1/3 text-left">Time :</h1>
+                    <div className="lg:w-2/3">
+                      {fullyBooked ? (
+                        <p className="text-red-500">All slots for this date are booked. Please choose another date.</p>
+                      ) : (
+                        <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required >
+                          <option value="">Choose Time Slot</option>
+                          {filteredTimeSlots.map((slot, index) => (
+                            <option key={index} value={slot}>{slot}</option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
+                  </div>
+                )}  */}
+
+                {/* Doctors Bill */}
+                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                  <h1 className="lg:w-1/3 text-left">Doctors Bill:</h1>
+                  <div className="lg:w-2/3">
+                    <input type="text" id="price" onChange={handleChange} value={`$ ${doctorBill}`} readOnly className="input input-bordered w-full bg-gray-200" required />
+                  </div>
+                </div>
+              </>
+            )
+          }
+
+          
 
           {/* Submit Button */}
           <button type="submit" className="mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
