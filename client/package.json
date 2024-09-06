@@ -26,6 +26,7 @@
     "lightgallery": "^2.7.2",
     "odometer": "^0.4.8",
     "react": "^18.2.0",
+    "react-calendar": "^5.0.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.52.2",
     "react-hot-toast": "^2.4.1",

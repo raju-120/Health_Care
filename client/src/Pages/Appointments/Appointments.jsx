@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import {  toast, Toaster } from "react-hot-toast";
+import Calendar from 'react-calendar';
 
 /* import { event } from "jquery"; */
 
@@ -19,6 +20,8 @@ function Appointments() {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDept, setSelectedDept] = useState('');
   const [filteredDoctors, setFilteredDoctors] = useState([]);
+  const [minDate, setMinDate] = useState('');
+  const [maxDate, setMaxDate] = useState('');
   
   const [select, setSelect] = useState({
     isAgrre: false, //check box
@@ -33,6 +36,22 @@ function Appointments() {
 
   console.log("formdata: ", formData);
   
+
+  useEffect(() => {
+    const today = new Date();
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 6);
+
+    const formatDate = (date) => {
+      let day = String(date.getDate()).padStart(2, '0');
+      let month = String(date.getMonth() + 1).padStart(2, '0'); 
+      let year = date.getFullYear();
+      return `${year}-${month}-${day}`;
+    };
+
+    setMinDate(formatDate(today));
+    setMaxDate(formatDate(nextWeek));
+  }, []);
 
   useEffect(() => {
     const getDoctor = async () => {
@@ -324,6 +343,8 @@ function Appointments() {
                     <input 
                       type="date" 
                       id="date" 
+                      min={minDate}
+                      max={maxDate}
                       onChange={handleChange}
                       className="input input-bordered w-full" 
                       required 
