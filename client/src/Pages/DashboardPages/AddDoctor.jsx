@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import {  toast, Toaster } from "react-hot-toast";
 
 export default function AddDoctor() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    slots: Array().fill(''), // Initial 5 empty slots
+    onlineSlots: Array().fill(''), // Initial 5 empty online slots
+  });
   const [file, setFile] = useState(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -11,10 +14,10 @@ export default function AddDoctor() {
   const [specialistsItems, setSpecialistsItems] = useState([]);
   const navigate = useNavigate();
 
-  console.log("List: ", deptData);
-  console.log("Data: ", formData);
-  console.log("avatar", file)
-
+ /*  console.log("List: ", deptData);
+ console.log("avatar", file) */
+ 
+ console.log("Data: ", formData);
 
   useEffect(() => {
     const getDepartment = async () => {
@@ -68,19 +71,39 @@ export default function AddDoctor() {
       gender: e.target.value,
     });
   };
+  
+
+  /* Slots section */
+  const handleSlotChange = (index, value) => {
+    const newSlots = [...formData.slots];
+    newSlots[index] = value;
+    setFormData({ ...formData, slots: newSlots });
+  };
+  
+  // Optionally add more slots dynamically
+  const addNewSlot = () => {
+    setFormData({
+      ...formData,
+      slots: [...formData.slots, '']
+    });
+  };
 
 
-  /* const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-
-     
-    } catch (error) {
-      setLoading(false);
-      setError(error.message);
-    }
-  };  */
+/* Online Slots */
+  const handleOnlineSlotChange = (index, value) => {
+    const newOnlineSlots = [...formData.onlineSlots];
+    newOnlineSlots[index] = value;
+    setFormData({ ...formData, onlineSlots: newOnlineSlots });
+  };
+  
+  // Optionally add more online slots dynamically
+  const addNewOnlineSlot = () => {
+    setFormData({
+      ...formData,
+      onlineSlots: [...formData.onlineSlots, ''] 
+    });
+  };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,6 +123,7 @@ export default function AddDoctor() {
       formDataToSend.append("phone", formData.phone);
       formDataToSend.append("appointmentnumber", formData.appointmentnumber);
       formDataToSend.append("price", formData.price);
+      formDataToSend.append("advPrice", formData.advPrice);
       formDataToSend.append("time", formData.time);
       formDataToSend.append("gender", formData.gender);
       formDataToSend.append("institute", formData.institute);
@@ -177,13 +201,7 @@ export default function AddDoctor() {
                   />
                 </div>
                 <div className="w-1/2">
-                  {/* <input
-                    type="text"
-                    id="department"
-                    placeholder="Department"
-                    onChange={handleChange}
-                    className="w-full border p-3 rounded-lg"
-                    /> */}
+                 
                   <select id="department" onChange={handleChange} className="input input-bordered w-full" required >
                     <option value="">Choose department</option>
                     {deptData?.map((dept, index) => (
@@ -245,7 +263,9 @@ export default function AddDoctor() {
                     placeholder="Address"
                     onChange={handleChange}
                     className="w-full border p-3 rounded-lg"
+                    defaultValue='Plot 81, Block-E, Bashundhara Rd, Dhaka 1229'
                     required
+                    readOnly
                   />
                 </div>
               </div>
@@ -263,11 +283,13 @@ export default function AddDoctor() {
                 </div>
                 <div className="w-1/2">
                   <input
-                    type="number"
+                    type="text"
                     id="appointmentnumber"
                     placeholder="Appointment Number"
                     onChange={handleChange}
                     className="w-full border p-3 rounded-lg"
+                    defaultValue='09666710678'
+                    readOnly
                     required
                   />
                 </div>
@@ -285,13 +307,6 @@ export default function AddDoctor() {
                   />
                 </div>
                 <div className="w-1/2 ">
-                  {/* <input
-                  type="text"
-                  id="time"
-                  placeholder="Appointment Number"
-                  onChange={handleChange}
-                  className="w-full border p-3 rounded-lg"
-                  /> */}
                    <select id="time" onChange={handleChange} className="select select-bordered w-full border rounded-lg" required>
                     <option  defaultValue>Choose Available Time & Day</option>
                     <option>Sat,Sun,Mon,Tues(5.00PM - 10.30PM)</option>
@@ -302,23 +317,37 @@ export default function AddDoctor() {
                   </select>
                 </div>
               </div>
-              {/* gender */}
-              <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3">
-                <h1 className="lg:w-1/3 text-left text-2xl font-semibold">Gender :</h1>
-                <div className="lg:w-2/3">
-                  <div className="flex gap-4">
-                    <label className="flex items-center">
-                      <span>Male</span>
-                      <input type="radio" name="gender" value="Male" className="m-2" onChange={handleGenderChange} required />
-                    </label>
-                    <label className="flex items-center">
-                      <span>Female</span>
-                      <input type="radio" name="gender" value="Female" className="m-2" onChange={handleGenderChange} required />
-                    </label>
+              {/* gender & Advance payment rate */}
+              <div className="flex">
+                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3">
+                  <h1 className="lg:w-1/3 text-left text-2xl font-semibold">Gender :</h1>
+                  <div className="lg:w-2/3">
+                    <div className="flex gap-4">
+                      <label className="flex items-center">
+                        <span>Male</span>
+                        <input type="radio" name="gender" value="Male" className="m-2" onChange={handleGenderChange} required />
+                      </label>
+                      <label className="flex items-center">
+                        <span>Female</span>
+                        <input type="radio" name="gender" value="Female" className="m-2" onChange={handleGenderChange} required />
+                      </label>
+                    </div>
                   </div>
                 </div>
-              </div>
 
+                <div className="w-2/3">
+                  <input
+                    type="number"
+                    id="advPrice"
+                    placeholder="Advance Charge per Visit"
+                    onChange={handleChange}
+                    className="w-full border p-3 rounded-lg"
+                    defaultValue={500}
+                    required
+                    readOnly
+                  />
+                </div>
+              </div>
 
               <input
                 type="text"
@@ -329,6 +358,61 @@ export default function AddDoctor() {
                 required
               />
 
+              {/* Face to face meet-up slots */}
+              <div>
+                <h3 className="font-semibold">Face to Face Meet-up Slots</h3>
+                <div className="flex flex-wrap gap-3">
+                  {formData.slots.map((slot, index) => (
+                    <div key={index} className="w-1/3 p-2">
+                      <input
+                        type="text"
+                        value={slot}
+                        placeholder={`Slot ${index + 1}`}
+                        onChange={(e) => handleSlotChange(index, e.target.value)}
+                        className="border p-3 rounded-lg"
+                        required
+                      />
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={addNewSlot}
+                  className="bg-blue-500 text-white p-2 rounded-lg mt-2"
+                >
+                  Add More Slot
+                </button>
+              </div>
+
+              {/* Online Meet Up sLots */}
+              
+              <div>
+                <h3 className="font-semibold mb-2">Online Slots</h3>
+                <div className="flex flex-wrap gap-3">
+                {formData.onlineSlots.map((onlineSlot, index) => (
+                  <div key={index} className="w-1/3 p-2">
+                    <input
+                      type="text"
+                      value={onlineSlot}
+                      placeholder={`Online Slot ${index + 1}`}
+                      onChange={(e) => handleOnlineSlotChange(index, e.target.value)}
+                      className="border p-3 rounded-lg w-full"
+                      required
+                    />
+                  </div>
+                ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={addNewOnlineSlot}
+                  className="bg-blue-500 text-white p-2 rounded-lg mt-2"
+                >
+                  Add More Online Slot
+                </button>
+              </div>
+
+
+                {/* Password section */}
               <input
                 type="password"
                 id="password"
@@ -338,6 +422,7 @@ export default function AddDoctor() {
                 required
               />
 
+              {/* Profile section */}
               <input
                 type="file"
                 id="avatar"

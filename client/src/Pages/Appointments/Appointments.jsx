@@ -258,7 +258,14 @@ function Appointments() {
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
             <h1 className="lg:w-1/3 text-left">Date of Birth:</h1>
             <div className="lg:w-2/3">
-              <input type="date" id="dateOfBirth" onChange={handleChange} className="input input-bordered w-full" required />
+              <input 
+                type="date" 
+                id="dateOfBirth" 
+                onChange={handleChange} 
+                max={new Date().toISOString().split("T")[0]}  // Set max date to today
+                className="input input-bordered w-full"
+                required 
+              />
             </div>
           </div>
 
@@ -421,6 +428,8 @@ function Appointments() {
                     <input 
                       type="date" 
                       id="date" 
+                      min={minDate}
+                      max={maxDate}
                       onChange={handleChange}
                       className="input input-bordered w-full" 
                       required 
@@ -451,7 +460,15 @@ function Appointments() {
                 <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
                   <h1 className="lg:w-1/3 text-left">Doctors Bill:</h1>
                   <div className="lg:w-2/3">
-                    <input type="text" id="price" onChange={handleChange} value={`$ ${doctorBill}`} readOnly className="input input-bordered w-full bg-gray-200" required />
+                    <input 
+                      type="text" 
+                      id="price" 
+                      onChange={handleChange} 
+                      value={`$ ${doctorBill}`} 
+                      readOnly 
+                      className="input input-bordered w-full bg-gray-200" 
+                      required 
+                    />
                   </div>
                 </div>
               </>

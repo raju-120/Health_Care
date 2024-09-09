@@ -54,6 +54,10 @@ const doctorSchema = new Schema({
         type: Number,
         required: true,
     },
+    advPrice:{ 
+        type: Number,
+        required: true,
+    },
     gender:{
         type: String,
         required: true,
@@ -73,6 +77,14 @@ const doctorSchema = new Schema({
     role: { 
         type: String,
         default: 'doctor'
+    },
+    slots: { 
+        type: Array,
+        required: true,
+    },
+    onlineSlots: { 
+        type: Array,
+        required: true,
     }
 },{timestamps: true});
 

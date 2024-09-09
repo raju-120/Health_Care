@@ -110,8 +110,8 @@ export default function AppointmentRequestDoctor() {
 
   return (
     <div className="mt-5 m-4">
-        <div className="overflow-x-auto">
-        <table className="table">
+        <div className="overflow-x-auto lg:max-h-[45rem]">
+        <table className="table w-full">
           <thead>
             <tr>
               <th></th>

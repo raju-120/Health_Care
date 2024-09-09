@@ -83,8 +83,8 @@ export default function RequestAppointmentToAdmin() {
     return (
       <div>
           <div className="m-4 p-2 bg-stone-200 rounded-md">
-            <div className="overflow-x-auto">
-              <table className="table">
+            <div className="overflow-y-auto lg:max-h-[45rem]">
+              <table className="table w-full">
                 {/* head */}
                 <thead>
                   <tr>

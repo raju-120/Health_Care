@@ -376,7 +376,7 @@ const docLogoutUser = asyncHandler (async(req, res) =>{
 
 const doctorSignUp = asyncHandler(async (req, res) => {
     const { username, email, bmdc, specialty, qualification, designation, institute,
-      department, phone, appointmentnumber, address, password, time, gender, price } = req.body;
+      department, phone, appointmentnumber, address, password, time, gender, price,advPrice,slots, onlineSlots } = req.body;
   
     const existedUser = await Doctor.findOne({ email });
     if (existedUser) {
@@ -393,7 +393,7 @@ const doctorSignUp = asyncHandler(async (req, res) => {
   
       const newDoctor = new Doctor({
         username, email, bmdc, specialty, qualification, designation, institute,
-        department, phone, appointmentnumber, address, avatar: avatarUrl, password, time, gender, price
+        department, phone, appointmentnumber, address, avatar: avatarUrl, password, time, gender, price,advPrice,slots, onlineSlots
       });
   
       await newDoctor.save();
@@ -540,7 +540,7 @@ const doctorUpdate = asyncHandler(async (req, res, next) => {
             department,
             phone,
             appointmentnumber,
-            address,time,gender,price
+            address,time,gender,price,advPrice,slots, onlineSlots
         } = req.body;
 
         let updateData = {
@@ -556,7 +556,7 @@ const doctorUpdate = asyncHandler(async (req, res, next) => {
             department,
             phone,
             appointmentnumber,
-            address,time,gender,price
+            address,time,gender,price,advPrice,slots, onlineSlots
         };
 
         // Only hash and update the password if it is provided
