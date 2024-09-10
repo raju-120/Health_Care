@@ -7,6 +7,7 @@ import { Department } from "../models/department.model.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import { cloudinary } from "../utils/cloudinaryConfig.js";
+import fs from 'fs';
 
 
 
@@ -311,6 +312,9 @@ const docLogoutUser = asyncHandler (async(req, res) =>{
 
 
 
+
+
+
 /* const doctorSignUp = asyncHandler(async(req, res) =>{
     const {username,email,bmdc,specialty,qualification,designation,institute,
         department,phone,appointmentnumber,address,password,time,gender,price} 
@@ -375,46 +379,72 @@ const docLogoutUser = asyncHandler (async(req, res) =>{
 
 
 const doctorSignUp = asyncHandler(async (req, res) => {
+    console.log("first", req.body);
+
+    // Extract fields from the request body
     const { username, email, bmdc, specialty, qualification, designation, institute,
-      department, phone, appointmentnumber, address, password, time, gender, price,advPrice,slots, onlineSlots } = req.body;
-  
+        department, phone, appointmentnumber, address, password, time, gender, price, advPrice,
+        slots: slotsString, onlineSlots: onlineSlotsString } = req.body;
+
+    // Convert JSON strings to arrays
+    let slots = [];
+    let onlineSlots = [];
+
+    try {
+        if (slotsString) {
+            slots = JSON.parse(slotsString);
+        }
+        if (onlineSlotsString) {
+            onlineSlots = JSON.parse(onlineSlotsString);
+        }
+    } catch (error) {
+        console.error('Error parsing JSON:', error);
+        throw new ApiError(400, 'Invalid JSON format for slots or onlineSlots');
+    }
+
     const existedUser = await Doctor.findOne({ email });
     if (existedUser) {
-    throw new ApiError(402, "This email id is already used");
+        throw new ApiError(402, "This email id is already used");
     }
 
     let avatarUrl = null;
-    
+
     try {
-      if (req.file) {
-        const result = await cloudinary.uploader.upload(req.file.path, { folder: 'avatars' });
-        avatarUrl = result.secure_url;
-      }
-  
-      const newDoctor = new Doctor({
-        username, email, bmdc, specialty, qualification, designation, institute,
-        department, phone, appointmentnumber, address, avatar: avatarUrl, password, time, gender, price,advPrice,slots, onlineSlots
-      });
-  
-      await newDoctor.save();
-  
-      const createdUser = await Doctor.findById(newDoctor._id).select("-password -refreshToken");
-  
-      if (!createdUser) {
-        throw new ApiError(500, "Doctor's ID not created. All fields must be filled!");
-      }
-  
-      return res.status(201).json(new APIResponse(200, createdUser, "Doctor registered successfully."));
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path, { folder: 'avatars' });
+            avatarUrl = result.secure_url;
+        }
+
+        const newDoctor = new Doctor({
+            username, email, bmdc, specialty, qualification, designation, institute,
+            department, phone, appointmentnumber, address, avatar: avatarUrl, password, time, gender, price, advPrice,
+            slots,
+            onlineSlots
+        });
+
+        await newDoctor.save();
+
+        const createdUser = await Doctor.findById(newDoctor._id).select("-password -refreshToken");
+
+        if (!createdUser) {
+            throw new ApiError(500, "Doctor's ID not created. All fields must be filled!");
+        }
+
+        return res.status(201).json(new APIResponse(200, createdUser, "Doctor registered successfully."));
     } catch (error) {
-      console.error('Error during image upload:', error);
-      throw new ApiError(500, 'Image upload failed');
+        console.error('Error during image upload:', error);
+        throw new ApiError(500, 'Image upload failed');
     } finally {
-      if (req.file) {
-        const fs = require('fs');
-        fs.unlinkSync(req.file.path);
-      }
+        if (req.file) {
+            fs.unlinkSync(req.file.path);
+        }
     }
-  });
+});
+
+
+
+
+
 
   const seedDepartments = async () => {
     const departmentCount = await Department.countDocuments();

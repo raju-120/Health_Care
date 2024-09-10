@@ -14,8 +14,7 @@ export default function AddDoctor() {
   const [specialistsItems, setSpecialistsItems] = useState([]);
   const navigate = useNavigate();
 
- /*  console.log("List: ", deptData);
- console.log("avatar", file) */
+ 
  
  console.log("Data: ", formData);
 
@@ -65,6 +64,7 @@ export default function AddDoctor() {
     setFile(e.target.files[0]);
   };
 
+
   const handleGenderChange = (e) => {
     setFormData({
       ...formData,
@@ -84,7 +84,7 @@ export default function AddDoctor() {
   const addNewSlot = () => {
     setFormData({
       ...formData,
-      slots: [...formData.slots, '']
+      slots: [...formData.slots,'']
     });
   };
 
@@ -110,7 +110,7 @@ export default function AddDoctor() {
     try {
       setLoading(true);
 
-      // Create a new FormData object
+      
       const formDataToSend = new FormData();
       formDataToSend.append("username", formData.username);
       formDataToSend.append("email", formData.email);
@@ -128,9 +128,22 @@ export default function AddDoctor() {
       formDataToSend.append("gender", formData.gender);
       formDataToSend.append("institute", formData.institute);
       formDataToSend.append("password", formData.password);
+
+
+
+      
+      formDataToSend.append("slots", JSON.stringify(formData.slots));
+      //console.log("SLots: ",formDataToSend)
+
+      formDataToSend.append("onlineSlots", JSON.stringify(formData.onlineSlots));
+      //console.log("Online SLots: ", formDataToSend)
+
+        
       if (file) {
         formDataToSend.append("avatar", file);
       }
+    
+
       console.log('Form data: ', formDataToSend);
       const res = await fetch('/api/auth/doctorsignup', {
         method: 'POST',
@@ -242,13 +255,7 @@ export default function AddDoctor() {
               {/* specialty & address */}
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  {/* <input
-                    type="text"
-                    id="specialty"
-                    placeholder="Specialty"
-                    onChange={handleChange}
-                    className="w-full border p-3 rounded-lg"
-                  /> */}
+                  
                   <select id="specialty" onChange={handleChange} className="input input-bordered w-full" required >
                     <option value="">Choose specialty</option>
                     {specialistsItems?.map((item, index) => (
@@ -265,7 +272,6 @@ export default function AddDoctor() {
                     className="w-full border p-3 rounded-lg"
                     defaultValue='Plot 81, Block-E, Bashundhara Rd, Dhaka 1229'
                     required
-                    readOnly
                   />
                 </div>
               </div>
@@ -288,8 +294,8 @@ export default function AddDoctor() {
                     placeholder="Appointment Number"
                     onChange={handleChange}
                     className="w-full border p-3 rounded-lg"
-                    defaultValue='09666710678'
-                    readOnly
+                    defaultValue='+09666710678'
+                    
                     required
                   />
                 </div>
@@ -344,7 +350,7 @@ export default function AddDoctor() {
                     className="w-full border p-3 rounded-lg"
                     defaultValue={500}
                     required
-                    readOnly
+                    
                   />
                 </div>
               </div>
@@ -435,7 +441,7 @@ export default function AddDoctor() {
                 disabled={loading}
                 className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-75 disabled:opacity-65"
               >
-                {loading ? 'Loading...' : 'Register Doctor'}
+                {/* {loading ? 'Loading...' : 'Register Doctor'} */}REG 
               </button>
             </form>
             {error && <p className="text-red-500">{error.message}</p>}

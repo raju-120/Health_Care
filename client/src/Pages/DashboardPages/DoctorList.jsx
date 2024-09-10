@@ -86,8 +86,8 @@ export default function DoctorList() {
 
   return (
     <div className="m-4 p-2 bg-stone-200 rounded-md">
-      <div className="overflow-x-auto">
-        <table className="table">
+      <div className="overflow-x-auto lg:max-h-[45rem] rounded-lg">
+        <table className="table w-full  ">
           {/* head */}
           <thead>
             <tr>
