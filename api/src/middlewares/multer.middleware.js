@@ -24,8 +24,8 @@ const storagePdf = new CloudinaryStorage({
 
 export const uploadPdf = multer({
     storage: storagePdf,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB file size limit
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB file size limit
 }).single('pdf');
 
-export const upload = multer({storage/* ,storagePdf */,/* uploadPdf */});
+export const upload = multer({storage,storagePdf ,/* uploadPdf */});
 

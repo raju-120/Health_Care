@@ -21,12 +21,12 @@ const messageSchema = new mongoose.Schema({
     },
     message: { 
         type: String,
-        required: true 
+        
     },
-    pdf: {
-        url: { type: String },
-        contentType: { type: String }
-    }
+    pdfFile: {
+        path: { type: String }, // path stored from multer
+        contentType: { type: String, default: 'application/pdf' } // typically 'application/pdf'
+      }
 }, { timestamps: true });
 
 const Message = mongoose.model('Message', messageSchema);

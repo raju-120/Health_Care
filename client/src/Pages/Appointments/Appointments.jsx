@@ -2,41 +2,42 @@ import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import {  toast, Toaster } from "react-hot-toast";
-import Calendar from 'react-calendar';
 
-/* import { event } from "jquery"; */
 
 function Appointments() {
-  const { currentUser } = useSelector(state => state.user);
+  const { currentUser } = useSelector((state) => state.user);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({});
-  const [deptData, setDeptData] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [selectedDoctorSlots, setSelectedDoctorSlots] = useState([]);
   const [doctorBill, setDoctorBill] = useState(0);
   const [doctorAdvBill, setDoctorAdvBill] = useState(0);
   const [selectedDate, setSelectedDate] = useState("");
-  const [selectedDept, setSelectedDept] = useState('');
+  const [selectedDept, setSelectedDept] = useState("");
   const [filteredDoctors, setFilteredDoctors] = useState([]);
-  const [minDate, setMinDate] = useState('');
-  const [maxDate, setMaxDate] = useState('');
+  const [appointmentSlots, setAppointmentSlots] = useState([]); // Booked slots
+  const [fullyBooked, setFullyBooked] = useState(false); // Track full bookings
+  const [minDate, setMinDate] = useState("");
+  const [maxDate, setMaxDate] = useState("");
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  
+   
+  const [deptData, setDeptData] = useState([]);
+  const navigate = useNavigate();
   
   const [select, setSelect] = useState({
     isAgrre: false, //check box
   })
 
 
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [fullyBooked, setFullyBooked] = useState(false);
-  const [appointmentSlots, setAppointmentSlots] = useState([]);
-
- /*  const [nameError, setNameError] = useState(''); // Error specific to name field */
-
   console.log("formdata: ", formData);
+  //console.log("Booked: ", fullyBooked.lenght)
+  console.log("Selected Doctors : ", selectedDoctor);
+  //console.log("Department : ", deptData);
   
 
+  //date blured function
   useEffect(() => {
     const today = new Date();
     const nextWeek = new Date(today);
@@ -52,6 +53,8 @@ function Appointments() {
     setMinDate(formatDate(today));
     setMaxDate(formatDate(nextWeek));
   }, []);
+
+  //Doctor fetching
 
   useEffect(() => {
     const getDoctor = async () => {
@@ -79,6 +82,7 @@ function Appointments() {
     getDepartment();
   }, []);
 
+  //formData changing
   const handleChange = (e) => {
     e.preventDefault();
     const { id, value } = e.target;
@@ -97,28 +101,23 @@ function Appointments() {
         setFormData({
           ...formData,
           [id]: value,
-          bill: doctorBill || doctorAdvBill,
+         
         });
         if (id === 'department') {
           setSelectedDept(value);
         } else if (id === 'doctor') {
           const doctor = doctors?.data?.find(doc => doc?.username === value);
-          
           setSelectedDoctor(doctor);
           setDoctorBill(doctor?.price || '');
-          setDoctorAdvBill(doctor?.advPrice || '')
+          setDoctorAdvBill(doctor?.advPrice || '');
           
-          if (doctor) {
-            setSelectedDoctor(doctor);
-            setDoctorBill(doctor?.price || '');
-            setDoctorAdvBill(doctor?.advPrice || '');
-
-            // Update formData to include doctorId
-            setFormData(prevState => ({
-                ...prevState,  // Save the doctor's username
-                docId: doctor?._id,     // Save the doctor's ID
-            }));
-        }
+          // Update formData to include doctorId
+          setFormData(prevState => ({
+              ...prevState,  // Save the doctor's username
+              docId: doctor?._id,     // Save the doctor's ID
+              bill: value === 'face-to-face' ?  doctor?.advPrice : doctor?.price ,
+          }));
+        
         }
       
     }
@@ -155,24 +154,19 @@ function Appointments() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-
-    /* const updatedSlots = [...appointmentSlots, formData.appointmentSlots];
-    setAppointmentSlots(updatedSlots); */
+    //console.log("Form Data:", formData);
 
   
     const appointmentData = {
       ...formData,
       permission: 'progress',
       docapprove: 'pending',
-      price: doctorBill || doctorAdvBill,
+      price: formData.price,
       uId: currentUser?.data?.user?._id,
       doctorId: formData.docId,
       email: currentUser?.data?.user?.email,
       meeting: formData.meeting,
     };
-
-    console.log("Appointment Data to Submit:", appointmentData);
 
     try {
       setLoading(true);
@@ -217,10 +211,12 @@ function Appointments() {
     setSelectedDate("");
     setFullyBooked(false);
   };
-
-  const filteredTimeSlots = selectedDoctorSlots.filter(slot =>
-    !appointmentSlots.includes(slot)
+  console.log("Selected Doc Time: ", selectedDoctor?.slots)
+  
+  /* const filteredTimeSlots = selectedDoctorSlots?.filter(slots =>
+    !appointmentSlots.includes(slots) ,
   );
+  //console.log("SLots: ", filteredTimeSlots);
 
   useEffect(() => {
     if (selectedDate && filteredTimeSlots.length === 0) {
@@ -228,7 +224,7 @@ function Appointments() {
     } else {
       setFullyBooked(false);
     }
-  }, [selectedDate, filteredTimeSlots, appointmentSlots]);
+  }, [selectedDate, filteredTimeSlots, appointmentSlots]); */
 
   return (
     <div className="max-w-auto p-5 flex flex-col items-center">
@@ -360,23 +356,24 @@ function Appointments() {
                 </div>
 
                 {/* Time */}
-               {/*  {selectedDoctor && (
+               {selectedDoctor && (
                   <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
                     <h1 className="lg:w-1/3 text-left">Time :</h1>
                     <div className="lg:w-2/3">
                       {fullyBooked ? (
                         <p className="text-red-500">All slots for this date are booked. Please choose another date.</p>
+                        
                       ) : (
                         <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required >
                           <option value="">Choose Time Slot</option>
-                          {filteredTimeSlots.map((slot, index) => (
+                          {selectedDoctor?.slots.map((slot, index) => (
                             <option key={index} value={slot}>{slot}</option>
                           ))}
                         </select>
                       )}
                     </div>
                   </div>
-                )}  */}
+                )}
 
                 {/* Doctors Bill */}
                 <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">

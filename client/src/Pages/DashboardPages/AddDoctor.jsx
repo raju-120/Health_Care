@@ -199,7 +199,8 @@ export default function AddDoctor() {
                 className="border p-3 rounded-lg"
                 required
               />
-                {/* BMDC & Department */}
+
+              {/* BMDC & Department */}
               <div className="flex gap-2"> 
                 <div className="w-1/2">
                   <input
@@ -223,16 +224,10 @@ export default function AddDoctor() {
                   </select>
                 </div>
               </div>
+
                 {/* Designation & qualification */}
               <div className="flex gap-2">
                 <div className="w-1/2">
-                {/* <input
-                    type="text"
-                    id="designation"
-                    placeholder="Designation"
-                    onChange={handleChange}
-                    className="w-full border p-3 rounded-lg"
-                  /> */}
                   <select id="designation" onChange={handleChange} className="select select-bordered w-full border rounded-lg" required>
                     <option  defaultValue>Choose Designation</option>
                     <option>Professor</option>
@@ -441,7 +436,7 @@ export default function AddDoctor() {
                 disabled={loading}
                 className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-75 disabled:opacity-65"
               >
-                {/* {loading ? 'Loading...' : 'Register Doctor'} */}REG 
+                {loading ? 'Loading...' : 'Register Doctor'} 
               </button>
             </form>
             {error && <p className="text-red-500">{error.message}</p>}

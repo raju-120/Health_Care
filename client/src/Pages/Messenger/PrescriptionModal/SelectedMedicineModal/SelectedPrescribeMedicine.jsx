@@ -13,9 +13,10 @@ export default function SelectedPrescribeMedicine({
   onRequestClose,
 }) {
     const { currentUser } = useSelector(state => state?.user);
-    const socket = io('http://localhost:5000');
+    console.log("selected user id: ", selectedUser?._id)
+    /* const socket = io('http://localhost:5000'); */
 
-    useEffect(() => {
+    /* useEffect(() => {
       if (currentUser) {
         socket.emit('joinRoom', { userId: currentUser.data.user._id });
       }
@@ -40,28 +41,23 @@ export default function SelectedPrescribeMedicine({
         // Clean up the socket connection and event listener
         socket.disconnect();
       };
-    }, [currentUser, socket]);
+    }, [currentUser, socket]); */
 
     const handleSubmit = async () => {
         try {
             const doc = new jsPDF();
     
-            // Left side of the pdf
+            // PDF content generation
             doc.setFontSize(14);
             doc.setFont('helvetica', 'bold');
             doc.text("Even Care", 10, 20);
-    
-            // Right side of the pdf
             doc.setFontSize(14);
             doc.setFont('Romania', 'semi-bold');
             doc.text(`${currentUser?.data?.user?.username}`, 150, 20);
-    
-            // Prescription Section
             doc.setFontSize(12);
             doc.setFont('helvetica', 'normal');
             doc.text('Prescription Details: ', 10, 40);
     
-            // Generate the table
             const tableColumn = ['#', "Medicine Name", "Dosage"];
             const tableRows = [];
     
@@ -74,26 +70,24 @@ export default function SelectedPrescribeMedicine({
                 tableRows.push(medicineData);
             });
     
-            // Auto table Plugin create for medicine table
             doc.autoTable(tableColumn, tableRows, { startY: 50 });
     
-            // Convert PDF to Blob and ArrayBuffer
             const pdfBlob = doc.output('blob');
-            const arrayBuffer = await pdfBlob.arrayBuffer();
+            const formData = new FormData();
     
-            // Send the PDF via WebSocket as binary data
-            socket.emit('sendMessage', {
-                from: currentUser?.data?.user?._id,
-                to: selectedUser,  // selected user
-                message: 'Prescription PDF',
-                senderusername: currentUser?.data?.user?.username,
-                receiverusername: selectedUser?.username,
-                pdfBuffer: arrayBuffer,  // Ensure this is not null or undefined
-                pdfContentType: 'application/pdf',
+            formData.append('file', pdfBlob, 'prescription.pdf');
+            formData.append('senderId', String(currentUser?.data?.user?._id)); 
+            formData.append('receiverId', String(selectedUser?._id)); 
+            formData.append('senderusername', currentUser?.data?.user?.username);
+            formData.append('receiverusername', selectedUser?.username);
+    
+            const res = await fetch('/api/medicine/sendpdf', {
+                method: 'POST',
+                body: formData,
             });
-            
     
-            console.log("PDF sent via WebSocket");
+            const data = await res.json();
+            console.log("Data pass: ", data);
     
         } catch (error) {
             console.error("An error occurred while submitting the prescription:", error);
@@ -101,6 +95,7 @@ export default function SelectedPrescribeMedicine({
     
         onRequestClose();
     };
+    
 
     return (
         <div>

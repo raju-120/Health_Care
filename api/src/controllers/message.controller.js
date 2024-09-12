@@ -1,11 +1,12 @@
 import Message from '../models/message.model.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 import {cloudinary} from '../utils/cloudinaryConfig.js';
 
 
 const sendMessage = async (req, res) => {
     try {
         const { senderId, receiverId, message, senderusername, receiverusername } = req.body;
-
+        
         let pdfUrl = null;
         if (req.file) {
             const result = await cloudinary.uploader.upload(req.file.path, {
@@ -38,6 +39,32 @@ const sendMessage = async (req, res) => {
     }
 };
 
+const sendPdf = asyncHandler(async (req, res) => {
+    try {
+        const { senderId, receiverId, senderusername, receiverusername } = req.body;
+        const { secure_url: pdfUrl, mimetype } = req.file || {};
+
+        const newMessage = new Message({
+            senderId,
+            receiverId,
+            senderusername,
+            receiverusername,
+            pdf: {
+                url: pdfUrl || null,
+                contentType: mimetype || 'application/pdf' // Default to PDF if undefined
+            }
+        });
+
+        await newMessage.save();
+        res.status(201).json(newMessage);
+    } catch (err) {
+        console.error('Error uploading the PDF:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
 const getMessages = async (req, res) => {
     try {
         const { senderId, receiverId } = req.body;
@@ -56,4 +83,4 @@ const getMessages = async (req, res) => {
     }
 };
 
-export { sendMessage, getMessages };
+export { sendMessage, getMessages,sendPdf };
