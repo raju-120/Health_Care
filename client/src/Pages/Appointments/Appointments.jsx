@@ -86,6 +86,7 @@ function Appointments() {
   const handleChange = (e) => {
     e.preventDefault();
     const { id, value } = e.target;
+    console.log({value})
     
       if (id === "name") {
         const regex = /^[A-Za-z\s]*$/;
@@ -115,7 +116,7 @@ function Appointments() {
           setFormData(prevState => ({
               ...prevState,  
               docId: doctor?._id,     
-              price: value === 'face-to-face' ?  doctor?.advPrice : doctor?.price ,
+              price: select.meeting === 'face-to-face' ?  doctor?.advPrice : doctor?.price ,
           }));
         
         }
