@@ -65,8 +65,14 @@ export default function SelectedPrescribeMedicine({
                 const medicineData = [index + 1, med.name, med.dosage];
                 tableRows.push(medicineData);
             });
-    
-            doc.autoTable(tableColumn, tableRows, { startY: 50 });
+            doc.autoTable({
+                head: [tableColumn],
+                body: tableRows,
+                startY: 50
+            });
+            
+          
+            console.log("first", doc.autoTable)
     
             // Convert jsPDF output to Blob
             const pdfBlob = doc.output('blob');

@@ -59,6 +59,7 @@ import { Link } from 'react-router-dom';
 import { motion, useAnimation } from 'framer-motion';
 import 'odometer/themes/odometer-theme-default.css';
 import Odometer from 'odometer';
+import {  toast, Toaster } from "react-hot-toast";
 
 //import Odometer from 'odometer';
 //import Avatar from '../';
@@ -100,6 +101,60 @@ export default function CenterSide() {
 
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [formdata, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  console.log("FormData: ", formdata);
+
+
+  const handleChange = (e) =>{
+    e.preventDefault();
+    const {id, value} = e.target;
+    setFormData({
+      ...formdata,
+      [id] : value,
+    })
+    //console.log("first: ", value);
+  };
+
+
+  const handleSubmit = async(e) =>{
+    e.preventDefault();
+
+    try{
+      setLoading(true);
+      const res = await fetch('/api/complainbox/complains',{
+        method: 'POST',
+        headers: {
+          'Content-type' : 'application/json',
+        },
+        body: JSON.stringify(formdata)
+      });
+      const data = await res.json();
+
+      if(data.success === false ){
+        setLoading(false);
+        setError(data.message);
+        toast.error("Something missing: ", data.message);
+      }
+      toast.success("Your suggestion submited successfully!", {
+        position: "top-center",
+        duration: 5000,
+        style: {
+          background: "#4CAF50",
+          color: "white",
+        },
+      });
+      setLoading(false);
+      setError(null);
+
+    }catch(err){
+      console.error('Error : ', err)
+    }
+  }
+
+
 
   const handlePrevClick = () => {
     setCurrentSlide((prevSlide) => (prevSlide === 0 ? testimonials.length - 1 : prevSlide - 1));
@@ -419,39 +474,59 @@ const odometerPart1Ref = useRef(null);
         <div className="cs_height_120 cs_height_lg_80"></div>
         <div className="container">
           <div className="cs_section_heading cs_style_1 text-center">
-            <h3 className="cs_section_title_up cs_accent_color_v1 cs_semibold cs_fs_24 wow fadeInDown">Need Any Help?</h3>
+            <h3 className="cs_section_title_up cs_accent_color_v1 cs_semibold cs_fs_24 wow fadeInDown">Have Any Suggestion or Complain?</h3>
             <h2 className="cs_section_title cs_semibold cs_fs_45 mb-0">Get in Touch With Us</h2>
           </div>
           <div className="cs_height_45 cs_height_lg_30"></div>
-          <form className="cs_contact_form row cs_gap_y_24" id="cs_form">
+          
+          <form onSubmit={handleSubmit} className="cs_contact_form row cs_gap_y_24" id="cs_form">
+            
             <div className="col-md-6 position-relative">
-              <input type="text" name="fname"  className="cs_form_field cs_radius_5" required/>
+              <input type="text" 
+                name="firstname" 
+                id='firstname' 
+                onChange={handleChange}
+                className="cs_form_field cs_radius_5" 
+                required
+              />
               <label>First Name</label>
             </div>
+
             <div className="col-md-6 position-relative">
-              <input type="text" name="lname" className="cs_form_field cs_radius_5" required/>
+              <input type="text" name="lastname" id='lastname' onChange={handleChange} className="cs_form_field cs_radius_5" required/>
               <label>Last Name</label>
             </div>
+
             <div className="col-md-6 position-relative">
-              <input type="text" name="phone" className="cs_form_field cs_radius_5" required/>
+              <input type="number" name="phone" id='phone' onChange={handleChange} className="cs_form_field cs_radius_5" required/>
               <label>Phone</label>
             </div>
+
             <div className="col-md-6 position-relative">
-              <input type="text" name="email" className="cs_form_field cs_radius_5" required/>
+              <input type="email" name="email" id='email' onChange={handleChange} className="cs_form_field cs_radius_5" required/>
               <label>Email Address</label>
             </div>
+
             <div className="col-md-12 position-relative">
-              <textarea name="message" rows="6" className="cs_form_field cs_radius_5" required></textarea>
+              <textarea name="message" rows="6" id='remark' onChange={handleChange} className="cs_form_field cs_radius_5" required></textarea>
               <label>Message</label>
             </div>
+
             <div className="col-md-12 text-md-center">
-              <button type="submit" className="w-full btn bg-sky-500 text-white cs_fs_24 cs_semibold">Send Message</button>
+              <button type="submit" className="w-full btn bg-sky-500 text-white cs_fs_24 cs_semibold">
+                {loading ? 'Submitting...' : 'Send Message'}
+              </button>
             </div>
           </form>
+
+          {error && <p className='text-red-500'>{error.message}</p>}
+          
         </div>
         <div className="cs_height_120 cs_height_lg_80"></div>
       </section>
+        
 
+      {/* Subscription news letter */}
       <section className="cs_newsletter_1_wrap mb-24">
         <div className="container">
           <div className="cs_newsletter cs_style_1 cs_accent_bg_v1 wow fadeIn">

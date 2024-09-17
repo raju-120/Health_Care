@@ -20,6 +20,7 @@ import Appointments from "./routes/booking.route.js";
 import Payment from './routes/payment.route.js';
 import BloodDonner from './routes/bloodDonner.route.js';
 import Medicine from './routes/medicine.route.js';
+import ComplainedBox from './routes/coomplain.route.js';
 /* import { handlePDFUpload } from "./middlewares/multer.middleware.js"; */
 
 
@@ -100,6 +101,7 @@ app.use("/api/appointment",Appointments );
 app.use("/api/payment", Payment);
 app.use("/api/donner", BloodDonner);
 app.use("/api/medicine",Medicine );
+app.use("/api/complainbox",ComplainedBox );
 
 
 
