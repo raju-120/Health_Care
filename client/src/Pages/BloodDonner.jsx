@@ -111,7 +111,7 @@ export default function BloodDonner() {
 
 
   return (
-    <div className='Items-center text-center m-24 mt-5'>
+    <div className='Items-center text-center lg:m-24 mt-5'>
     <section id="services">
       <div className="cs_height_120 cs_height_lg_80"></div>
       <div className="container">
@@ -126,7 +126,7 @@ export default function BloodDonner() {
 
     {/* Donor List search section by blood group */}
     <section className="mb-24 mt-[-7em]">
-      <div className="container lg:max-w-[1250px] mx-auto px-5">
+      <div className="container lg:max-w-[1250px] mx-auto lg:px-5">
         <form className="w-full" onSubmit={(e) => e.preventDefault()}>
           <div className="mb-8">
             <div className="relative flex items-center">

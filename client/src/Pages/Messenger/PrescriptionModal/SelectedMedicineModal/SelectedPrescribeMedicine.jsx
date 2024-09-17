@@ -46,13 +46,13 @@ export default function SelectedPrescribeMedicine({
     const handleSubmit = async () => {
         try {
             const doc = new jsPDF();
-    
+            
             // PDF content generation
             doc.setFontSize(14);
             doc.setFont('helvetica', 'bold');
             doc.text("Even Care", 10, 20);
             doc.setFontSize(14);
-            doc.setFont('Romania', 'semi-bold');
+            doc.setFont('helvetica', 'semi-bold');
             doc.text(`${currentUser?.data?.user?.username}`, 150, 20);
             doc.setFontSize(12);
             doc.setFont('helvetica', 'normal');
@@ -62,25 +62,26 @@ export default function SelectedPrescribeMedicine({
             const tableRows = [];
     
             medicines?.forEach((med, index) => {
-                const medicineData = [
-                    index + 1,
-                    med.name,
-                    med.dosage
-                ];
+                const medicineData = [index + 1, med.name, med.dosage];
                 tableRows.push(medicineData);
             });
     
             doc.autoTable(tableColumn, tableRows, { startY: 50 });
     
+            // Convert jsPDF output to Blob
             const pdfBlob = doc.output('blob');
-            const formData = new FormData();
     
-            formData.append('file', pdfBlob, 'prescription.pdf');
-            formData.append('senderId', String(currentUser?.data?.user?._id)); 
-            formData.append('receiverId', String(selectedUser?._id)); 
+            // Convert Blob to File (multer requires this format)
+            const pdfFile = new File([pdfBlob], 'prescription.pdf', { type: 'application/pdf' });
+    
+            const formData = new FormData();
+            formData.append('file', pdfFile);  // File is correctly added now
+            formData.append('senderId', String(currentUser?.data?.user?._id));
+            formData.append('receiverId', String(selectedUser?._id));
             formData.append('senderusername', currentUser?.data?.user?.username);
             formData.append('receiverusername', selectedUser?.username);
     
+            // Send FormData to backend
             const res = await fetch('/api/medicine/sendpdf', {
                 method: 'POST',
                 body: formData,
@@ -95,6 +96,7 @@ export default function SelectedPrescribeMedicine({
     
         onRequestClose();
     };
+    
     
 
     return (

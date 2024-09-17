@@ -33,7 +33,7 @@ function Appointments() {
 
   console.log("formdata: ", formData);
   //console.log("Booked: ", fullyBooked.lenght)
-  console.log("Selected Doctors : ", selectedDoctor);
+  //console.log("Selected Doctors : ", selectedDoctor);
   //console.log("Department : ", deptData);
   
 
@@ -108,14 +108,14 @@ function Appointments() {
         } else if (id === 'doctor') {
           const doctor = doctors?.data?.find(doc => doc?.username === value);
           setSelectedDoctor(doctor);
-          setDoctorBill(doctor?.price || '');
+          setDoctorBill(doctor?.price ||'');
           setDoctorAdvBill(doctor?.advPrice || '');
           
           // Update formData to include doctorId
           setFormData(prevState => ({
-              ...prevState,  // Save the doctor's username
-              docId: doctor?._id,     // Save the doctor's ID
-              bill: value === 'face-to-face' ?  doctor?.advPrice : doctor?.price ,
+              ...prevState,  
+              docId: doctor?._id,     
+              price: value === 'face-to-face' ?  doctor?.advPrice : doctor?.price ,
           }));
         
         }
@@ -140,28 +140,31 @@ function Appointments() {
   };
 
   const handleMettingChange = (e) => {
-    setSelect({
-      ...select,
-      meeting: e.target.value,
-    });
+  
+  const meetingType = e.target.value;
+  setSelect({
+    ...select,
+    meeting: meetingType,
+  });
 
-    setFormData({
-      ...formData,
-      meeting: e.target.value,
-    });
-  };
+ 
+  setFormData(prevState => ({
+    ...prevState,
+    meeting: meetingType,
+    price: meetingType === 'face-to-face' ? selectedDoctor?.advPrice : selectedDoctor?.price,
+  }));
+};
 
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //console.log("Form Data:", formData);
-
   
     const appointmentData = {
       ...formData,
       permission: 'progress',
       docapprove: 'pending',
-      price: formData.price,
+      /* price: formData.bill, */
       uId: currentUser?.data?.user?._id,
       doctorId: formData.docId,
       email: currentUser?.data?.user?.email,
@@ -211,7 +214,8 @@ function Appointments() {
     setSelectedDate("");
     setFullyBooked(false);
   };
-  console.log("Selected Doc Time: ", selectedDoctor?.slots)
+  //console.log("Selected Doc Time: ", selectedDoctor?.slots);
+  
   
   /* const filteredTimeSlots = selectedDoctorSlots?.filter(slots =>
     !appointmentSlots.includes(slots) ,
@@ -227,10 +231,10 @@ function Appointments() {
   }, [selectedDate, filteredTimeSlots, appointmentSlots]); */
 
   return (
-    <div className="max-w-auto p-5 flex flex-col items-center">
+    <div className="max-w-auto lg:p-5 mt-16 lg:mt-5 flex flex-col items-center">
       <h1 className="mt-5 text-4xl text-center font-semibold">Make Appointment</h1>
       <div className="lg:p-10 text-center w-full flex justify-center mt-5">
-        <form className="flex flex-col items-center w-full max-w-4xl p-5 bg-gray-100 rounded-lg" onSubmit={handleSubmit}>
+        <form className="flex flex-col items-center w-full max-w-4xl p-5 bg-gray-100 rounded-2xl" onSubmit={handleSubmit}>
 
           {/* Patient Name */}
           <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
@@ -356,7 +360,7 @@ function Appointments() {
                 </div>
 
                 {/* Time */}
-               {selectedDoctor && (
+               {/* {selectedDoctor && (
                   <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
                     <h1 className="lg:w-1/3 text-left">Time :</h1>
                     <div className="lg:w-2/3">
@@ -373,7 +377,7 @@ function Appointments() {
                       )}
                     </div>
                   </div>
-                )}
+                )} */}
 
                 {/* Doctors Bill */}
                 <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">

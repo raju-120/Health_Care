@@ -39,7 +39,7 @@ const sendMessage = async (req, res) => {
     }
 };
 
-const sendPdf = asyncHandler(async (req, res) => {
+/* const sendPdf = asyncHandler(async (req, res) => {
     try {
         const { senderId, receiverId, senderusername, receiverusername } = req.body;
         const { secure_url: pdfUrl, mimetype } = req.file || {};
@@ -61,7 +61,7 @@ const sendPdf = asyncHandler(async (req, res) => {
         console.error('Error uploading the PDF:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
-});
+}); */
 
 
 
@@ -83,4 +83,4 @@ const getMessages = async (req, res) => {
     }
 };
 
-export { sendMessage, getMessages,sendPdf };
+export { sendMessage, getMessages,/* sendPdf */ };

@@ -1,25 +1,21 @@
 import multer from 'multer';
+/* import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { cloudinary } from '../utils/cloudinaryConfig'; */
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Directory to store files
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); // Save file with original name
-  }
-});
-
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'application/pdf') {
-    cb(null, true); // Accept only PDFs
-  } else {
-    cb(new Error('Only PDF Files are allowed'), false); // Reject other files
-  }
-};
+const storage = multer.memoryStorage(); 
 
 const upload = multer({
-  storage,
-  fileFilter
+    storage: storage,
+    limits: { fileSize: 10000000 },  // Limit file size to 10MB
+    fileFilter: (req, file, cb) => {
+        const filetypes = /pdf/;
+        const mimetype = filetypes.test(file.mimetype);
+        if (mimetype) {
+            cb(null, true);
+        } else {
+            cb('Error: File type not supported. Please upload a PDF.');
+        }
+    }
 });
 
 export { upload };

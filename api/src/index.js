@@ -60,8 +60,8 @@ io.on('connection', (socket) => {
                 message,
                 senderusername,
                 receiverusername,
-                pdf: pdfBuffer && pdfContentType ? {
-                    data: Buffer.from(pdfBuffer),
+                pdfFile: pdfBuffer && pdfContentType ? {  // Use 'pdfFile' to match schema
+                    data: Buffer.from(pdfBuffer),  // Convert from ArrayBuffer to Buffer
                     contentType: pdfContentType
                 } : null,
             });

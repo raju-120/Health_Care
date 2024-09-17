@@ -198,22 +198,31 @@ export default function Services() {
   return (
     <div className='Items-center text-center mt-24'>
 
-    <section id="services" className="py-12">
+    <section id="services" className="lg:py-12">
       <div className="container mx-auto">
-        <div className="w-full p-5">
-          <ul className="flex border-b border-gray-200 sticky mt-0 z-index-10">
-            {tabs.map((tab) => (
-              <li
-                key={tab?.id}
-                className={` cursor-pointer ${activeTab === tab?.id ? 'text-accent border-b-2 border-accent' : ''}`}
-                onClick={() => handleTabClick(tab?.id)}
-              >
-                <a  className="flex w-auto mr-2 items-center space-x-2 h-32 bg-sky-100 hover:bg-blue-200  p-3 rounded-xl ">
-                  <img  src={tab.icons} alt={`Icon for ${tab.header}`} className="lg:w-14 "  />
-                  <span className='lg:text-2xl font-bold m-36'>{tab.header}</span>
-                </a>
-              </li>
-            ))}
+        <div className="w-full lg:p-5">
+          <ul className="flex border-b gap-1 border-gray-200 sticky mt-0 lg:z-index-10 overflow-x-auto whitespace-nowrap">
+            <div className='flex space-x-1'>
+              {tabs.map((tab) => (
+                <li
+                  key={tab?.id}
+                  className={`cursor-pointer ${activeTab === tab?.id ? 'text-accent border-b-2 border-accent' : ''}`}
+                  onClick={() => handleTabClick(tab?.id)}
+                >
+                  <a className="flex flex-col sm:flex-row w-full sm:w-auto items-center space-x-0 sm:space-x-2 h-16 sm:h-32 bg-sky-100 hover:bg-blue-200 p-3 rounded-xl">
+                    <img
+                      src={tab.icons}
+                      alt={`Icon for ${tab.header}`}
+                      className="w-4 sm:w-12 lg:w-14"
+                    />
+                    <span className="text-base sm:text-lg lg:text-2xl font-bold sm:ml-4">
+                      {tab.header}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </div>
+
           </ul>
 
           {tabs?.map((tab) => (
@@ -222,88 +231,60 @@ export default function Services() {
               id={tab?.id}
               className={`tab-content ${activeTab === tab.id ? 'block' : 'hidden'}`}
             >
-              <div className="bg-white rounded-lg shadow-lg p-6 mt-4">
-                <div className="flex flex-wrap -mx-4">
+              <div className="bg-white rounded-lg shadow-lg lg:p-6 mt-4">
+                <div className="flex flex-wrap lg:-mx-4">
                   <div className="w-full lg:w-7/12 px-4">
                     <div className="cs_card_text">
                       <h2 className="cs_card_title text-3xl font-semibold">{tab.title}</h2>
                       <p className="cs_card_subtitle text-gray-600 mt-4">{tab.description}</p>
                       <h3 className="cs_list_title text-xl font-bold text-accent mt-6 text-left">Quick Amenities in</h3>
-                      <ul className="cs_list mt-4 space-y-2">
-                       
-                       <div className=' flex justify-start gap-5 '>
-                        
-                        <div className='flex flex-row-2 items-start text-xl'>
-                            <div>
-                              <img className='w-8 mr-2 font-bold' src={Icon7} alt="" />
-                            </div>
-                            <div>
-                              <p className='font-bold'>Qualified Doctors</p>
-                            </div>
+                      <ul className="cs_list mt-4 space-y-4 lg:space-y-2">
+                        {/* First Row */}
+                        <div className='flex flex-wrap justify-start lg:gap-5'>
+                          {/* Qualified Doctors */}
+                          <div className='flex items-start w-full sm:w-auto lg:text-xl'>
+                            <img className='w-6 lg:w-8 mt-2 lg:mt-[-2px] mr-2' src={Icon7} alt="" />
+                            <p className='font-bold'>Qualified Doctors</p>
+                          </div>
 
-                            
+                          {/* 24 Hours Service */}
+                          <div className='flex items-start w-full sm:w-auto lg:text-xl ml-0 sm:ml-14'>
+                            <img className='w-6 lg:w-8 mt-2 lg:mt-[-2px] mr-2' src={Icon7} alt="" />
+                            <p className='font-bold'>24 Hours Service</p>
+                          </div>
                         </div>
 
-                        <div className='flex items-start text-xl ml-14'>
-                            <div>
-                              <img className='w-8 mr-2 font-bold' src={Icon7} alt="" />
-                            </div>
-                            <div>
-                              <p className='font-bold'>24 Hours Service</p>
-                            </div>
+                        {/* Second Row */}
+                        <div className='flex flex-wrap justify-start lg:gap-5'>
+                          {/* Need Emergency */}
+                          <div className='flex items-start w-full sm:w-auto lg:text-xl'>
+                            <img className='w-6 lg:w-8 mt-2 lg:mt-[-2px] mr-2' src={Icon7} alt="" />
+                            <p className='font-bold'>Need Emergency</p>
+                          </div>
+
+                          {/* Nose and Sinus */}
+                          <div className='flex items-start w-full sm:w-auto lg:text-xl ml-0 sm:ml-16'>
+                            <img className='w-6 lg:w-8 mt-2 lg:mt-[-2px] mr-2' src={Icon7} alt="" />
+                            <p className='font-bold'>Nose and Sinus</p>
+                          </div>
                         </div>
 
-                       </div>
+                        {/* Third Row */}
+                        <div className='flex flex-wrap justify-start lg:gap-5'>
+                          {/* Throat / Larynx Surgery */}
+                          <div className='flex items-start w-full sm:w-auto lg:text-xl'>
+                            <img className='w-6 lg:w-8 mt-2 lg:mt-[-2px] mr-2' src={Icon7} alt="" />
+                            <p className='font-bold'>Throat / Larynx Surgery</p>
+                          </div>
 
-                       <div className=' flex justify-start gap-5'>
-                        
-                        <div className='flex flex-row-2 items-start text-xl'>
-                            <div>
-                              <img className='w-8 mr-2 font-bold' src={Icon7} alt="" />
-                            </div>
-                            <div>
-                              <p className='font-bold'>Need Emergency</p>
-                            </div>
-
-                            
+                          {/* Mission statement */}
+                          <div className='flex items-start w-full sm:w-auto lg:text-xl'>
+                            <img className='w-6 lg:w-8 mt-2 lg:mt-[-2px] mr-2' src={Icon7} alt="" />
+                            <p className='font-bold'>Mission Statement</p>
+                          </div>
                         </div>
-
-                        <div className='flex items-start text-xl ml-16'>
-                            <div>
-                              <img className='w-8 mr-2 font-bold' src={Icon7} alt="" />
-                            </div>
-                            <div>
-                              <p className='font-bold'>Nose and Sinus</p>
-                            </div>
-                        </div>
-
-                       </div>
-
-                       <div className=' flex justify-start gap-5'>
-                        
-                        <div className='flex flex-row-2 items-start text-xl'>
-                            <div>
-                              <img className='w-8 mr-2 font-bold' src={Icon7} alt="" />
-                            </div>
-                            <div>
-                              <p className='font-bold'>Throat / Larynx Surgery</p>
-                            </div>
-
-                            
-                        </div>
-
-                        <div className='flex items-start text-xl'>
-                            <div>
-                              <img className='w-8 mr-2 font-bold' src={Icon7} alt="" />
-                            </div>
-                            <div>
-                              <p className='font-bold'>Mission statement</p>
-                            </div>
-                        </div>
-
-                       </div>
-
                       </ul>
+
                     </div>
                   </div>
                   <div className="w-full lg:w-5/12 px-4 mt-6 lg:mt-0">

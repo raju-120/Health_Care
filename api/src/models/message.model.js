@@ -23,10 +23,10 @@ const messageSchema = new mongoose.Schema({
         type: String,
         
     },
-    pdfFile: {
-        path: { type: String }, // path stored from multer
-        contentType: { type: String, default: 'application/pdf' } // typically 'application/pdf'
-      }
+    pdfFile: {  // Storing binary PDF data and its content type
+        data: { type: Buffer },  // Binary data of the PDF
+        contentType: { type: String, default: 'application/pdf' }  // Typically 'application/pdf'
+    }
 }, { timestamps: true });
 
 const Message = mongoose.model('Message', messageSchema);

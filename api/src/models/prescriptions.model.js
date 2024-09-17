@@ -1,10 +1,30 @@
 import mongoose from 'mongoose';
 
 const prescriptionSchema = new mongoose.Schema({
-  senderId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  medicines: [{ name: String, dosage: String }],
-  pdfUrl: { type: String, required: true },
+    senderId: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    senderusername: { 
+        type: String,
+        required: true 
+    },
+    receiverId: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    receiverusername: { 
+        type: String,
+        required: true 
+    },
+    pdf: {
+        url: { type: String, required: true }, 
+        public_id: { type: String },          
+        contentType: { type: String, default: 'application/pdf' },
+    }
 }, { timestamps: true });
 
-export const Prescription = mongoose.model('Prescription', prescriptionSchema);
+const Prescription = mongoose.model('Prescription', prescriptionSchema);
+export default Prescription;

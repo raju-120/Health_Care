@@ -44,6 +44,7 @@
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.15.0",
     "prettier": "^3.2.5",
+    "streamifier": "^0.1.1",
     "stripe": "^15.12.0"
   }
 }

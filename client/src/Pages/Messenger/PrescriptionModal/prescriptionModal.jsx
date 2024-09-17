@@ -63,7 +63,7 @@ const PrescriptionModal = ({ isOpen, onRequestClose, onSubmit,selectedUser }) =>
           <h2 className="text-3xl font-semibold text-center mb-10">Prescribe Medicines</h2>
           
           {/* Fetched the data */}
-          <div /* className='grid grid-cols-2 lg:grid-cols-6 gap-6 mb-6' */>
+          <div >
             <MedicineFetchData 
               medicineData={medicineData}
               handleSelectMedicine={handleSelectMedicine}
@@ -72,26 +72,7 @@ const PrescriptionModal = ({ isOpen, onRequestClose, onSubmit,selectedUser }) =>
             
             {/* Automatically selected the items from the fetched data */}
 
-          {/* <div className="space-y-4">
-            {medicines.map((med, index) => (
-              <div key={index} className="flex flex-col md:flex-row md:space-x-4">
-                <input
-                  type="text"
-                  placeholder="Medicine Name"
-                  value={med.name}
-                  onChange={(e) => handleMedicineChange(index, 'name', e.target.value)}
-                  className="w-full p-3 mb-2 md:mb-0 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                  type="text"
-                  placeholder="Dosage"
-                  value={med.dosage}
-                  onChange={(e) => handleMedicineChange(index, 'dosage', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            ))}
-          </div> */}
+          
           <SelectedPrescribeMedicine
             selectedUser={selectedUser} 
             medicines={medicines}

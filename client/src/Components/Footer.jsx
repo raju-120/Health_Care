@@ -28,7 +28,7 @@ export default function Footer() {
             <div className="container">
             <div className="cs_height_95 cs_height_lg_65"></div>
             <div className="cs_footer_main">
-                <div className="row cs_gap_y_30 ml-28 items-center">
+                <div className="row cs_gap_y_30  items-center">
                 <div className="col-lg-4">
                     <div className="cs_footer_widget cs_text_widget">
                     <Link to='/'>

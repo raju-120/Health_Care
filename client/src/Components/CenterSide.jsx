@@ -231,7 +231,7 @@ const odometerPart1Ref = useRef(null);
      </div>
        
       <section className="cs_hero cs_style_5 position-relative" id="home">
-        <div className="cs_hero_top cs_bg_filled cs_primary_bg cs_bg_filed" data-src="assets/images/hero_bg_11.jpeg">
+        <div className="cs_hero_top cs_bg_filled cs_primary_bg cs_bg_filed " data-src="assets/images/hero_bg_11.jpeg">
         <div className="container">
           <div className="cs_hero_text text-center">
             <h1 className="cs_hero_title cs_headline clip cs_fs_60 cs_semibold cs_white_color">Take Best Quality <br/> Treatment for
@@ -359,20 +359,23 @@ const odometerPart1Ref = useRef(null);
       <div className="cs_height_120 cs_height_lg_80"></div>
 
       <div className="container position-relative z-2">
-        <div className="cs_slider_heading d-flex align-items-center justify-content-between">
-          <div className="cs_section_heading cs_style_1">
-            <h3 className="cs_section_title_up cs_semibold cs_fs_24 cs_accent_color_v4">Our Testimonial</h3>
-            <h2 className="cs_section_title cs_semibold cs_fs_45 mb-0">What Our Clients Says</h2>
-          </div>
-          <div className="cs_slider_arrows cs_style_1 cs_hide_mobile wow fadeInUp">
-            <div className="cs_left_arrow cs_slider_arrow cs_version_4 cs_center slick-arrow" onClick={handlePrevClick}>
-              <i className="fa-solid fa-chevron-left"></i>
+        <div className="" >
+          <div className='flex lg:justify-between justify-around'>
+            <div className="cs_section_heading cs_style_1">
+              <h3 className="cs_section_title_up cs_semibold cs_fs_24 cs_accent_color_v4">Our Testimonial</h3>
+              <h2 className="cs_section_title cs_semibold cs_fs_45 mb-0">What Our Clients Says</h2>
             </div>
-            <div className="cs_right_arrow cs_slider_arrow cs_version_4 cs_center slick-arrow" onClick={handleNextClick}>
-              <i className="fa-solid fa-chevron-right"></i>
+            <div className="cs_slider_arrows cs_style_1  wow fadeInUp">
+              <div className="cs_left_arrow cs_slider_arrow cs_version_4 cs_center slick-arrow" onClick={handlePrevClick}>
+                <i className="fa-solid fa-chevron-left"></i>
+              </div>
+              <div className="cs_right_arrow cs_slider_arrow cs_version_4 cs_center slick-arrow" onClick={handleNextClick}>
+                <i className="fa-solid fa-chevron-right"></i>
+              </div>
             </div>
           </div>
         </div>
+        
         <div className="cs_height_40 cs_height_lg_20"></div>
         <div className="cs_slider_container">
           <div className="flex ml-2 gap-4">
@@ -397,6 +400,7 @@ const odometerPart1Ref = useRef(null);
           </div>
         </div>
       </div>
+      
       <div className="cs_testimonial_shape3 position-absolute wow fadeInLeft">
         <img src={Icon11} alt="Shape Image" />
       </div>
