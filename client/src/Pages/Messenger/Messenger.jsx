@@ -15,11 +15,10 @@ function ChatWindow() {
   const [isModalOpen, setModalOpen] = useState(false);
   const { currentUser } = useSelector(state => state.user);
   const [doctors, setDoctors] = useState([]);
-  const [getPdfFiles, setGetPDFFiles] = useState([])
-  
+  const [getPdfFiles, setGetPDFFiles] = useState([]);
+  const [chatChange,setChatChange] = useState(true);
 
-  console.log("first", getPdfFiles)
-
+  // Fetch the list of doctors or users based on the role
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -33,104 +32,64 @@ function ChatWindow() {
     fetchDoctors();
   }, [currentUser?.data?.user]);
 
+  // Fetch past messages and join the room when a user is selected
   useEffect(() => {
     if (selectedUser) {
-        const senderId = currentUser?.data?.user?._id;
+      const senderId = currentUser?.data?.user?._id;
 
-        // Fetch past messages
-        const getMessages = async () => {
-            const res = await fetch('/api/message', {
-                method: 'POST',
-                headers: {
-                    "content-type": "application/json"
-                },
-                body: JSON.stringify({ senderId, receiverId: selectedUser._id, accessToken: currentUser?.data?.accessToken })
-            });
-            const data = await res.json();
-            setMessages(data);
-        };
-        getMessages();
-
-        // Join the room
-        socket.emit('joinRoom', { userId: senderId });
-
-        // Handle receiving new messages
-        socket.on('receiveMessage', (message) => {
-            setMessages((prevMessages) => [...prevMessages, message]);
+      // Fetch past messages
+      const getMessages = async () => {
+        const res = await fetch('/api/message', {
+          method: 'POST',
+          headers: {
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({ senderId, receiverId: selectedUser._id, accessToken: currentUser?.data?.accessToken })
         });
+        const data = await res.json();
+        setMessages(data);
+      };
+      getMessages();
 
-        return () => {
-            socket.off('receiveMessage');
-        };
+      // Join the room
+      socket.emit('joinRoom', { userId: senderId });
+
+      // Handle receiving new messages
+      socket.on('receiveMessage', (message) => {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      });
+
+      return () => {
+        socket.off('receiveMessage');
+      };
     }
-}, [selectedUser, currentUser?.data?.user?._id]);
+  }, [selectedUser, currentUser?.data?.user?._id]);
 
-
+  // Handle sending a new message
   const handleSendMessage = async () => {
     const senderId = currentUser?.data?.user?._id;
     const receiverId = selectedUser?._id;
     const senderusername = currentUser?.data?.user?.username;
     const receiverusername = selectedUser?.username;
+    
 
     if (newMessage.trim() && senderId && receiverId) {
       socket.emit('sendMessage', { from: senderId, to: receiverId, message: newMessage, senderusername, receiverusername });
-
-      // You don't need to update the state here; let the server handle it
       setNewMessage("");
     }
   };
 
+  // Handle user selection in the chat
   const handleUserSelect = (user) => {
     setSelectedUser(user);
     setMessages([]);
   };
-/* 
-  const handlePrescribe = async (medicines) => {
-    try {
-      const response = await fetch('/api/posts/prescription', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser?.data?.accessToken}`,
-        },
-        body: JSON.stringify({
-          senderId: currentUser?.data?.user?._id,
-          receiverId: selectedUser?._id,
-          medicines,
-        }),
-      });
 
-      if (response.ok) {
-        const prescription = await response.json();
-        console.log('Prescription created:', prescription);
-
-        // Send prescription URL as message
-        const senderId = currentUser?.data?.user?._id;
-        const receiverId = selectedUser?._id;
-        const senderusername = currentUser?.data?.user?.username;
-        const receiverusername = selectedUser?.username;
-        const message = `Prescription created: ${prescription.pdfUrl}`;
-
-        socket.emit('sendMessage', { from: senderId, to: receiverId, message, senderusername, receiverusername });
-
-        setModalOpen(false);
-      } else {
-        console.error('Error creating prescription:', await response.text());
-      }
-    } catch (error) {
-      console.error('Error creating prescription:', error);
-    }
-  };
-
- */ 
-
-
-
-  
+  // Fetch PDF data from the backend
   useEffect(() => {
     const getPrescriptions = async () => {
       try {
-        const res = await fetch('/api/medicine/getpdf');
+        const res = await fetch('/api/prescription/getpdf');
   
         if (!res.ok) {
           console.error('Failed to fetch the PDF data:', res.statusText);
@@ -138,13 +97,14 @@ function ChatWindow() {
         }
   
         const data = await res.json();
+        console.log("Fetched PDF Data: ", data); // Log to see the format of data
   
         if (data.success === false) {
           console.log("Data has not been fetched yet");
           return; 
         }
   
-        setGetPDFFiles(data)
+        setGetPDFFiles(data);
        
       } catch (error) {
         console.error('Error fetching the PDF data:', error);
@@ -153,11 +113,37 @@ function ChatWindow() {
   
     getPrescriptions();
   }, []);
-  
-  
- 
 
-   return (
+
+  const handleChatChange = (e) =>{
+    e.target.value === 'chat' ? setChatChange(true) : setChatChange(false)
+    // console.log(e.target.value)
+  }
+
+  const downloadPdf = (pdfContent, pdfFileId) => {
+    const doc = new jsPDF();
+  
+    // Add content to the PDF manually
+    doc.setFontSize(14);
+    doc.text("Even Care", 10, 10);
+    doc.text("Dr. Sohel Rana", 10, 20);
+    doc.text("Prescription Details:", 10, 30);
+  
+    // Create a table with medicine details using `autoTable` from jsPDF
+    doc.autoTable({
+      head: [['#', 'Medicine Name', 'Dosage']],
+      body: [
+        ['1', 'Naproxen', ''],
+      ],
+      startY: 40,
+    });
+  
+    // Save the PDF with the file's ID
+    doc.save(`prescription_${pdfFileId}.pdf`);
+  };
+
+  return (
+
     <div className="chat-container lg:mt-28 ">
       <div className="chat-users bg-gray-300 w-full rounded-lg h-full">
         <h2 className="text-blue-500">Available Users</h2>
@@ -170,40 +156,45 @@ function ChatWindow() {
         </ul>
       </div>
 
+
+
       <div className="chat-messages h-full ">
         <h2 className="text-lg font-semibold">Chat with <span className="lg:text-2xl text-blue-500">{selectedUser ? selectedUser?.username : "..."}</span></h2>
         <div className="chat-window">
           {selectedUser && (
             <>
               <div className="message-container mb-72">
-                {messages.map((message) => (
+              <button className="btn btn-primary" value='chat' onClick={ (e)=> handleChatChange(e)}>Chat</button>
+              <button className="btn btn-primary" value='pdf' onClick={ (e)=>handleChatChange(e)}>PDF</button>
+
+              {
+                chatChange ?
+                <>
+                                {messages.map((message) => (
                   <div key={message?._id} className={message.senderId === currentUser?.data?.user?._id ? "user-message" : "other-message"}>
                     {message.message}
                     
-                    {
-                      getPdfFiles?.map((pdfFile) =>{
-                        <div 
-                          key={pdfFile?._id} 
-                          className={pdfFile?.senderId ===  currentUser?.data?.user?._id 
-                            ? 
-                            "user-message" : "other-message"
-                            }
-                        >
-                          {pdfFile?.pdf?.url} 
-                          {/* { 
-                          {console.log("Data PDF: ", pdfFile?.pdf?.url)} 
-                           
-                              
-                               <iframe src={pdfFile?.pdf?.url} width="100%" height="600px" title="PDF Viewer" />
-                            
-                            
-                          } */}
-                        </div>
-                      })
-                    }
-
+                    {/* Render PDF files related to the chat */}
                   </div>
                 ))}
+                </>
+                :
+                <>
+                                    {
+                      getPdfFiles?.length > 0 && getPdfFiles.map((pdfFile) => (
+                        <div key={pdfFile?._id} className="user-message">
+                          <p>PDF Content: </p>
+                          <button onClick={() => downloadPdf(pdfFile?.pdfContent, pdfFile?._id)}>
+            Download Prescription PDF
+          </button>
+                          {/* <iframe src={pdfFile?.pdf?.url} width="100%" height="600px" title="PDF Viewer" /> */}
+                        </div>
+                      ))
+                    }
+                </>
+              }
+
+
               </div>
               <div className="chat-input gap-2">
                 <input
@@ -217,7 +208,7 @@ function ChatWindow() {
                 <button onClick={handleSendMessage}>Send</button>
                 {
                   currentUser?.data?.user?.role === 'doctor' && 
-                  <button  onClick={() => setModalOpen(true)}>Prescribe Medicine</button>
+                  <button onClick={() => setModalOpen(true)}>Prescribe Medicine</button>
                 }
               </div>
             </>
@@ -231,8 +222,6 @@ function ChatWindow() {
             isOpen={isModalOpen}
             selectedUser={selectedUser}
             onRequestClose={() => setModalOpen(false)}
-            /* handleSubmit={handleSubmit} */
-           
           />
         </div>
       }

@@ -1,8 +1,5 @@
+import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import { useEffect } from 'react';
-import io from 'socket.io-client';
 
 export default function SelectedPrescribeMedicine({
   selectedUser,
@@ -12,136 +9,86 @@ export default function SelectedPrescribeMedicine({
   handleAddMedicine, 
   onRequestClose,
 }) {
-    const { currentUser } = useSelector(state => state?.user);
-    console.log("selected user id: ", selectedUser?._id)
-    /* const socket = io('http://localhost:5000'); */
+  const { currentUser } = useSelector(state => state?.user);
+  const htmlRef = useRef();
 
-    /* useEffect(() => {
-      if (currentUser) {
-        socket.emit('joinRoom', { userId: currentUser.data.user._id });
-      }
-
-      // Set up the receiveMessage listener only once
-      socket.on('receiveMessage', (message) => {
-          if (message.pdf && message.pdf.data) {
-              // Convert the received data to a Blob
-              const pdfBlob = new Blob([new Uint8Array(message.pdf.data.data)], { type: message.pdf.contentType });
-          
-              // Create a download link
-              const downloadLink = document.createElement('a');
-              downloadLink.href = URL.createObjectURL(pdfBlob);
-              downloadLink.download = 'Prescription.pdf'; // Set the file name
-              downloadLink.click(); // Trigger the download
-          } else {
-              console.log("Message received:", message.message);
-          }
-      });
-
-      return () => {
-        // Clean up the socket connection and event listener
-        socket.disconnect();
+  // Function to submit HTML to backend
+  // Function to submit HTML to backend
+const handleSubmit = async () => {
+    try {
+      // Get HTML content as string
+      const htmlContent = htmlRef.current.outerHTML;
+  
+      // Create a JSON object to send to the backend
+      const prescriptionData = {
+        htmlContent,
+        senderId: String(currentUser?.data?.user?._id),
+        receiverId: String(selectedUser?._id),
+        senderusername: currentUser?.data?.user?.username,
+        receiverusername: selectedUser?.username,
       };
-    }, [currentUser, socket]); */
+  
+      // Send JSON data to backend
+      const res = await fetch('/api/prescription/sendpdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Correct header for JSON
+        },
+        body: JSON.stringify(prescriptionData), // Convert the data to JSON
+      });
+  
+      const data = await res.json();
+      console.log("Data passed: ", data);
+  
+    } catch (error) {
+      console.error("An error occurred while submitting the prescription:", error);
+    }
+  
+    onRequestClose();
+  };
+  
 
-    const handleSubmit = async () => {
-        try {
-            const doc = new jsPDF();
-            
-            // PDF content generation
-            doc.setFontSize(14);
-            doc.setFont('helvetica', 'bold');
-            doc.text("Even Care", 10, 20);
-            doc.setFontSize(14);
-            doc.setFont('helvetica', 'semi-bold');
-            doc.text(`${currentUser?.data?.user?.username}`, 150, 20);
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'normal');
-            doc.text('Prescription Details: ', 10, 40);
-    
-            const tableColumn = ['#', "Medicine Name", "Dosage"];
-            const tableRows = [];
-    
-            medicines?.forEach((med, index) => {
-                const medicineData = [index + 1, med.name, med.dosage];
-                tableRows.push(medicineData);
-            });
-            doc.autoTable({
-                head: [tableColumn],
-                body: tableRows,
-                startY: 50
-            });
-            
-          
-            console.log("first", doc.autoTable)
-    
-            // Convert jsPDF output to Blob
-            const pdfBlob = doc.output('blob');
-    
-            // Convert Blob to File (multer requires this format)
-            const pdfFile = new File([pdfBlob], 'prescription.pdf', { type: 'application/pdf' });
-    
-            const formData = new FormData();
-            formData.append('file', pdfFile);  // File is correctly added now
-            formData.append('senderId', String(currentUser?.data?.user?._id));
-            formData.append('receiverId', String(selectedUser?._id));
-            formData.append('senderusername', currentUser?.data?.user?.username);
-            formData.append('receiverusername', selectedUser?.username);
-    
-            // Send FormData to backend
-            const res = await fetch('/api/medicine/sendpdf', {
-                method: 'POST',
-                body: formData,
-            });
-    
-            const data = await res.json();
-            console.log("Data pass: ", data);
-    
-        } catch (error) {
-            console.error("An error occurred while submitting the prescription:", error);
-        }
-    
-        onRequestClose();
-    };
-    
-    
+  return (
+    <div>
+      {/* HTML content to send */}
+      <div ref={htmlRef} className="space-y-4 p-4 border rounded-md">
+        <h1 style={{ fontSize: '14pt', fontWeight: 'bold' }}>Even Care</h1>
+        <h2 style={{ fontSize: '14pt', fontWeight: 'semi-bold' }}>{currentUser?.data?.user?.username}</h2>
+        <h3 style={{ fontSize: '12pt', fontWeight: 'normal' }}>Prescription Details:</h3>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th style={{ border: '1px solid black', padding: '8px' }}>#</th>
+              <th style={{ border: '1px solid black', padding: '8px' }}>Medicine Name</th>
+              <th style={{ border: '1px solid black', padding: '8px' }}>Dosage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {medicines?.map((med, index) => (
+              <tr key={index}>
+                <td style={{ border: '1px solid black', padding: '8px' }}>{index + 1}</td>
+                <td style={{ border: '1px solid black', padding: '8px' }}>{med.name}</td>
+                <td style={{ border: '1px solid black', padding: '8px' }}><input></input></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-    return (
-        <div>
-            <div className="space-y-4">
-                {medicines?.map((med, index) => (
-                    <div key={index} className="flex flex-col md:flex-row md:space-x-4">
-                        <input
-                            type="text"
-                            placeholder="Medicine Name"
-                            value={med.name}
-                            onChange={(e) => handleMedicineChange(index, 'name', e.target.value)}
-                            className="w-full p-3 mb-2 md:mb-0 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Dosage"
-                            value={med.dosage}
-                            onChange={(e) => handleMedicineChange(index, 'dosage', e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-                ))}
-            </div>
-
-            <div className="flex justify-between items-center mt-8">
-                <button
-                    onClick={handleAddMedicine}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none"
-                >
-                    Add Medicine
-                </button>
-                <button
-                    onClick={handleSubmit}
-                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none"
-                >
-                    Send Prescription
-                </button>
-            </div>
-        </div>
-    );
+      <div className="flex justify-between items-center mt-8">
+        <button
+          onClick={handleAddMedicine}
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none"
+        >
+          Add Medicine
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none"
+        >
+          Send Prescription
+        </button>
+      </div>
+    </div>
+  );
 }
