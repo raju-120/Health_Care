@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 
 export default function PatientRegistrationForm() {
@@ -28,6 +29,8 @@ export default function PatientRegistrationForm() {
           ps: '',
           district: '',
           country: '',
+          phoneNumber: '',
+          homeNumber: ''
         },
       });
     
@@ -50,13 +53,73 @@ export default function PatientRegistrationForm() {
         });
       };
     
-      const handleSubmit = (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
-      };
+    
+        try {
+          const response = await fetch("/api/patient/patient-reg-form", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+    
+          if (response.ok) {
+            const result = await response.json();
+            console.log("Registration successful", result);
+    
+            // Display success toast notification
+            toast.success("Appointment submitted successfully!", {
+              position: "top-center",
+              duration: 5000,
+              style: {
+                background: "#4CAF50",
+                color: "white",
+              },
+            });
+    
+            // Reset the form after successful submission
+            setFormData({
+              name: '',
+              age: '',
+              sex: '',
+              dob: '',
+              bloodGroup: '',
+              fatherMotherName: '',
+              maritalStatus: 'Unmarried',
+              email: '',
+              nationalId: '',
+              spouseName: '',
+              occupation: '',
+              religion: '',
+              nationality: '',
+              placeOfBirth: '',
+              passportNo: '',
+              language: '',
+              citizenship: '',
+              address: {
+                houseNo: '',
+                roadNo: '',
+                po: '',
+                ps: '',
+                district: '',
+                country: '',
+                phoneNumber: '',
+                homeNumber: ''
+              },
+            });
+          } else {
+            console.error("Error:", response.statusText);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+    };
 
   return (
-    <div className="max-w-4xl mx-auto lg:p-5 mt-16 lg:mt-5 flex flex-col items-center">
+    <div className="max-w-4xl mx-auto lg:p-5 mt-10 lg:mt-2 flex flex-col items-center">
         <h1 className="mt-20 text-4xl text-center font-semibold">Patient Registration Form</h1>
         <div className="lg:p-10 w-full flex justify-center mt-5 bg-white shadow-lg rounded-lg">
             <form onSubmit={handleSubmit} className="w-full space-y-5">
@@ -138,7 +201,7 @@ export default function PatientRegistrationForm() {
 
             {/* Parent's Name */}
             <div>
-                <label className="block text-left font-medium">Father/Mother's Name*</label>
+                <label className="block text-left font-medium">Father/Mother Name*</label>
                 <input
                 type="text"
                 id="fatherMotherName"
@@ -151,46 +214,20 @@ export default function PatientRegistrationForm() {
 
             {/* Marital Status */}
             <div>
-                <label className="block text-left font-medium">Marital Status*</label>
-                <div className="flex space-x-3 mt-2">
-                <div className="flex items-center">
-                    <input
-                    type="radio"
-                    id="married"
-                    name="maritalStatus"
-                    value="Married"
-                    onChange={handleChange}
-                    checked={formData.maritalStatus === 'Married'}
-                    className="mr-2"
-                    />
-                    <label htmlFor="married">Married</label>
-                </div>
-                <div className="flex items-center">
-                    <input
-                    type="radio"
-                    id="unmarried"
-                    name="maritalStatus"
-                    value="Unmarried"
-                    onChange={handleChange}
-                    checked={formData.maritalStatus === 'Unmarried'}
-                    className="mr-2"
-                    />
-                    <label htmlFor="unmarried">Unmarried</label>
-                </div>
-                <div className="flex items-center">
-                    <input
-                    type="radio"
-                    id="others"
-                    name="maritalStatus"
-                    value="Others"
-                    onChange={handleChange}
-                    checked={formData.maritalStatus === 'Others'}
-                    className="mr-2"
-                    />
-                    <label htmlFor="others">Others</label>
-                </div>
-                </div>
-            </div>
+                        <label className="block text-left font-medium">Marital Status*</label>
+                        <select
+                            id="maritalStatus"
+                            value={formData.maritalStatus}
+                            onChange={handleChange}
+                            required
+                            className="w-full mt-2 p-2 border border-gray-300 rounded"
+                        >
+                            <option value="Unmarried">Unmarried</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Widowed">Widowed</option>
+                        </select>
+                    </div>
 
             {/* Email and National ID */}
             <div className="flex flex-col lg:flex-row lg:space-x-5">
@@ -289,26 +326,48 @@ export default function PatientRegistrationForm() {
                 />
                 </div>
                 <div>
-                <label className="block text-left font-medium">District*</label>
-                <input
-                    type="text"
-                    id="district"
-                    value={formData.address.district}
-                    onChange={handleAddressChange}
-                    required
-                    className="w-full mt-2 p-2 border border-gray-300 rounded"
-                />
+                    <label className="block text-left font-medium">District*</label>
+                    <input
+                        type="text"
+                        id="district"
+                        value={formData.address.district}
+                        onChange={handleAddressChange}
+                        required
+                        className="w-full mt-2 p-2 border border-gray-300 rounded"
+                    />
                 </div>
                 <div>
-                <label className="block text-left font-medium">Country*</label>
-                <input
-                    type="text"
-                    id="country"
-                    value={formData.address.country}
-                    onChange={handleAddressChange}
-                    required
-                    className="w-full mt-2 p-2 border border-gray-300 rounded"
-                />
+                    <label className="block text-left font-medium">Country*</label>
+                    <input
+                        type="text"
+                        id="country"
+                        value={formData.address.country}
+                        onChange={handleAddressChange}
+                        required
+                        className="w-full mt-2 p-2 border border-gray-300 rounded"
+                    />
+                </div>
+                <div>
+                    <label className="block text-left font-medium">Home Number*</label>
+                    <input
+                        type="number"
+                        id="homeNumber"
+                        value={formData.address.homeNumber}
+                        onChange={handleAddressChange}
+                        required
+                        className="w-full mt-2 p-2 border border-gray-300 rounded"
+                    />
+                </div>
+                <div>
+                    <label className="block text-left font-medium">Phone*</label>
+                    <input
+                        type="number"
+                        id="phoneNumber"
+                        value={formData.address.phoneNumber}
+                        onChange={handleAddressChange}
+                        required
+                        className="w-full mt-2 p-2 border border-gray-300 rounded"
+                    />
                 </div>
             </div>
 
@@ -320,7 +379,7 @@ export default function PatientRegistrationForm() {
             </button>
             </form>
         </div>
+        < Toaster position="center-top"/>
         </div>
-
   )
 }

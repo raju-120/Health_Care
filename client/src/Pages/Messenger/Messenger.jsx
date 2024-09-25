@@ -4,13 +4,11 @@ import io from "socket.io-client";
 import PrescriptionModal from "./PrescriptionModal/prescriptionModal.jsx";
 import "./style.css";
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const socket = io('http://localhost:5000');
 
 function ChatWindow() {
   const { currentUser } = useSelector(state => state.user);
-
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
@@ -32,11 +30,9 @@ function ChatWindow() {
     fetchDoctors();
   }, [currentUser?.data?.user]);
 
-  // Fetch past messages and join the room when a user is selected
   useEffect(() => {
     if (selectedUser) {
       const senderId = currentUser?.data?.user?._id;
-
       const getMessages = async () => {
         const res = await fetch('/api/message', {
           method: 'POST',
@@ -49,22 +45,16 @@ function ChatWindow() {
         setMessages(data);
       };
       getMessages();
-
-      // Join the room
       socket.emit('joinRoom', { userId: senderId });
-
-      // Handle receiving new messages
       socket.on('receiveMessage', (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
       });
-
       return () => {
         socket.off('receiveMessage');
       };
     }
   }, [selectedUser, currentUser?.data?.user?._id]);
 
-  // Handle sending a new message
   const handleSendMessage = async () => {
     const senderId = currentUser?.data?.user?._id;
     const receiverId = selectedUser?._id;
@@ -77,72 +67,50 @@ function ChatWindow() {
     }
   };
 
-  // Handle user selection in the chat
   const handleUserSelect = (user) => {
     setSelectedUser(user);
     setMessages([]);
   };
 
-  // Fetch PDF data from the backend
   useEffect(() => {
     const getPrescriptions = async () => {
       try {
         const res = await fetch('/api/prescription/getpdf');
-
         if (!res.ok) {
           console.error('Failed to fetch the PDF data:', res.statusText);
           return; 
         }
-
         const data = await res.json();
-        console.log("Fetched PDF Data: ", data); // Log to see the format of data
-
         if (data.success === false) {
           console.log("Data has not been fetched yet");
           return; 
         }
-
         setGetPDFFiles(data);
-       
       } catch (error) {
         console.error('Error fetching the PDF data:', error);
       }
     };
-
     getPrescriptions();
   }, []);
 
   const handleChatChange = (e) => {
-    e.target.value === 'chat' ? setChatChange(true) : setChatChange(false);
+    setChatChange(e.target.value === 'chat');
   };
 
   const handleDownload = (pdfContent, filename) => {
-    // Create a temporary div to hold the HTML content
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = pdfContent;
-    document.body.appendChild(tempDiv); // Append to body for visibility
-  
-    // Use a timeout to ensure content is rendered before capturing
-    setTimeout(() => {
-      html2canvas(tempDiv).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        const doc = new jsPDF();
-  
-        // Add image to PDF
-        doc.addImage(imgData, "PNG", 10, 10);
-        
-        // Save the PDF
-        doc.save(filename);
-  
-        // Clean up the temporary div
-        document.body.removeChild(tempDiv);
-      }).catch(err => {
-        console.error("Error capturing element: ", err);
-        document.body.removeChild(tempDiv); // Clean up in case of error
-      });
-    }, 100); // Delay in milliseconds (adjust as necessary)
+    const doc = new jsPDF();
+
+    // Adding HTML content to the PDF
+    doc.html(pdfContent, {
+      callback: function (doc) {
+        doc.save(filename); // Save the generated PDF
+      },
+      x: 10,
+      y: 10,
+      width: 190, // max width
+      windowWidth: 650 // base window width for rendering HTML
+    });
   };
-  
 
   return (
     <div className="chat-container lg:mt-28 ">
@@ -157,7 +125,7 @@ function ChatWindow() {
         </ul>
       </div>
 
-      <div className="chat-messages h-full ">
+      <div className="chat-messages h-full">
         <h2 className="text-lg font-semibold">Chat with <span className="lg:text-2xl text-blue-500">{selectedUser ? selectedUser?.username : "..."}</span></h2>
         <div className="chat-window overflow-x-auto lg:max-h-[40rem]">
           {selectedUser && (

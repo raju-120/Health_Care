@@ -57,7 +57,7 @@ export default function MyAppointment() {
   return (
     <div>
       <div className="m-4 p-3 bg-stone-200 rounded-md">
-      <div className="overflow-x-auto">
+      <div className="overflow-y-auto lg:max-h-[45rem]">
         <table className="table">
           {/* head */}
           <thead>
@@ -69,7 +69,7 @@ export default function MyAppointment() {
               <th className="text-xl font-semibold text-black">Bill</th>
               <th className="text-xl font-semibold text-black">Talk</th> 
               <th className="text-xl font-semibold text-black">Action</th>
-              <th className="text-xl font-semibold text-black">Paitent Form</th>
+              {/* <th className="text-xl font-semibold text-black">Paitent Form</th> */}
             </tr>
           </thead>
           <tbody>
@@ -134,9 +134,9 @@ export default function MyAppointment() {
                     <span>{data?.status}</span>
                   )}
                 </td>
-                <td>
+                {/* <td>
                   <Link to='/patientinfo'>Form</Link>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>

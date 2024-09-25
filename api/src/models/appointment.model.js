@@ -41,21 +41,21 @@ const appointmentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    appointmentSlots: {
-        type: String,
-        required: true,
-    },
+    // appointmentSlots: {
+    //     type: String,
+    //     required: true,
+    // },
     docapporve:{
         type: String,
         default: 'pending'
     },
     price: {
         type: Number,
-        required: true,
+        // required: true,
     },
     advPrice: {
         type: Number,
-        required: true,
+        // required: true,
     },
     permission: {
         type: String,
@@ -71,5 +71,6 @@ const appointmentSchema = new mongoose.Schema({
     },
     paid: { type: Boolean, default: false },
 }, { timestamps: true });
+
 
 export const Appointment = mongoose.model('Appointment', appointmentSchema);

@@ -114,18 +114,21 @@ export default function AppointmentRequestDoctor() {
         <table className="table w-full">
           <thead>
             <tr>
-              <th></th>
+              <th>Serial</th>
               <th>Patient Name</th>
-              <th>DOB</th>
+              {/* <th>DOB</th> */}
+              {/* <th>Baal</th> */}
               <th>Date</th>
+              <th>SLot</th>
               <th>Bill</th>
               <th>Talk</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {allData?.map((data) => (
+            {allData?.map((data,i) => (
               <tr key={data?._id}>
+                <td>{i + 1 }</td>
                 <td>
                   <div className="flex items-center gap-3">
                     <div>
@@ -133,8 +136,8 @@ export default function AppointmentRequestDoctor() {
                     </div>
                   </div>
                 </td>
-                <td className="text-md">{data?.doctor}</td>
-                <td className="text-md">{data?.department}</td>
+                {/* <td className="text-md">{data?.doctor}</td> */}
+                {/* <td className="text-md">{data?.department}</td> */}
                 <td className="text-md">{data?.date}</td>
                 <td className="text-md">{data?.appointmentSlots}</td>
                 <td>

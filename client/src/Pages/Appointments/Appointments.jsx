@@ -10,19 +10,17 @@ function Appointments() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({});
   const [doctors, setDoctors] = useState([]);
-  const [selectedDoctorSlots, setSelectedDoctorSlots] = useState([]);
-  const [doctorBill, setDoctorBill] = useState(0);
-  const [doctorAdvBill, setDoctorAdvBill] = useState(0);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDept, setSelectedDept] = useState("");
   const [filteredDoctors, setFilteredDoctors] = useState([]);
-  const [appointmentSlots, setAppointmentSlots] = useState([]); // Booked slots
+  const [availableSlots, setAvailableSlots] = useState([]); // Available slots for selected date
   const [fullyBooked, setFullyBooked] = useState(false); // Track full bookings
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [doctorBill, setDoctorBill] = useState(0);
+  const [doctorAdvBill, setDoctorAdvBill] = useState(0);
   
-   
   const [deptData, setDeptData] = useState([]);
   const navigate = useNavigate();
   
@@ -32,27 +30,8 @@ function Appointments() {
 
 
   console.log("formdata: ", formData);
-  //console.log("Booked: ", fullyBooked.lenght)
-  //console.log("Selected Doctors : ", selectedDoctor);
-  //console.log("Department : ", deptData);
   
-
-  //date blured function
-  useEffect(() => {
-    const today = new Date();
-    const nextWeek = new Date(today);
-    nextWeek.setDate(today.getDate() + 6);
-
-    const formatDate = (date) => {
-      let day = String(date.getDate()).padStart(2, '0');
-      let month = String(date.getMonth() + 1).padStart(2, '0'); 
-      let year = date.getFullYear();
-      return `${year}-${month}-${day}`;
-    };
-
-    setMinDate(formatDate(today));
-    setMaxDate(formatDate(nextWeek));
-  }, []);
+  
 
   //Doctor fetching
 
@@ -69,6 +48,8 @@ function Appointments() {
     getDoctor();
   }, []);
 
+
+   // Get department 
   useEffect(() => {
     const getDepartment = async () => {
       try {
@@ -81,6 +62,33 @@ function Appointments() {
     };
     getDepartment();
   }, []);
+
+   //date blured function
+   useEffect(() => {
+    const today = new Date();
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 6);
+
+    const formatDate = (date) => {
+      let day = String(date.getDate()).padStart(2, '0');
+      let month = String(date.getMonth() + 1).padStart(2, '0'); 
+      let year = date.getFullYear();
+      return `${year}-${month}-${day}`;
+    };
+
+    setMinDate(formatDate(today));
+    setMaxDate(formatDate(nextWeek));
+  }, []);
+
+  // Handle department selection
+  useEffect(() => {
+    if (selectedDept) {
+      const filtered = doctors?.data?.filter(doctor => doctor.department === selectedDept);
+      setFilteredDoctors(filtered);
+    } else {
+      setFilteredDoctors([]);
+    }
+  }, [selectedDept, doctors]);
 
   //formData changing
   const handleChange = (e) => {
@@ -124,15 +132,7 @@ function Appointments() {
     }
   };
 
-  useEffect(() => {
-    if (selectedDept) {
-      const filtered = doctors?.data?.filter(doctor => doctor.department === selectedDept);
-      setFilteredDoctors(filtered);
-    } else {
-      setFilteredDoctors([]);
-    }
-  }, [selectedDept, doctors]);
-
+// Handle Gender Change
   const handleGenderChange = (e) => {
     setFormData({
       ...formData,
@@ -140,6 +140,7 @@ function Appointments() {
     });
   };
 
+  // Handle Meeting 
   const handleMettingChange = (e) => {
   
   const meetingType = e.target.value;
@@ -147,8 +148,6 @@ function Appointments() {
     ...select,
     meeting: meetingType,
   });
-
- 
   setFormData(prevState => ({
     ...prevState,
     meeting: meetingType,
@@ -156,7 +155,24 @@ function Appointments() {
   }));
 };
 
+// Handle slot filtering based on selected date
+const handleDateChange = async (e) => {
+  const selected = e.target.value;
+  setSelectedDate(selected);
   
+  if (selectedDoctor) {
+    try {
+      // Fetch available slots from the server for the selected doctor and date
+      const response = await fetch(`/api/auth/doctorSlots?doctorId=${selectedDoctor._id}&date=${selected}`);
+      const { slots } = await response.json();
+      
+      setAvailableSlots(slots);
+      setFullyBooked(slots.length === 0);
+    } catch (error) {
+      console.error('Error fetching available slots:', error);
+    }
+  }
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -391,91 +407,7 @@ function Appointments() {
             )
           }
 
-          {
-            select.meeting === 'online' && 
-            (
-              <>
-                {/* Department */}
-                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-                  <h1 className="lg:w-1/3 text-left">Department :</h1>
-                  <div className="lg:w-2/3">
-                    <select id="department" onChange={handleChange} className="input input-bordered w-full" required >
-                      <option value="">Choose department</option>
-                      {deptData?.map((dept, index) => (
-                        <option key={index} value={dept?.deptname}>{dept?.deptname}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                 {/* Doctor */}     
-                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-                    <h1 className="lg:w-1/3 text-left">Doctor :</h1>
-                    <div className="lg:w-2/3">
-                      <select id="doctor" onChange={handleChange} className="input input-bordered w-full" required >
-                        <option value="">Choose doctor</option>
-                        {filteredDoctors?.map((doctor) => (
-                          <option key={doctor?._id} value={doctor?.username}>
-                            {doctor?.username}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                </div>
-
-                {/* Appointment Date */}
-                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-                  <h1 className="lg:w-1/3 text-left">Appointment Date :</h1>
-                  <div className="lg:w-2/3">
-                    <input 
-                      type="date" 
-                      id="date" 
-                      min={minDate}
-                      max={maxDate}
-                      onChange={handleChange}
-                      className="input input-bordered w-full" 
-                      required 
-                    />
-                  </div>
-                </div>
-
-                {/* Time */}
-                {/* {selectedDoctor && (
-                  <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-                    <h1 className="lg:w-1/3 text-left">Time :</h1>
-                    <div className="lg:w-2/3">
-                      {fullyBooked ? (
-                        <p className="text-red-500">All slots for this date are booked. Please choose another date.</p>
-                      ) : (
-                        <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required >
-                          <option value="">Choose Time Slot</option>
-                          {filteredTimeSlots.map((slot, index) => (
-                            <option key={index} value={slot}>{slot}</option>
-                          ))}
-                        </select>
-                      )}
-                    </div>
-                  </div>
-                )}  */}
-
-                {/* Doctors Bill */}
-                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-                  <h1 className="lg:w-1/3 text-left">Doctors Bill:</h1>
-                  <div className="lg:w-2/3">
-                    <input 
-                      type="text" 
-                      id="price" 
-                      onChange={handleChange} 
-                      value={`$ ${doctorBill}`} 
-                      readOnly 
-                      className="input input-bordered w-full bg-gray-200" 
-                      required 
-                    />
-                  </div>
-                </div>
-              </>
-            )
-          }
+          
 
           
 

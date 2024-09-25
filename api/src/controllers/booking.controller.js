@@ -9,30 +9,58 @@ import sendGridMail from "@sendgrid/mail"; */
 
 const booking = asyncHandler(async (req, res) => {
     try {
-        const {
-            name, dateOfBirth, gender, phone,
-            department, doctor, date, 
-            price, permission,uId,email,docId,appointmentSlots,advPrice
-        } = req.body;
-
-        const newAppointment = new Appointment({
-            name, dateOfBirth, gender, phone,
-            department, doctor, date, 
-            price, permission,uId,email,docId,appointmentSlots,advPrice
-        });
-
-        await newAppointment.save();
-
-        return res.status(201).json(
-            new APIResponse(200, newAppointment, "Doctor appointment submitted successfully.")
-        );
+      const {
+        name, dateOfBirth, gender, phone,
+        department, doctor, date, 
+        price, permission, uId, email, docId, appointmentSlot, appointmentType, advPrice
+      } = req.body;
+  
+      // Fetch the doctor from the database
+      const doctorData = await Doctor.findById(docId);
+  
+      if (!doctorData) {
+        return res.status(404).json(new APIResponse(404, null, "Doctor not found."));
+      }
+  
+      // Select slots based on appointment type (online or in-person)
+      const availableSlots = appointmentType === 'online' ? doctorData.onlineSlots : doctorData.slots;
+  
+      // Check if the selected slot is part of the available slots
+      if (!availableSlots.includes(appointmentSlot)) {
+        return res.status(400).json(new APIResponse(400, null, "Invalid time slot selected."));
+      }
+  
+      // Check if the slot is already booked for the doctor on the selected date
+      const existingAppointment = await Appointment.findOne({
+        docId,
+        date,
+        appointmentSlot,
+      });
+  
+      if (existingAppointment) {
+        return res.status(400).json(new APIResponse(400, null, "This time slot is already booked."));
+      }
+  
+      // If the slot is available, proceed with booking
+      const newAppointment = new Appointment({
+        name, dateOfBirth, gender, phone,
+        department, doctor, date, 
+        price, permission, uId, email, docId, appointmentSlot, appointmentType, advPrice
+      });
+  
+      await newAppointment.save();
+  
+      return res.status(201).json(
+        new APIResponse(200, newAppointment, "Doctor appointment submitted successfully.")
+      );
     } catch (error) {
-        console.error('Error:', error.message);
-        return res.status(500).json(
-            new APIResponse(500, null, "Failed to submit doctor appointment.")
-        );
+      console.error('Error:', error.message);
+      return res.status(500).json(
+        new APIResponse(500, null, "Failed to submit doctor appointment.")
+      );
     }
-});
+  });
+  
 
 const getBooking = asyncHandler(async (req, res) => {
     try {

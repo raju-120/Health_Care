@@ -6,7 +6,7 @@ const prescriptionSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    senderusername: { 
+    sendername: { 
         type: String,
         required: true 
     },
@@ -15,16 +15,21 @@ const prescriptionSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    receiverusername: { 
+    receivername: { 
         type: String,
         required: true 
     },
-    pdf: {
+    pdfContent :{
+        type: String,
+        required: true,
+    }
+   /*  pdf: {
         url: { type: String, required: true }, 
         public_id: { type: String },          
         contentType: { type: String, default: 'application/pdf' },
-    }
+    } */
 }, { timestamps: true });
 
 const Prescription = mongoose.model('Prescription', prescriptionSchema);
 export default Prescription;
+

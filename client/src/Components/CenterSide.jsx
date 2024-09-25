@@ -60,6 +60,8 @@ import { motion, useAnimation } from 'framer-motion';
 import 'odometer/themes/odometer-theme-default.css';
 import Odometer from 'odometer';
 import {  toast, Toaster } from "react-hot-toast";
+import PatientRegistrationForm from '../Pages/Patient Registration Form/PatientRegistrationForm.jsx';
+import { useSelector } from 'react-redux';
 
 //import Odometer from 'odometer';
 //import Avatar from '../';
@@ -107,12 +109,13 @@ const initialFormState = {
 export default function CenterSide() {
   const controls = useAnimation();
 
-
+  const {currentUser} = useSelector((state) => state?.user) 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [formdata, setFormData] = useState(initialFormState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
+  console.log("currentUser: ", currentUser?.data?.user);
   console.log("FormData: ", formdata);
 
 
@@ -351,6 +354,12 @@ const odometerPart1Ref = useRef(null);
         </div>
         <div className="cs_height_120 cs_height_lg_80"></div>
       </section>
+
+      {
+        currentUser?.data?.user.role === 'user' && <PatientRegistrationForm />
+      }
+
+      
 
       {/* Qalifier success rate + Count down section should be added. */}
 
