@@ -93,6 +93,14 @@ const testimonials = [
   },
 ];
 
+const initialFormState = {
+  firstname: '',
+  lastname: '',
+  phone: '',
+  email: '',
+  remark: ''
+};
+
 
 
 
@@ -101,7 +109,7 @@ export default function CenterSide() {
 
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [formdata, setFormData] = useState({});
+  const [formdata, setFormData] = useState(initialFormState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -119,40 +127,45 @@ export default function CenterSide() {
   };
 
 
-  const handleSubmit = async(e) =>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try{
+    try {
       setLoading(true);
-      const res = await fetch('/api/complainbox/complains',{
+      const res = await fetch('/api/complainbox/complains', {
         method: 'POST',
         headers: {
-          'Content-type' : 'application/json',
+          'Content-type': 'application/json',
         },
-        body: JSON.stringify(formdata)
+        body: JSON.stringify(formdata),
       });
+
       const data = await res.json();
 
-      if(data.success === false ){
+      if (data.success === false) {
         setLoading(false);
         setError(data.message);
-        toast.error("Something missing: ", data.message);
-      }
-      toast.success("Your suggestion submited successfully!", {
-        position: "top-center",
-        duration: 5000,
-        style: {
-          background: "#4CAF50",
-          color: "white",
-        },
-      });
-      setLoading(false);
-      setError(null);
+        toast.error("Something missing: " + data.message);
+      } else {
+        toast.success("Your suggestion submitted successfully!", {
+          position: "top-center",
+          duration: 5000,
+          style: {
+            background: "#4CAF50",
+            color: "white",
+          },
+        });
 
-    }catch(err){
-      console.error('Error : ', err)
+        // Reset the form after successful submission
+        setFormData(initialFormState);
+        setError(null);
+      }
+
+      setLoading(false);
+    } catch (err) {
+      console.error('Error : ', err);
     }
-  }
+  };
 
 
 
@@ -480,44 +493,77 @@ const odometerPart1Ref = useRef(null);
           <div className="cs_height_45 cs_height_lg_30"></div>
           
           <form onSubmit={handleSubmit} className="cs_contact_form row cs_gap_y_24" id="cs_form">
-            
-            <div className="col-md-6 position-relative">
-              <input type="text" 
-                name="firstname" 
-                id='firstname' 
-                onChange={handleChange}
-                className="cs_form_field cs_radius_5" 
-                required
-              />
-              <label>First Name</label>
-            </div>
+      <div className="col-md-6 position-relative">
+        <input
+          type="text"
+          name="firstname"
+          id="firstname"
+          value={formdata.firstname}
+          onChange={handleChange}
+          className="cs_form_field cs_radius_5"
+          required
+        />
+        <label>First Name</label>
+      </div>
 
-            <div className="col-md-6 position-relative">
-              <input type="text" name="lastname" id='lastname' onChange={handleChange} className="cs_form_field cs_radius_5" required/>
-              <label>Last Name</label>
-            </div>
+      <div className="col-md-6 position-relative">
+        <input
+          type="text"
+          name="lastname"
+          id="lastname"
+          value={formdata.lastname}
+          onChange={handleChange}
+          className="cs_form_field cs_radius_5"
+          required
+        />
+        <label>Last Name</label>
+      </div>
 
-            <div className="col-md-6 position-relative">
-              <input type="number" name="phone" id='phone' onChange={handleChange} className="cs_form_field cs_radius_5" required/>
-              <label>Phone</label>
-            </div>
+      <div className="col-md-6 position-relative">
+        <input
+          type="number"
+          name="phone"
+          id="phone"
+          value={formdata.phone}
+          onChange={handleChange}
+          className="cs_form_field cs_radius_5"
+          required
+        />
+        <label>Phone</label>
+      </div>
 
-            <div className="col-md-6 position-relative">
-              <input type="email" name="email" id='email' onChange={handleChange} className="cs_form_field cs_radius_5" required/>
-              <label>Email Address</label>
-            </div>
+      <div className="col-md-6 position-relative">
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value={formdata.email}
+          onChange={handleChange}
+          className="cs_form_field cs_radius_5"
+          required
+        />
+        <label>Email Address</label>
+      </div>
 
-            <div className="col-md-12 position-relative">
-              <textarea name="message" rows="6" id='remark' onChange={handleChange} className="cs_form_field cs_radius_5" required></textarea>
-              <label>Message</label>
-            </div>
+      <div className="col-md-12 position-relative">
+        <textarea
+          name="message"
+          rows="6"
+          id="remark"
+          value={formdata.remark}
+          onChange={handleChange}
+          className="cs_form_field cs_radius_5"
+          required
+        ></textarea>
+        <label>Message</label>
+      </div>
 
-            <div className="col-md-12 text-md-center">
-              <button type="submit" className="w-full btn bg-sky-500 text-white cs_fs_24 cs_semibold">
-                {loading ? 'Submitting...' : 'Send Message'}
-              </button>
-            </div>
-          </form>
+      <div className="col-md-12 text-md-center">
+        <button type="submit" className="w-full btn bg-sky-500 text-white cs_fs_24 cs_semibold">
+          {loading ? 'Submitting...' : 'Send Message'}
+        </button>
+      </div>
+    </form>
 
           {error && <p className='text-red-500'>{error.message}</p>}
           

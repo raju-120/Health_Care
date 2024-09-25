@@ -1,22 +1,49 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function SelectedPrescribeMedicine({
   selectedUser,
   medicines, 
-  handleSelectMedicine, 
-  handleMedicineChange, 
   handleAddMedicine, 
   onRequestClose,
 }) {
   const { currentUser } = useSelector(state => state?.user);
   const htmlRef = useRef();
 
-  // Function to submit HTML to backend
-  // Function to submit HTML to backend
-const handleSubmit = async () => {
+  // Manage the dosage inputs in the state
+  const [dosages, setDosages] = useState(
+    medicines.reduce((acc, med, index) => {
+      acc[index] = ''; // Initialize dosage for each medicine
+      return acc;
+    }, {})
+  );
+
+  // Track if form has been submitted
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Handle dosage change
+  const handleDosageChange = (index, value) => {
+    setDosages(prevDosages => ({
+      ...prevDosages,
+      [index]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
     try {
-      // Get HTML content as string
+      // Set form as submitted
+      setIsSubmitted(true);
+
+      // Disable all input fields in the DOM before capturing HTML content
+      medicines.forEach((med, index) => {
+        const inputElement = htmlRef.current.querySelector(`#dosage-${index}`);
+        if (inputElement) {
+          inputElement.value = dosages[index]; // Update the input element value
+          inputElement.disabled = true; // Disable the input field
+        }
+      });
+
+      // Get the updated HTML content with disabled inputs
       const htmlContent = htmlRef.current.outerHTML;
   
       // Create a JSON object to send to the backend
@@ -24,29 +51,28 @@ const handleSubmit = async () => {
         htmlContent,
         senderId: String(currentUser?.data?.user?._id),
         receiverId: String(selectedUser?._id),
-        senderusername: currentUser?.data?.user?.username,
-        receiverusername: selectedUser?.username,
+        sendername: currentUser?.data?.user?.username,
+        receivername: selectedUser?.username,
       };
-  
+
       // Send JSON data to backend
       const res = await fetch('/api/prescription/sendpdf', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // Correct header for JSON
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(prescriptionData), // Convert the data to JSON
+        body: JSON.stringify(prescriptionData),
       });
-  
+
       const data = await res.json();
       console.log("Data passed: ", data);
-  
+
     } catch (error) {
       console.error("An error occurred while submitting the prescription:", error);
     }
-  
+
     onRequestClose();
   };
-  
 
   return (
     <div>
@@ -68,7 +94,16 @@ const handleSubmit = async () => {
               <tr key={index}>
                 <td style={{ border: '1px solid black', padding: '8px' }}>{index + 1}</td>
                 <td style={{ border: '1px solid black', padding: '8px' }}>{med.name}</td>
-                <td style={{ border: '1px solid black', padding: '8px' }}><input></input></td>
+                <td style={{ border: '1px solid black', padding: '8px' }}>
+                  <input
+                    id={`dosage-${index}`}
+                    type="text"
+                    value={dosages[index]} 
+                    onChange={(e) => handleDosageChange(index, e.target.value)}
+                    disabled={isSubmitted} // Disable after submission
+                    placeholder="Enter dosage"
+                  />
+                </td>
               </tr>
             ))}
           </tbody>
@@ -79,12 +114,14 @@ const handleSubmit = async () => {
         <button
           onClick={handleAddMedicine}
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none"
+          disabled={isSubmitted} // Disable button after submission
         >
           Add Medicine
         </button>
         <button
           onClick={handleSubmit}
           className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none"
+          disabled={isSubmitted} // Disable button after submission
         >
           Send Prescription
         </button>

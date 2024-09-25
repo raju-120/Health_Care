@@ -378,7 +378,7 @@ function Appointments() {
                       )}
                     </div>
                   </div>
-                )} */}
+                )}  */}
 
                 {/* Doctors Bill */}
                 <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">

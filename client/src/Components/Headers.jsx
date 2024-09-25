@@ -112,6 +112,8 @@ export default function Headers() {
                   <li><Link to='/doctorlists'><>Doctors</></Link></li>
                   <li><Link to='/service'><>Services</></Link></li>
                   <li><Link to='/donner'><>Blood</></Link></li>
+                  {/* <li><Link to='/map'><>Map</></Link></li> */}
+                  
                   
 
                   {/* <li className="menu_item_has_children"><a href="#blog">Blog</a>

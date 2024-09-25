@@ -69,6 +69,7 @@ export default function MyAppointment() {
               <th className="text-xl font-semibold text-black">Bill</th>
               <th className="text-xl font-semibold text-black">Talk</th> 
               <th className="text-xl font-semibold text-black">Action</th>
+              <th className="text-xl font-semibold text-black">Paitent Form</th>
             </tr>
           </thead>
           <tbody>
@@ -132,6 +133,9 @@ export default function MyAppointment() {
                   ) : (
                     <span>{data?.status}</span>
                   )}
+                </td>
+                <td>
+                  <Link to='/patientinfo'>Form</Link>
                 </td>
               </tr>
             ))}

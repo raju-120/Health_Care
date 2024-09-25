@@ -31,8 +31,11 @@ import AddDoctor from './Pages/DashboardPages/AddDoctor';
 import PaymentInvoice from './Pages/DashboardPages/Payment/PaymentInvoice';
 import AppointmentRequestDoctor from './Pages/DashboardPages/AppointmentRequestDoctor';
 import RequestAppointmentToAdmin from './Pages/DashboardPages/RequestAppointmentToAdmin';
+import PatientRegistrationForm from './Pages/Patient Registration Form/PatientRegistrationForm';
+
 
 /* import { paymentLoader } from './Pages/DashboardPages/Payment/paymentLoader'; 
+import Map from './Pages/Map';
 import RequestAdmin from './Pages/DashboardPages/RequestAdmin';
 import Hospital from './Pages/Hospital/Hospital';
 import ServiceDetails from './Pages/ServiceDetails';
@@ -67,8 +70,12 @@ export default function App() {
       <Route path='/service' element={<Services />}/>
       <Route path='/appointment' element={<Appointments />}/>
       <Route path='/donner' element={<BloodDonner />}/>
+      {/* <Route path='/map' element={<Map />}/> */}
+      
+      
       <Route path='/doctorlists' element={<Doctors />} />
       <Route path='/doctorlists/:id' element={<DoctorList />} />
+      <Route path='/patientinfo' element={<PatientRegistrationForm />}/>
       
       {/* <Route path='/tips' element={<Tips />}/>
       <Route path='/create-advertising' element={ <CreateAdvertising /> }/>

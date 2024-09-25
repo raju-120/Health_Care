@@ -4,21 +4,21 @@ import io from "socket.io-client";
 import PrescriptionModal from "./PrescriptionModal/prescriptionModal.jsx";
 import "./style.css";
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import html2canvas from 'html2canvas';
 
 const socket = io('http://localhost:5000');
 
 function ChatWindow() {
+  const { currentUser } = useSelector(state => state.user);
+
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
-  const { currentUser } = useSelector(state => state.user);
   const [doctors, setDoctors] = useState([]);
   const [getPdfFiles, setGetPDFFiles] = useState([]);
-  const [chatChange,setChatChange] = useState(true);
+  const [chatChange, setChatChange] = useState(true);
 
-  // Fetch the list of doctors or users based on the role
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -37,7 +37,6 @@ function ChatWindow() {
     if (selectedUser) {
       const senderId = currentUser?.data?.user?._id;
 
-      // Fetch past messages
       const getMessages = async () => {
         const res = await fetch('/api/message', {
           method: 'POST',
@@ -71,7 +70,6 @@ function ChatWindow() {
     const receiverId = selectedUser?._id;
     const senderusername = currentUser?.data?.user?.username;
     const receiverusername = selectedUser?.username;
-    
 
     if (newMessage.trim() && senderId && receiverId) {
       socket.emit('sendMessage', { from: senderId, to: receiverId, message: newMessage, senderusername, receiverusername });
@@ -90,60 +88,63 @@ function ChatWindow() {
     const getPrescriptions = async () => {
       try {
         const res = await fetch('/api/prescription/getpdf');
-  
+
         if (!res.ok) {
           console.error('Failed to fetch the PDF data:', res.statusText);
           return; 
         }
-  
+
         const data = await res.json();
         console.log("Fetched PDF Data: ", data); // Log to see the format of data
-  
+
         if (data.success === false) {
           console.log("Data has not been fetched yet");
           return; 
         }
-  
+
         setGetPDFFiles(data);
        
       } catch (error) {
         console.error('Error fetching the PDF data:', error);
       }
     };
-  
+
     getPrescriptions();
   }, []);
 
-
-  const handleChatChange = (e) =>{
-    e.target.value === 'chat' ? setChatChange(true) : setChatChange(false)
-    // console.log(e.target.value)
-  }
-
-  const downloadPdf = (pdfContent, pdfFileId) => {
-    const doc = new jsPDF();
-  
-    // Add content to the PDF manually
-    doc.setFontSize(14);
-    doc.text("Even Care", 10, 10);
-    doc.text("Dr. Sohel Rana", 10, 20);
-    doc.text("Prescription Details:", 10, 30);
-  
-    // Create a table with medicine details using `autoTable` from jsPDF
-    doc.autoTable({
-      head: [['#', 'Medicine Name', 'Dosage']],
-      body: [
-        ['1', 'Naproxen', ''],
-      ],
-      startY: 40,
-    });
-  
-    // Save the PDF with the file's ID
-    doc.save(`prescription_${pdfFileId}.pdf`);
+  const handleChatChange = (e) => {
+    e.target.value === 'chat' ? setChatChange(true) : setChatChange(false);
   };
 
-  return (
+  const handleDownload = (pdfContent, filename) => {
+    // Create a temporary div to hold the HTML content
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = pdfContent;
+    document.body.appendChild(tempDiv); // Append to body for visibility
+  
+    // Use a timeout to ensure content is rendered before capturing
+    setTimeout(() => {
+      html2canvas(tempDiv).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const doc = new jsPDF();
+  
+        // Add image to PDF
+        doc.addImage(imgData, "PNG", 10, 10);
+        
+        // Save the PDF
+        doc.save(filename);
+  
+        // Clean up the temporary div
+        document.body.removeChild(tempDiv);
+      }).catch(err => {
+        console.error("Error capturing element: ", err);
+        document.body.removeChild(tempDiv); // Clean up in case of error
+      });
+    }, 100); // Delay in milliseconds (adjust as necessary)
+  };
+  
 
+  return (
     <div className="chat-container lg:mt-28 ">
       <div className="chat-users bg-gray-300 w-full rounded-lg h-full">
         <h2 className="text-blue-500">Available Users</h2>
@@ -156,46 +157,46 @@ function ChatWindow() {
         </ul>
       </div>
 
-
-
       <div className="chat-messages h-full ">
         <h2 className="text-lg font-semibold">Chat with <span className="lg:text-2xl text-blue-500">{selectedUser ? selectedUser?.username : "..."}</span></h2>
-        <div className="chat-window">
+        <div className="chat-window overflow-x-auto lg:max-h-[40rem]">
           {selectedUser && (
             <>
-              <div className="message-container mb-72">
-              <button className="btn btn-primary" value='chat' onClick={ (e)=> handleChatChange(e)}>Chat</button>
-              <button className="btn btn-primary" value='pdf' onClick={ (e)=>handleChatChange(e)}>PDF</button>
+              <div className="message-container">
+                <div className="text-end mb-5 sticky top-0 bg-white z-10 p-2 w-full">
+                  <button className="btn btn-primary mr-5 " value='chat' onClick={(e) => handleChatChange(e)}>Chat</button>
+                  <button className="btn btn-primary" value='pdf' onClick={(e) => handleChatChange(e)}>PDF</button>
+                </div>
 
-              {
-                chatChange ?
-                <>
-                                {messages.map((message) => (
-                  <div key={message?._id} className={message.senderId === currentUser?.data?.user?._id ? "user-message" : "other-message"}>
-                    {message.message}
-                    
-                    {/* Render PDF files related to the chat */}
-                  </div>
-                ))}
-                </>
-                :
-                <>
-                                    {
-                      getPdfFiles?.length > 0 && getPdfFiles.map((pdfFile) => (
-                        <div key={pdfFile?._id} className="user-message">
-                          <p>PDF Content: </p>
-                          <button onClick={() => downloadPdf(pdfFile?.pdfContent, pdfFile?._id)}>
-            Download Prescription PDF
-          </button>
-                          {/* <iframe src={pdfFile?.pdf?.url} width="100%" height="600px" title="PDF Viewer" /> */}
-                        </div>
-                      ))
-                    }
-                </>
-              }
-
-
+                {chatChange ? (
+                  <>
+                    {messages.map((message) => (
+                      <div key={message?._id} className={message.senderId === currentUser?.data?.user?._id ? "user-message" : "other-message"}>
+                        {message.message}
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {getPdfFiles?.length > 0 && getPdfFiles.map((pdfFile) => (
+                      <div key={pdfFile?._id} className="user-message">
+                        {pdfFile?.senderId === selectedUser?._id && pdfFile?.receiverId === currentUser?.data?.user?._id ? (
+                          <>
+                            <p>PDF Content:</p>
+                            <div dangerouslySetInnerHTML={{ __html: pdfFile?.pdfContent }} />
+                            <button
+                              onClick={() => handleDownload(pdfFile?.pdfContent, `prescription_${pdfFile?._id}.pdf`)}
+                            >
+                              Download PDF
+                            </button>
+                          </>
+                        ) : null}
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
+
               <div className="chat-input gap-2">
                 <input
                   type="text"
@@ -216,15 +217,15 @@ function ChatWindow() {
         </div>
       </div>
 
-      {
-        <div >
+      {isModalOpen && (
+        <div>
           <PrescriptionModal
             isOpen={isModalOpen}
             selectedUser={selectedUser}
             onRequestClose={() => setModalOpen(false)}
           />
         </div>
-      }
+      )}
     </div>
   );
 }
