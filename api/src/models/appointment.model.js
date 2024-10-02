@@ -41,10 +41,10 @@ const appointmentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // appointmentSlots: {
-    //     type: String,
-    //     required: true,
-    // },
+    appointmentSlots: {
+        type: String,
+        required: true,
+    },
     docapporve:{
         type: String,
         default: 'pending'
@@ -70,6 +70,10 @@ const appointmentSchema = new mongoose.Schema({
         default: 'pending', 
     },
     paid: { type: Boolean, default: false },
+    meeting: {
+        type: String, 
+        required: true
+    }
 }, { timestamps: true });
 
 

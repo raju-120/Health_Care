@@ -6,7 +6,7 @@ import {  toast, Toaster } from "react-hot-toast";
 
 function Appointments() {
   const { currentUser } = useSelector((state) => state.user);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({});
   const [doctors, setDoctors] = useState([]);
@@ -14,64 +14,60 @@ function Appointments() {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDept, setSelectedDept] = useState("");
   const [filteredDoctors, setFilteredDoctors] = useState([]);
-  const [availableSlots, setAvailableSlots] = useState([]); // Available slots for selected date
-  const [fullyBooked, setFullyBooked] = useState(false); // Track full bookings
+  const [fullyBooked, setFullyBooked] = useState(false);
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
   const [doctorBill, setDoctorBill] = useState(0);
   const [doctorAdvBill, setDoctorAdvBill] = useState(0);
-  
   const [deptData, setDeptData] = useState([]);
+  const [appointmentSlots, setAppointmentSlots] = useState([]);
   const navigate = useNavigate();
   
+  // const [availableSlots, setAvailableSlots] = useState([]);
+  // const [selectedDoctorSlots, setSelectedDoctorSlots] = useState([]);
+
+  console.log("FormData: ", formData);
+  console.log("Appointment Slots: ", appointmentSlots);
+
   const [select, setSelect] = useState({
-    isAgrre: false, //check box
-  })
+    isAgree: false,
+  });
 
-
-  console.log("formdata: ", formData);
-  
-  
-
-  //Doctor fetching
-
+  // Fetch doctors and departments on component mount
   useEffect(() => {
-    const getDoctor = async () => {
+    const getDoctors = async () => {
       try {
         const res = await fetch("/api/auth/doctors");
         const data = await res.json();
         setDoctors(data);
       } catch (error) {
-        console.log('Error fetching departments:', error.message);
+        console.error('Error fetching doctors:', error.message);
+        setError("Failed to load doctors");
       }
     };
-    getDoctor();
-  }, []);
-
-
-   // Get department 
-  useEffect(() => {
-    const getDepartment = async () => {
+    const getDepartments = async () => {
       try {
         const res = await fetch("/api/auth/departments");
         const data = await res.json();
         setDeptData(data);
       } catch (error) {
-        console.log('Error fetching departments:', error.message);
+        console.error('Error fetching departments:', error.message);
+        setError("Failed to load departments");
       }
     };
-    getDepartment();
+    getDoctors();
+    getDepartments();
   }, []);
 
-   //date blured function
-   useEffect(() => {
+  // Set min and max appointment dates
+  useEffect(() => {
     const today = new Date();
     const nextWeek = new Date(today);
     nextWeek.setDate(today.getDate() + 6);
 
     const formatDate = (date) => {
       let day = String(date.getDate()).padStart(2, '0');
-      let month = String(date.getMonth() + 1).padStart(2, '0'); 
+      let month = String(date.getMonth() + 1).padStart(2, '0');
       let year = date.getFullYear();
       return `${year}-${month}-${day}`;
     };
@@ -80,7 +76,7 @@ function Appointments() {
     setMaxDate(formatDate(nextWeek));
   }, []);
 
-  // Handle department selection
+  // Filter doctors by department
   useEffect(() => {
     if (selectedDept) {
       const filtered = doctors?.data?.filter(doctor => doctor.department === selectedDept);
@@ -89,50 +85,50 @@ function Appointments() {
       setFilteredDoctors([]);
     }
   }, [selectedDept, doctors]);
+  
 
-  //formData changing
+  // Handle form changes
   const handleChange = (e) => {
     e.preventDefault();
     const { id, value } = e.target;
-    console.log({value})
-    
-      if (id === "name") {
-        const regex = /^[A-Za-z\s]*$/;
-        if (regex.test(value)) {
-          setError('');
-          setFormData({ ...formData, [id]: value });
-        } else {
-          setError('Please enter only alphabetic characters and spaces');
-          setFormData({ ...formData, [id]: value.replace(/[^A-Za-z\s]/g, '') });
-        }
-      } 
-      else {
-        setFormData({
-          ...formData,
-          [id]: value,
-         
-        });
-        if (id === 'department') {
-          setSelectedDept(value);
-        } else if (id === 'doctor') {
-          const doctor = doctors?.data?.find(doc => doc?.username === value);
-          setSelectedDoctor(doctor);
-          setDoctorBill(doctor?.price ||'');
-          setDoctorAdvBill(doctor?.advPrice || '');
-          
-          // Update formData to include doctorId
-          setFormData(prevState => ({
-              ...prevState,  
-              docId: doctor?._id,     
-              price: select.meeting === 'face-to-face' ?  doctor?.advPrice : doctor?.price ,
-          }));
-        
-        }
-      
+    if (id === "name") {
+      const regex = /^[A-Za-z\s]*$/;
+      if (regex.test(value)) {
+        setError(null);
+        setFormData({ ...formData, [id]: value });
+      } else {
+        setError('Please enter only alphabetic characters and spaces');
+      }
+    } else {
+      setFormData({
+        ...formData,
+        [id]: value,
+      });
+      if (id === 'department') {
+        setSelectedDept(value);
+      } else if (id === 'doctor') {
+        const doctor = doctors?.data?.find(doc => doc?.username === value);
+        setSelectedDoctor(doctor);
+        setDoctorBill(doctor?.price || '');
+        setDoctorAdvBill(doctor?.advPrice || '');
+
+        // Update formData with doctorId
+        setFormData(prevState => ({
+          ...prevState,
+          docId: doctor?._id,
+          price: select.meeting === 'face-to-face' ? doctor?.advPrice : doctor?.price,
+        }));
+
+        fetch(`/api/appointments/doctor/${doctor?._id}/booked-slots?date=${selectedDate}`)
+          .then(res => res.json())
+          .then(data => {
+            setAppointmentSlots(data?.bookedSlots || []);
+          })
+          .catch(err => console.error("Error fetching booked slots:", err?.message));
+      }
     }
   };
 
-// Handle Gender Change
   const handleGenderChange = (e) => {
     setFormData({
       ...formData,
@@ -140,48 +136,29 @@ function Appointments() {
     });
   };
 
-  // Handle Meeting 
+  // Handle meeting type change
   const handleMettingChange = (e) => {
-  
-  const meetingType = e.target.value;
-  setSelect({
-    ...select,
-    meeting: meetingType,
-  });
-  setFormData(prevState => ({
-    ...prevState,
-    meeting: meetingType,
-    price: meetingType === 'face-to-face' ? selectedDoctor?.advPrice : selectedDoctor?.price,
-  }));
-};
+    const meetingType = e.target.value;
+    setSelect({
+      ...select,
+      meeting: meetingType,
+    });
+    setFormData(prevState => ({
+      ...prevState,
+      meeting: meetingType,
+      price: meetingType === 'face-to-face' ? selectedDoctor?.advPrice : selectedDoctor?.price,
+    }));
+  };
 
-// Handle slot filtering based on selected date
-const handleDateChange = async (e) => {
-  const selected = e.target.value;
-  setSelectedDate(selected);
-  
-  if (selectedDoctor) {
-    try {
-      // Fetch available slots from the server for the selected doctor and date
-      const response = await fetch(`/api/auth/doctorSlots?doctorId=${selectedDoctor._id}&date=${selected}`);
-      const { slots } = await response.json();
-      
-      setAvailableSlots(slots);
-      setFullyBooked(slots.length === 0);
-    } catch (error) {
-      console.error('Error fetching available slots:', error);
-    }
-  }
-};
-
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    setError(null);
+
     const appointmentData = {
       ...formData,
       permission: 'progress',
       docapprove: 'pending',
-      /* price: formData.bill, */
       uId: currentUser?.data?.user?._id,
       doctorId: formData.docId,
       email: currentUser?.data?.user?.email,
@@ -202,42 +179,22 @@ const handleDateChange = async (e) => {
       if (data.success === false) {
         setLoading(false);
         setError(data.message);
-        toast.error("Something missing");
+        toast.error("Error: " + data.message);
+      } else {
+        toast.success("Appointment booked successfully!");
+        setLoading(false);
+        navigate('/dashboard');
       }
-      toast.success("Appointment submit successfully!", {
-        position: "top-center",
-        duration: 5000,
-        style: {
-          background: "#4CAF50",
-          color: "white",
-        },
-      });
-      setLoading(false);
-      setError(null);
-      navigate('/dashboard');
-      
     } catch (error) {
-      console.error('Error creating appointment:', error);
+      setLoading(false);
+      setError("Failed to create appointment. Please try again.");
+      toast.error("Failed to create appointment.");
     }
-
-    setFormData({
-      department: formData.department,
-      doctor: formData.doctor,
-    });
-    setSelectedDoctor(null);
-    setSelectedDoctorSlots([]);
-    setDoctorBill(0);
-    setDoctorAdvBill(0);
-    setSelectedDate("");
-    setFullyBooked(false);
   };
-  //console.log("Selected Doc Time: ", selectedDoctor?.slots);
-  
-  
-  /* const filteredTimeSlots = selectedDoctorSlots?.filter(slots =>
-    !appointmentSlots.includes(slots) ,
-  );
-  //console.log("SLots: ", filteredTimeSlots);
+
+  // Filter out already booked slots
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const filteredTimeSlots = selectedDoctor?.slots?.filter(slot => !appointmentSlots.includes(slot)) || [];
 
   useEffect(() => {
     if (selectedDate && filteredTimeSlots.length === 0) {
@@ -245,7 +202,8 @@ const handleDateChange = async (e) => {
     } else {
       setFullyBooked(false);
     }
-  }, [selectedDate, filteredTimeSlots, appointmentSlots]); */
+  }, [selectedDate, filteredTimeSlots]);
+ 
 
   return (
     <div className="max-w-auto lg:p-5 mt-16 lg:mt-5 flex flex-col items-center">
@@ -364,37 +322,43 @@ const handleDateChange = async (e) => {
                 <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
                   <h1 className="lg:w-1/3 text-left">Appointment Date :</h1>
                   <div className="lg:w-2/3">
-                    <input 
-                      type="date" 
-                      id="date" 
-                      min={minDate}
-                      max={maxDate}
-                      onChange={handleChange}
-                      className="input input-bordered w-full" 
-                      required 
-                    />
+                  <input 
+                    type="date"
+                    min={minDate}
+                    max={maxDate}
+                    value={selectedDate}
+                    onChange={(e) => {
+                      setSelectedDate(e.target.value); 
+                      setFormData({ ...formData, date: e.target.value });
+                    }}
+                    required
+                    className="input input-bordered w-full"
+                  />
                   </div>
                 </div>
 
                 {/* Time */}
-               {/* {selectedDoctor && (
+                {selectedDoctor && (
                   <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
                     <h1 className="lg:w-1/3 text-left">Time :</h1>
                     <div className="lg:w-2/3">
                       {fullyBooked ? (
                         <p className="text-red-500">All slots for this date are booked. Please choose another date.</p>
-                        
                       ) : (
-                        <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required >
+                        <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required>
+                          {/* {console.log("Data Length: ", filteredTimeSlots?.length)} */}
+
+                          <p>{filteredTimeSlots?.length} {filteredTimeSlots?.length > 1 ? 'spaces' : 'space'} available</p>
+
                           <option value="">Choose Time Slot</option>
-                          {selectedDoctor?.slots.map((slot, index) => (
+                          {filteredTimeSlots.map((slot, index) => (
                             <option key={index} value={slot}>{slot}</option>
                           ))}
                         </select>
                       )}
                     </div>
                   </div>
-                )}  */}
+                )}
 
                 {/* Doctors Bill */}
                 <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
@@ -424,3 +388,91 @@ const handleDateChange = async (e) => {
 }
 
 export default Appointments;
+
+
+
+// {
+//   select.meeting === 'online' && 
+//   (
+//     <>
+//       {/* Department */}
+//       <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+//         <h1 className="lg:w-1/3 text-left">Department :</h1>
+//         <div className="lg:w-2/3">
+//           <select id="department" onChange={handleChange} className="input input-bordered w-full" required >
+//             <option value="">Choose department</option>
+//             {deptData?.map((dept, index) => (
+//               <option key={index} value={dept?.deptname}>{dept?.deptname}</option>
+//             ))}
+//           </select>
+//         </div>
+//       </div>
+
+//        {/* Doctor */}     
+//       <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+//           <h1 className="lg:w-1/3 text-left">Doctor :</h1>
+//           <div className="lg:w-2/3">
+//             <select id="doctor" onChange={handleChange} className="input input-bordered w-full" required >
+//               <option value="">Choose doctor</option>
+//               {filteredDoctors?.map((doctor) => (
+//                 <option key={doctor?._id} value={doctor?.username}>
+//                   {doctor?.username}
+//                 </option>
+//               ))}
+//             </select>
+//           </div>
+//       </div>
+
+//       {/* Appointment Date */}
+//       <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+//         <h1 className="lg:w-1/3 text-left">Appointment Date :</h1>
+//         <div className="lg:w-2/3">
+//           <input 
+//             type="date" 
+//             id="date" 
+//             min={minDate}
+//             max={maxDate}
+//             onChange={handleChange}
+//             className="input input-bordered w-full" 
+//             required 
+//           />
+//         </div>
+//       </div>
+
+//       {/* Time */}
+//       {/* {selectedDoctor && (
+//         <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+//           <h1 className="lg:w-1/3 text-left">Time :</h1>
+//           <div className="lg:w-2/3">
+//             {fullyBooked ? (
+//               <p className="text-red-500">All slots for this date are booked. Please choose another date.</p>
+//             ) : (
+//               <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required >
+//                 <option value="">Choose Time Slot</option>
+//                 {filteredTimeSlots.map((slot, index) => (
+//                   <option key={index} value={slot}>{slot}</option>
+//                 ))}
+//               </select>
+//             )}
+//           </div>
+//         </div>
+//       )}  */}
+
+//       {/* Doctors Bill */}
+//       <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+//         <h1 className="lg:w-1/3 text-left">Doctors Bill:</h1>
+//         <div className="lg:w-2/3">
+//           <input 
+//             type="text" 
+//             id="price" 
+//             onChange={handleChange} 
+//             value={`$ ${doctorBill}`} 
+//             readOnly 
+//             className="input input-bordered w-full bg-gray-200" 
+//             required 
+//           />
+//         </div>
+//       </div>
+//     </>
+//   )
+// }

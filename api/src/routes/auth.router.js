@@ -17,7 +17,9 @@ import { docLogoutUser,
     userDelete,
     doctorDelete,
     getDepartments,
-    getDoctorsByDepartment} from "../controllers/auth.controller.js";
+    // getDoctorsByDepartment,
+    // getAvailableSlots
+} from "../controllers/auth.controller.js";
 
 import { AdminVerifyJWT, conditionalAuth, docUpVerifyJwt, docVerifyJwt, systemAdminJWTLOgout, systemAdminVerifyJWT, verifyJwt } from "../middlewares/auth.middleware.js";
 import { adminDelete, adminLogOut, adminSignIn,adminSignup, getAllAdminList, systemAdminOut, systemAdminSignIn, systemAdminSignup } from "../controllers/adminAuth.controller.js";
@@ -51,6 +53,9 @@ router.route('/doctorsignup').post(adminUpload,doctorSignUp);
 router.route('/doctorssignin').post(doctorSignIn);
 router.route('/doctors/:id').get(getSpecificDoctor);
 router.route('/doctors').get(getAllDoctors);
+// router.route('/doctors/availableSlots').get(getAvailableSlots);
+
+
 //router.get('/doctors', getDoctorsByDepartment);
 
 router.get('/departments', getDepartments);

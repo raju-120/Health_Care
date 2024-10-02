@@ -8,6 +8,7 @@ import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import { cloudinary } from "../utils/cloudinaryConfig.js";
 import fs from 'fs';
+import { Appointment } from "../models/appointment.model.js";
 
 
 
@@ -686,6 +687,41 @@ const doctorDelete = asyncHandler(async (req, res) => {
 });
 
 
+// const getAvailableSlots = asyncHandler(async (req, res) => {
+//     try {
+//       const { docId, date, appointmentType } = req.body; // Expecting docId, date, and type (online or offline) from the frontend
+  
+//       // Fetch the doctor data
+//       const doctorData = await Doctor.findById(docId);
+  
+//       if (!doctorData) {
+//         return res.status(404).json(new APIResponse(404, null, "Doctor not found."));
+//       }
+  
+//       // Get either 'onlineSlots' or 'slots' based on the appointment type
+//       let availableSlots = appointmentType === 'online' ? doctorData.onlineSlots : doctorData.slots;
+  
+//       // Fetch all booked appointments for the doctor on the selected date
+//       const bookedAppointments = await Appointment.find({ docId, date });
+  
+//       // Extract the slots that are already booked
+//       const bookedSlots = bookedAppointments.map(app => app.appointmentSlot);
+  
+//       // Filter out the booked slots from the available slots
+//       const filteredSlots = availableSlots.filter(slot => !bookedSlots.includes(slot));
+  
+//       return res.status(200).json(
+//         new APIResponse(200, filteredSlots, "Available slots for the selected date.")
+//       );
+//     } catch (error) {
+//       console.error('Error:', error.message);
+//       return res.status(500).json(
+//         new APIResponse(500, null, "Failed to fetch available slots.")
+//       );
+//     }
+//   });
+  
+
 
 export {
         signup,
@@ -707,5 +743,6 @@ export {
         doctorDelete,
         getDoctorsByDepartment,
         getDepartments,
-        seedDepartments
+        seedDepartments,
+        // getAvailableSlots
     };

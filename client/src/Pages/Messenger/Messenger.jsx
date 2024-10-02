@@ -4,6 +4,7 @@ import io from "socket.io-client";
 import PrescriptionModal from "./PrescriptionModal/prescriptionModal.jsx";
 import "./style.css";
 import jsPDF from 'jspdf';
+import DOMPurify from 'dompurify';
 
 const socket = io('http://localhost:5000');
 
@@ -97,21 +98,26 @@ function ChatWindow() {
     setChatChange(e.target.value === 'chat');
   };
 
-  const handleDownload = (pdfContent, filename) => {
+  // Function to sanitize HTML content
+  const sanitizeHtml = (html) => {
+    return DOMPurify.sanitize(html); // This sanitizes the HTML to prevent XSS attacks
+  };
+
+  // Function to handle download
+  const handleDownload = (htmlContent, fileName) => {
+    const sanitizedContent = sanitizeHtml(htmlContent); // Sanitize before converting to PDF
     const doc = new jsPDF();
 
-    // Adding HTML content to the PDF
-    doc.html(pdfContent, {
+    doc.html(sanitizedContent, {
       callback: function (doc) {
-        doc.save(filename); // Save the generated PDF
+        doc.save(fileName);
       },
       x: 10,
       y: 10,
-      width: 190, // max width
-      windowWidth: 650 // base window width for rendering HTML
+      width: 180,
     });
   };
-
+  
   return (
     <div className="chat-container lg:mt-28 ">
       <div className="chat-users bg-gray-300 w-full rounded-lg h-full">
@@ -151,12 +157,15 @@ function ChatWindow() {
                         {pdfFile?.senderId === selectedUser?._id && pdfFile?.receiverId === currentUser?.data?.user?._id ? (
                           <>
                             <p>PDF Content:</p>
-                            <div dangerouslySetInnerHTML={{ __html: pdfFile?.pdfContent }} />
-                            <button
+                            {/* Sanitize the HTML content before displaying */}
+                            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(pdfFile?.pdfContent) }} />
+
+                            {/* Button to download PDF */}
+                            {/* <button
                               onClick={() => handleDownload(pdfFile?.pdfContent, `prescription_${pdfFile?._id}.pdf`)}
                             >
                               Download PDF
-                            </button>
+                            </button> */}
                           </>
                         ) : null}
                       </div>

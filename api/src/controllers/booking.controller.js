@@ -4,63 +4,65 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import nodemailer from 'nodemailer';
 import Mailgen from "mailgen";
-/* import mongoose from "mongoose";
-import sendGridMail from "@sendgrid/mail"; */
+import { Doctor } from "../models/doctor.model.js";
+
+
 
 const booking = asyncHandler(async (req, res) => {
-    try {
-      const {
-        name, dateOfBirth, gender, phone,
-        department, doctor, date, 
-        price, permission, uId, email, docId, appointmentSlot, appointmentType, advPrice
-      } = req.body;
-  
-      // Fetch the doctor from the database
-      const doctorData = await Doctor.findById(docId);
-  
-      if (!doctorData) {
-        return res.status(404).json(new APIResponse(404, null, "Doctor not found."));
-      }
-  
-      // Select slots based on appointment type (online or in-person)
-      const availableSlots = appointmentType === 'online' ? doctorData.onlineSlots : doctorData.slots;
-  
-      // Check if the selected slot is part of the available slots
-      if (!availableSlots.includes(appointmentSlot)) {
-        return res.status(400).json(new APIResponse(400, null, "Invalid time slot selected."));
-      }
-  
-      // Check if the slot is already booked for the doctor on the selected date
-      const existingAppointment = await Appointment.findOne({
-        docId,
-        date,
-        appointmentSlot,
-      });
-  
-      if (existingAppointment) {
-        return res.status(400).json(new APIResponse(400, null, "This time slot is already booked."));
-      }
-  
-      // If the slot is available, proceed with booking
-      const newAppointment = new Appointment({
-        name, dateOfBirth, gender, phone,
-        department, doctor, date, 
-        price, permission, uId, email, docId, appointmentSlot, appointmentType, advPrice
-      });
-  
-      await newAppointment.save();
-  
-      return res.status(201).json(
-        new APIResponse(200, newAppointment, "Doctor appointment submitted successfully.")
-      );
-    } catch (error) {
-      console.error('Error:', error.message);
-      return res.status(500).json(
-        new APIResponse(500, null, "Failed to submit doctor appointment.")
-      );
+  const {
+    name, dateOfBirth, gender, phone, department,
+    doctor, date, price, permission, uId, email, docId,
+    appointmentSlots, meeting,
+  } = req.body;
+
+  try {
+
+    //const {} = 
+
+    const doctorData = await Doctor.findById(docId);
+    if (!doctorData) {
+      return res.status(404).json(new APIResponse(404, null, "Doctor not found."));
     }
-  });
-  
+    
+    const alreadyBooked = await Appointment.find({ email, date, });
+    if (alreadyBooked.length) {
+      const message = `You already take an appoinment on This ${date} at ${appointmentSlots}`;
+      return res.send({ acknowledge: false, message });
+    }
+    console.log("Booked Message: ",alreadyBooked)
+
+    const newAppointment = new Appointment({
+      name, dateOfBirth, gender, phone,
+      department, doctor, date,
+      price, permission, uId, email, docId, appointmentSlots, meeting,
+    });
+
+    await newAppointment.save();
+
+    return res.status(201).json(new APIResponse(201, newAppointment, "Doctor appointment submitted successfully."));
+  } catch (error) {
+    console.error('Error:', error.message);
+    return res.status(500).json(new APIResponse(500, null, "Internal server error."));
+  }
+});
+
+
+// Endpoint to fetch booked slots for a doctor on a particular date
+// const getBookedSlots = asyncHandler(async (req, res) => {
+//   const { doctorId, date } = req.query;
+
+//   try {
+//     const bookedAppointments = await Appointment.find({ docId: doctorId, date });
+//     console.log("Booked : ",bookedAppointments)
+//     const bookedSlots = bookedAppointments.map(app => app.appointmentSlots);
+
+
+//     return res.status(200).json({ bookedSlots });
+//   } catch (error) {
+//     return res.status(500).json(new APIResponse(500, null, "Error fetching booked slots."));
+//   }
+// });
+
 
 const getBooking = asyncHandler(async (req, res) => {
     try {
@@ -206,15 +208,51 @@ const getBooking = asyncHandler(async (req, res) => {
     }
 });
 
+const avaiableTimeSLot = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { date } = req.query;
+  
+  console.log("Date from server ID: ", id);
+  
+  // Query for doctor or appointment
+  // const query = { doctor: id };
+  const query = await Doctor.findById(id);
+  // console.log("Doc Details: ", query);
+
+  // const findDocId = {docId === query}
+
+  // Find available dates and appointments for the doctor
+const avaiableDates = await Appointment.find({docId: query});
+  console.log("Doc Details: ", avaiableDates);
+
+  // Get the already booked appointments for the specific date
+  // const appointmentQuery = { date, doctor: id };
+  // const alreadyBooked = await Appointment.find(appointmentQuery);
+
+  // Check and filter available slots
+  // avaiableDates.forEach(option => {
+  //   const dateOptionBooked = alreadyBooked.filter(book => book.doctor === option.doctor);
+  //   const bookedSlots = dateOptionBooked.map(book => book.slot);
+  //   const remainingSlots = option.slots.filter(slot => !bookedSlots.includes(slot));
+  //   option.slots = remainingSlots;
+  // });
+
+  // res.send(avaiableDates);
+});
+
+
+
 
 
 
 
 export {
     booking,
+    /* getBookedSlots, */
     getBooking,
     getSpecificBooking,
     getAllBooking,
-    updateAppointmentStatus
+    updateAppointmentStatus,
+    avaiableTimeSLot
 };
 
