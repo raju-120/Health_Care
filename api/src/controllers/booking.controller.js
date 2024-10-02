@@ -17,8 +17,6 @@ const booking = asyncHandler(async (req, res) => {
 
   try {
 
-    //const {} = 
-
     const doctorData = await Doctor.findById(docId);
     if (!doctorData) {
       return res.status(404).json(new APIResponse(404, null, "Doctor not found."));
@@ -240,6 +238,35 @@ const avaiableDates = await Appointment.find({docId: query});
   // res.send(avaiableDates);
 });
 
+const getDateAndTime = asyncHandler(async(req, res) =>{
+  const {docId,date} = req.body;  
+  console.log("Date Server: ", date);
+    try {
+        const appointments = await Appointment.find({ 
+            docId: docId,
+            date: date  // Match the specific date
+        });
+        console.log("Server: ", appointments)
+        const availableSlots = ["06:00 PM - 06:20 PM", "06:30 PM - 06:50 PM", "07:00 PM - 07:20 PM", "07:30 PM - 07:50 PM"]
+
+        const bookedSlots = appointments.map(appointment => appointment.appointmentSlots);
+        console.log(bookedSlots)
+
+        // Filter available slots by excluding the booked ones
+        const freeSlots = availableSlots.filter(slot => !bookedSlots.includes(slot));
+        console.log(freeSlots)
+
+        // Send the free slots to the frontend
+        return res.status(200).json({ freeSlots });
+
+
+        return slots;
+    } catch (error) {
+        console.error("Error fetching appointments: ", error);
+        throw error;
+    }
+})
+
 
 
 
@@ -253,6 +280,7 @@ export {
     getSpecificBooking,
     getAllBooking,
     updateAppointmentStatus,
-    avaiableTimeSLot
+    avaiableTimeSLot,
+    getDateAndTime
 };
 

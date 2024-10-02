@@ -5,10 +5,13 @@ import PrescriptionModal from "./PrescriptionModal/prescriptionModal.jsx";
 import "./style.css";
 import jsPDF from 'jspdf';
 import DOMPurify from 'dompurify';
+import { AiOutlineVideoCamera } from "react-icons/ai";
+
 
 const socket = io('http://localhost:5000');
 
-function ChatWindow() {
+export default function ChatWindow() {
+
   const { currentUser } = useSelector(state => state.user);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -17,6 +20,36 @@ function ChatWindow() {
   const [doctors, setDoctors] = useState([]);
   const [getPdfFiles, setGetPDFFiles] = useState([]);
   const [chatChange, setChatChange] = useState(true);
+  const [isRinging, setIsRinging] = useState(false);  // For ringing state
+  const [caller, setCaller] = useState(null);  // To store the caller ID
+  
+  // const [isCalling, setIsCalling] = useState(false);
+
+  // const localStream = useRef(null);
+  // const remoteStream = useRef(null);
+  // const peerConnection = useRef(null);
+
+  // ICE servers configuration for WebRTC
+  const iceServers = {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' }  // STUN server configuration
+    ]
+  };
+
+  const createPeerConnection = () => {
+    const peer = new RTCPeerConnection(iceServers);
+
+    // Handle incoming ICE candidates
+    peer.onicecandidate = (event) => {
+      if (event.candidate) {
+        socket.emit('ice-candidate', {
+          candidate: event.candidate,
+          to: selectedUser?._id,
+          from: currentUser?.data?.user?._id
+        });
+      }
+    };}
+
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -94,6 +127,44 @@ function ChatWindow() {
     getPrescriptions();
   }, []);
 
+  // Handle Video Call trigger
+  const handleVideoCall = () => {
+    const senderId = currentUser?.data?.user?._id;
+    const receiverId = selectedUser?._id;
+    console.log("Video calling Caller ID: ",senderId )
+    console.log("Video calling: ",receiverId )
+
+    if (senderId && receiverId) {
+      socket.emit('callUser', { from: senderId, to: receiverId });
+    }
+  };
+
+  // Handle incoming call (ringing)
+  useEffect(() => {
+    socket.on('incomingCall', ({ from }) => {
+      setIsRinging(true);
+      setCaller(from);
+    });
+
+    // Clean up the listener
+    return () => {
+      socket.off('incomingCall');
+    };
+  }, []);
+
+  // Answer the call
+  const answerCall = () => {
+    const senderId = currentUser?.data?.user?._id;
+    socket.emit('answerCall', { from: caller, to: senderId });
+    setIsRinging(false);
+  };
+
+  // Decline the call
+  const declineCall = () => {
+    setIsRinging(false);
+    setCaller(null);
+  };
+
   const handleChatChange = (e) => {
     setChatChange(e.target.value === 'chat');
   };
@@ -137,9 +208,14 @@ function ChatWindow() {
           {selectedUser && (
             <>
               <div className="message-container">
-                <div className="text-end mb-5 sticky top-0 bg-white z-10 p-2 w-full">
-                  <button className="btn btn-primary mr-5 " value='chat' onClick={(e) => handleChatChange(e)}>Chat</button>
-                  <button className="btn btn-primary" value='pdf' onClick={(e) => handleChatChange(e)}>PDF</button>
+                <div className="flex justify-between">
+                  <div className="text-start mb-5 sticky top-0 bg-white z-10 p-2 w-full">
+                    <button className="btn btn-primary mr-5 " value='chat' onClick={(e) => handleChatChange(e)}>Chat</button>
+                    <button className="btn btn-primary" value='pdf' onClick={(e) => handleChatChange(e)}>PDF</button>
+                  </div>
+                  <div>
+                    <button className="text-4xl"  onClick={handleVideoCall}><AiOutlineVideoCamera /></button>
+                  </div>
                 </div>
 
                 {chatChange ? (
@@ -173,6 +249,15 @@ function ChatWindow() {
                   </>
                 )}
               </div>
+              
+                {/* Ringing notification */}
+              {isRinging && (
+                <div>
+                  <p>{caller} is calling you...</p>
+                  <button onClick={answerCall}>Answer</button>
+                  <button onClick={declineCall}>Decline</button>
+                </div>
+              )}
 
               <div className="chat-input gap-2">
                 <input
@@ -207,4 +292,4 @@ function ChatWindow() {
   );
 }
 
-export default ChatWindow;
+

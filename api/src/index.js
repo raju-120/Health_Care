@@ -63,15 +63,21 @@ io.on('connection', (socket) => {
         io.to(to).emit('offer', { offer, from });
     });
 
-    // Handle WebRTC answer
-    socket.on('answer', ({ answer, to, from }) => {
-        io.to(to).emit('answer', { answer, from });
-    });
+   // Handle WebRTC offer
+socket.on('offer', ({ offer, to, from }) => {
+    io.to(to).emit('offer', { offer, from });
+});
 
-    // Handle ICE candidates
-    socket.on('ice-candidate', ({ candidate, to, from }) => {
-        io.to(to).emit('ice-candidate', { candidate, from });
-    });
+// Handle WebRTC answer
+socket.on('answer', ({ answer, to, from }) => {
+    io.to(to).emit('answer', { answer, from });
+});
+
+// Handle ICE candidates
+socket.on('ice-candidate', ({ candidate, to, from }) => {
+    io.to(to).emit('ice-candidate', { candidate, from });
+});
+
 
     socket.on('sendMessage', async ({ from, to, message, senderusername, receiverusername, pdfBuffer, pdfContentType }) => {
         try {

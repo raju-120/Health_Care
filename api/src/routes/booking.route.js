@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { avaiableTimeSLot, booking, getAllBooking, /* getBookedSlots, */ getBooking, getSpecificBooking, updateAppointmentStatus } from "../controllers/booking.controller.js";
+import { avaiableTimeSLot, booking, getAllBooking, /* getBookedSlots, */ getBooking, getDateAndTime, getSpecificBooking, updateAppointmentStatus } from "../controllers/booking.controller.js";
 import {  /* verifyJwtApproval, */systemAdminVerifyJWT,docApproveVerifyJwt } from "../middlewares/auth.middleware.js";
 import { payment, paymentIntent } from "../controllers/payment.controller.js";
 
@@ -9,6 +9,8 @@ const router = Router()
 router.route("/bookings").post(booking);
 
 router.route("/booked-slots/:id").get(avaiableTimeSLot);
+
+router.route("/get-date-time").post(getDateAndTime);
 
 router.route("/bookings").get(getAllBooking);
 router.route("/bookings/:email").get(getBooking);
