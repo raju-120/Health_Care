@@ -4,9 +4,10 @@ import io from "socket.io-client";
 import PrescriptionModal from "./PrescriptionModal/prescriptionModal.jsx";
 import "./style.css";
 import jsPDF from "jspdf";
-import DOMPurify from "dompurify";
+import html2canvas from "html2canvas";
 import { AiOutlineVideoCamera } from "react-icons/ai";
 import Modal from "react-modal";
+import DOMPurify from "dompurify";
 
 const socket = io("http://localhost:5000");
 
@@ -51,13 +52,15 @@ export default function ChatWindow() {
 
     // Handle receiving tracks (remote video/audio)
     peer.ontrack = (event) => {
-      remoteStream.current.srcObject = event.streams[0];
+      if (remoteStream.current) {
+        remoteStream.current.srcObject = event.streams[0]; // Display the remote stream in the remote video element
+      }
     };
 
     // Add local stream tracks to the peer connection
-    localStream.current
-      .getTracks()
-      .forEach((track) => peer.addTrack(track, localStream.current));
+    localStream.current?.getTracks().forEach((track) => {
+      peer.addTrack(track, localStream.current);
+    });
 
     peerConnection.current = peer;
   };
@@ -131,6 +134,7 @@ export default function ChatWindow() {
     setMessages([]);
   };
 
+  // Get PDF File
   useEffect(() => {
     const getPrescriptions = async () => {
       try {
@@ -273,18 +277,33 @@ export default function ChatWindow() {
     return DOMPurify.sanitize(html); // Sanitize to prevent XSS attacks
   };
 
-  const handleDownload = (htmlContent, fileName) => {
-    const sanitizedContent = sanitizeHtml(htmlContent); // Sanitize before converting to PDF
-    const doc = new jsPDF();
+  const handleDownload = (pdfContent, filename) => {
+    // Create a temporary div to hold the HTML content
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = pdfContent;
+    document.body.appendChild(tempDiv); // Append to body for visibility
 
-    doc.html(sanitizedContent, {
-      callback: function (doc) {
-        doc.save(fileName);
-      },
-      x: 10,
-      y: 10,
-      width: 180,
-    });
+    // Use a timeout to ensure content is rendered before capturing
+    setTimeout(() => {
+      html2canvas(tempDiv)
+        .then((canvas) => {
+          const imgData = canvas.toDataURL("image/png");
+          const doc = new jsPDF();
+
+          // Add image to PDF
+          doc.addImage(imgData, "PNG", 10, 10);
+
+          // Save the PDF
+          doc.save(filename);
+
+          // Clean up the temporary div
+          document.body.removeChild(tempDiv);
+        })
+        .catch((err) => {
+          console.error("Error capturing element: ", err);
+          document.body.removeChild(tempDiv); // Clean up in case of error
+        });
+    }, 100); // Delay in milliseconds (adjust as necessary)
   };
 
   return (
@@ -333,7 +352,10 @@ export default function ChatWindow() {
                     </button>
                   </div>
                   <div>
-                    <button className="text-4xl" onClick={handleVideoCall}>
+                    <button
+                      className="text-4xl bg-gary-400 hover:opacity-65 hover:text-gray-700 hover:bg-gray-400 rounded-lg"
+                      onClick={handleVideoCall}
+                    >
                       <AiOutlineVideoCamera />
                     </button>
                   </div>
