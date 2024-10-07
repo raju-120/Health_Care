@@ -1,107 +1,147 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import io from "socket.io-client";
 
-const VideoCall = () => {
-  const localVideoRef = useRef(null); // Reference to the local video element (caller)
-  const remoteVideoRef = useRef(null); // Reference to the remote video element (receiver)
-  const [peerConnection, setPeerConnection] = useState(null);
-  const [localStream, setLocalStream] = useState(null);
+const socket = io("http://localhost:5000");
+
+const VideoCallWindow = () => {
+  const remoteStream = useRef(null);
+  const localVideoRef = useRef(null);
+  const peerConnection = useRef(null);
+  const remoteVideoRef = useRef(null);
+
+  //   useEffect(() => {
+  //     // Set the local stream to the local video element
+  //     const localStream = window.localStream;
+  //     const localVideo = document.getElementById("localVideo");
+  //     localVideo.srcObject = localStream;
+
+  //     // Create peer connection (from the parent window)
+  //     window.RTCPeerConnection = () => {
+  //       const peer = new RTCPeerConnection({
+  //         iceServers: [
+  //           { urls: "stun:stun.l.google.com:19302" }, // STUN server configuration
+  //         ],
+  //       });
+
+  //       peer.onicecandidate = (event) => {
+  //         if (event.candidate) {
+  //           socket.emit("ice-candidate", {
+  //             candidate: event.candidate,
+  //             to: window.selectedUser?.username,
+  //             from: window.currentUser?.data?.user?.username,
+  //           });
+  //         }
+  //       };
+
+  //       peer.ontrack = (event) => {
+  //         if (remoteStream.current) {
+  //           remoteStream.current.srcObject = event.streams[0];
+  //         }
+  //       };
+
+  //       // Add the local stream tracks to the peer connection
+  //       localStream.getTracks().forEach((track) => {
+  //         peer.addTrack(track, localStream);
+  //       });
+
+  //       window.RTCPeerConnection = peer;
+  //     };
+  //   }, []);
 
   useEffect(() => {
-    // Initialize WebRTC Peer Connection when the component is mounted
-    const pc = new RTCPeerConnection({
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" }, // Google STUN server
-      ],
-    });
-
-    pc.ontrack = (event) => {
-      if (remoteVideoRef.current) {
-        remoteVideoRef.current.srcObject = event.streams[0]; // Attach the remote stream
-      }
-    };
-
-    pc.onicecandidate = (event) => {
-      if (event.candidate) {
-        // Handle ICE candidate exchange here (through signaling server)
-        console.log("New ICE candidate: ", event.candidate);
-      }
-    };
-
-    setPeerConnection(pc);
-
-    return () => {
-      pc.close();
-    };
-  }, []);
-
-  const startCall = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+    const initializeVideoCall = async () => {
+      // Access local video/audio stream
+      const localStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
-      setLocalStream(stream);
 
+      // Set the local video stream to the local video element
       if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream; // Display caller's own video
+        localVideoRef.current.srcObject = localStream;
       }
 
-      // Add local stream to the peer connection (for WebRTC)
-      stream
-        .getTracks()
-        .forEach((track) => peerConnection.addTrack(track, stream));
+      window.RTCPeerConnection = () => {
+        const peer = new RTCPeerConnection({
+          iceServers: [
+            { urls: "stun:stun.l.google.com:19302" }, // STUN server configuration
+          ],
+        });
 
-      // Create an offer to initiate the call
-      const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
+        peer.onicecandidate = (event) => {
+          if (event.candidate) {
+            socket.emit("ice-candidate", {
+              candidate: event.candidate,
+              to: window.selectedUser?.username,
+              from: window.currentUser?.data?.user?.username,
+            });
+          }
+        };
 
-      // Send the offer to the remote peer (via signaling server)
-      console.log("Offer sent: ", offer);
-    } catch (error) {
-      console.error("Error accessing media devices: ", error);
-    }
-  };
+        peer.ontrack = (event) => {
+          if (remoteStream.current) {
+            remoteStream.current.srcObject = event.streams[0];
+          }
+        };
 
-  const handleAnswer = async (answer) => {
-    // Set remote description when receiving the answer
-    await peerConnection.setRemoteDescription(
-      new RTCSessionDescription(answer)
-    );
-  };
+        // Add the local stream tracks to the peer connection
+        localStream.getTracks().forEach((track) => {
+          peer.addTrack(track, localStream);
+        });
+
+        window.RTCPeerConnection = peer;
+      };
+
+      // Add local stream to peer connection
+      localStream.getTracks().forEach((track) => {
+        peerConnection.current.addTrack(track, localStream);
+      });
+
+      // Handle receiving tracks (remote video/audio)
+      peerConnection.current.ontrack = (event) => {
+        if (remoteVideoRef.current) {
+          remoteVideoRef.current.srcObject = event.streams[0]; // Attach the remote stream to remote video
+        }
+      };
+    };
+
+    initializeVideoCall();
+
+    // Add necessary signaling logic if applicable here
+    // like handling ICE candidates, offers, answers, etc.
+  }, []);
 
   return (
-    <div>
-      <h1>Video Call</h1>
-
-      {/* Local video (caller's video) */}
-      <div>
-        <h2>Local Video (Caller)</h2>
-        <video
-          ref={localVideoRef}
-          autoPlay
-          playsInline
-          muted
-          style={{ width: "400px" }}
-        />
+    <div className="video-call-container flex flex-col items-center justify-center h-screen bg-gray-100">
+      <div className="video-container flex space-x-8">
+        <div className="local-video">
+          <h3 className="text-lg font-semibold mb-2 text-center">Your Video</h3>
+          <video
+            ref={localVideoRef}
+            autoPlay
+            playsInline
+            muted
+            className="border border-gray-300 rounded-lg"
+          ></video>
+        </div>
+        <div className="remote-video">
+          <h3 className="text-lg font-semibold mb-2 text-center">
+            Remote Video
+          </h3>
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="border border-gray-300 rounded-lg"
+          ></video>
+        </div>
       </div>
 
-      {/* Remote video (receiver's video) */}
-      <div>
-        <h2>Remote Video (Receiver)</h2>
-        <video
-          ref={remoteVideoRef}
-          autoPlay
-          playsInline
-          style={{ width: "400px" }}
-        />
-      </div>
-
-      {/* Buttons */}
-      <div>
-        <button onClick={startCall}>Start Call</button>
+      <div className="controls mt-8">
+        <button className="btn btn-error">End Call</button>
       </div>
     </div>
   );
 };
 
-export default VideoCall;
+export default VideoCallWindow;

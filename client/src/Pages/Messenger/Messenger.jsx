@@ -28,7 +28,7 @@ export default function ChatWindow() {
   const remoteStream = useRef(null);
   const peerConnection = useRef(null);
 
-  console.log("Selected User: ", selectedUser?.username);
+  // console.log("Selected User: ", selectedUser?.username);
 
   const iceServers = {
     iceServers: [
@@ -39,7 +39,6 @@ export default function ChatWindow() {
   const createPeerConnection = () => {
     const peer = new RTCPeerConnection(iceServers);
 
-    // Handle incoming ICE candidates
     peer.onicecandidate = (event) => {
       if (event.candidate) {
         socket.emit("ice-candidate", {
@@ -50,19 +49,18 @@ export default function ChatWindow() {
       }
     };
 
-    // Handle receiving tracks (remote video/audio)
     peer.ontrack = (event) => {
       if (remoteStream.current) {
-        remoteStream.current.srcObject = event.streams[0]; // Display the remote stream in the remote video element
+        remoteStream.current.srcObject = event.streams[0];
       }
     };
 
-    // Add local stream tracks to the peer connection
-    localStream.current?.getTracks().forEach((track) => {
+    localStream.current.getTracks().forEach((track) => {
       peer.addTrack(track, localStream.current);
     });
 
     peerConnection.current = peer;
+    console.log("Messenger Video call: ", peerConnection.current);
   };
 
   useEffect(() => {
@@ -162,26 +160,76 @@ export default function ChatWindow() {
     const receiverId = selectedUser?._id;
 
     if (senderId && receiverId) {
-      localStream.current = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      createPeerConnection();
+      try {
+        localStream.current = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
 
-      const offer = await peerConnection.current.createOffer();
-      await peerConnection.current.setLocalDescription(offer);
+        const videoCallWindow = window.open("/video-call", "_blank");
 
-      socket.emit("offer", { offer, to: receiverId, from: senderId });
+        // Transfer the necessary data (like peerConnection) to the new window
+        videoCallWindow.localStream = localStream.current;
+        videoCallWindow.selectedUser = selectedUser;
+        videoCallWindow.currentUser = currentUser;
+
+        // Once the new window is ready, start the peer connection and offer
+        videoCallWindow.onload = async () => {
+          videoCallWindow.createPeerConnection();
+
+          // createPeerConnection();
+
+          const offer = await peerConnection.current.createOffer();
+          await peerConnection.current.setLocalDescription(offer);
+
+          socket.emit("incomingCall", {
+            from: senderId,
+            to: receiverId,
+            offer: offer, // Include the offer to streamline the process
+          });
+        };
+      } catch (error) {
+        console.error("Error starting the video call: ", error);
+      }
     }
   };
 
   // Handle incoming call (ringing)
   useEffect(() => {
-    socket.on("incomingCall", ({ from }) => {
+    socket.on("incomingCall", ({ from, offer }) => {
       console.log("Incoming call from: ", from);
+
       setIsRinging(true);
       setCaller(from);
-      setShowCallModal(true); // Confirm state update
+      setShowCallModal(true); // Trigger the call modal
+
+      // When the call is answered, the following logic will proceed
+      const answerCall = async () => {
+        setShowCallModal(false);
+        setIsRinging(false);
+
+        localStream.current = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+        createPeerConnection(); // Create the peer connection
+
+        // Set remote description with the offer received
+        await peerConnection.current.setRemoteDescription(
+          new RTCSessionDescription(offer)
+        );
+
+        // Create and send the answer back
+        const answer = await peerConnection.current.createAnswer();
+        await peerConnection.current.setLocalDescription(answer);
+
+        socket.emit("answer", {
+          answer,
+          to: from, // Send answer back to the caller
+          from: currentUser?.data?.user?.username,
+        });
+      };
+      answerCall();
     });
 
     return () => {
@@ -225,15 +273,12 @@ export default function ChatWindow() {
   // Handle incoming answer
   useEffect(() => {
     socket.on("answer", async ({ answer }) => {
-      await peerConnection.current.setRemoteDescription(
-        new RTCSessionDescription(answer)
-      );
+      if (peerConnection.current) {
+        await peerConnection.current.setRemoteDescription(
+          new RTCSessionDescription(answer)
+        );
+      }
     });
-
-    // Clean up answer listener
-    return () => {
-      socket.off("answer");
-    };
   }, []);
 
   // Handle incoming ICE candidates
@@ -255,12 +300,38 @@ export default function ChatWindow() {
   const answerCall = async () => {
     setShowCallModal(false);
     setIsRinging(false);
+
     const senderId = currentUser?.data?.user?._id;
-    socket.emit("answerCall", { from: caller, to: senderId });
 
     // Open a new window for the video call
     const videoCallWindow = window.open("/video-call", "_blank");
-    videoCallWindow.opener = null; // Prevent the new window from accessing the parent window
+
+    // Pass relevant data to the new window
+    videoCallWindow.localStream = localStream.current;
+    videoCallWindow.selectedUser = caller;
+    videoCallWindow.currentUser = currentUser;
+
+    // Emit the answer through WebSocket when window is ready
+    videoCallWindow.onload = async () => {
+      videoCallWindow.createPeerConnection();
+
+      socket.emit("answerCall", { from: caller, to: senderId });
+
+      const answer =
+        await videoCallWindow.peerConnection.current.createAnswer();
+      await videoCallWindow.peerConnection.current.setLocalDescription(answer);
+
+      // Send answer back to the caller via WebSocket
+      socket.emit("answer", {
+        answer,
+        to: caller,
+        from: currentUser?.data?.user?.username,
+      });
+
+      // Open a new window for the video call
+      // const videoCallWindow = window.open("/video-call", "_blank");
+      // videoCallWindow.opener = null; // Prevent the new window from accessing the parent window
+    };
   };
 
   const declineCall = () => {
