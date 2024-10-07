@@ -45,6 +45,9 @@ const appointmentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    onlineAppointmentSlots: {
+        type: String,
+    },
     docapporve:{
         type: String,
         default: 'pending'

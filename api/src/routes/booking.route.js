@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { avaiableTimeSLot, booking, getAllBooking, /* getBookedSlots, */ getBooking, getDateAndTime, getSpecificBooking, updateAppointmentStatus } from "../controllers/booking.controller.js";
+import { avaiableTimeSLot, booking, getAllBooking, /* getBookedSlots, */ getBooking, getDateAndTime, getOnlineDateAndTime, getSpecificBooking, updateAppointmentStatus } from "../controllers/booking.controller.js";
 import {  /* verifyJwtApproval, */systemAdminVerifyJWT,docApproveVerifyJwt } from "../middlewares/auth.middleware.js";
 import { payment, paymentIntent } from "../controllers/payment.controller.js";
 
@@ -11,13 +11,15 @@ router.route("/bookings").post(booking);
 router.route("/booked-slots/:id").get(avaiableTimeSLot);
 
 router.route("/get-date-time").post(getDateAndTime);
+router.route("/get-online-date-time").get(getOnlineDateAndTime);
 
 router.route("/bookings").get(getAllBooking);
 router.route("/bookings/:email").get(getBooking);
+
 // router.route("/booking/:id").get(getSpecificBooking);
 
-router.route("/booking/:id").get(getSpecificBooking);
-router.route("/advbooking/:id").get(getSpecificBooking);
+// router.route("/booking/:id").get(getSpecificBooking);
+
 
 
 router.route("/booking/update/doctor/:id").put( docApproveVerifyJwt/* ,systemAdminVerifyJWT, */,updateAppointmentStatus);

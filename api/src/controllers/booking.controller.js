@@ -12,7 +12,7 @@ const booking = asyncHandler(async (req, res) => {
   const {
     name, dateOfBirth, gender, phone, department,
     doctor, date, price, permission, uId, email, docId,
-    appointmentSlots, meeting,
+    appointmentSlots, meeting,onlineAppointmentSlots
   } = req.body;
 
   try {
@@ -32,7 +32,7 @@ const booking = asyncHandler(async (req, res) => {
     const newAppointment = new Appointment({
       name, dateOfBirth, gender, phone,
       department, doctor, date,
-      price, permission, uId, email, docId, appointmentSlots, meeting,
+      price, permission, uId, email, docId, appointmentSlots, meeting,onlineAppointmentSlots
     });
 
     await newAppointment.save();
@@ -276,7 +276,7 @@ const getOnlineDateAndTime = asyncHandler(async(req, res) =>{
             date: date  // Match the specific date
         });
         console.log("Server: ", appointments)
-        const availableSlots = ["06:00 PM - 06:30 PM", "06:35 PM - 06:50 PM", "07:00 PM - 07:20 PM", "07:30 PM - 07:50 PM"]
+        const availableSlots = ["08:10 PM - 08:40 PM", "08:50 PM - 09:20 PM", "09:30 PM - 10:00 PM"]
 
         const bookedSlots = appointments.map(appointment => appointment.appointmentSlots);
         console.log(bookedSlots)
