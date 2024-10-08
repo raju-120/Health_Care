@@ -43,7 +43,7 @@ const appointmentSchema = new mongoose.Schema({
     },
     appointmentSlots: {
         type: String,
-        required: true,
+        // required: true,
     },
     onlineAppointmentSlots: {
         type: String,

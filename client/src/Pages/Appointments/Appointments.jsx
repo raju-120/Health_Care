@@ -28,8 +28,8 @@ function Appointments() {
   // const [selectedDoctorSlots, setSelectedDoctorSlots] = useState([]);
 
   console.log("FormData: ", formData);
-  console.log("Appointment Slots: ", appointmentSlots);
-  console.log("Doc ID: ", selectedDoctor?._id);
+  // console.log("Appointment Slots: ", appointmentSlots);
+  // console.log("Doc ID: ", selectedDoctor?._id);
 
   const [select, setSelect] = useState({
     isAgree: false,
@@ -237,7 +237,7 @@ function Appointments() {
       if (data.success === false) {
         setLoading(false);
         setError(data.message);
-        toast.error("Error: " + data.message);
+        toast.error("Error: ", data.message);
       } else {
         toast.success("Appointment booked successfully!");
         setLoading(false);
@@ -494,7 +494,7 @@ function Appointments() {
                     type="text"
                     id="price"
                     onChange={handleChange}
-                    value={`$ ${doctorAdvBill}`}
+                    value={`${doctorAdvBill} TK`}
                     readOnly
                     className="input input-bordered w-full bg-gray-200"
                     required
@@ -555,7 +555,9 @@ function Appointments() {
                     id="date"
                     min={minDate}
                     max={maxDate}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleOnlineDateChange(e);
+                    }}
                     className="input input-bordered w-full"
                     required
                   />
@@ -563,23 +565,42 @@ function Appointments() {
               </div>
 
               {/* Time */}
-              {/* {selectedDoctor && (
-        <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-          <h1 className="lg:w-1/3 text-left">Time :</h1>
-          <div className="lg:w-2/3">
-            {fullyBooked ? (
-              <p className="text-red-500">All slots for this date are booked. Please choose another date.</p>
-            ) : (
-              <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required >
-                <option value="">Choose Time Slot</option>
-                {filteredTimeSlots.map((slot, index) => (
-                  <option key={index} value={slot}>{slot}</option>
-                ))}
-              </select>
-            )}
-          </div>
-        </div>
-      )}  */}
+              {selectedDoctor && (
+                <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
+                  <h1 className="lg:w-1/3 text-left">Time :</h1>
+                  <div className="lg:w-2/3">
+                    {onlineSlots.length === 0 ? (
+                      <p className="text-red-500">
+                        Please Select Date to continue
+                      </p>
+                    ) : (
+                      <select
+                        id="onlineAppointmentSlots"
+                        onChange={handleChange}
+                        className="input input-bordered w-full"
+                        required
+                      >
+                        {/* {console.log("Data Length: ", filteredTimeSlots?.length)} */}
+
+                        {/* <p>
+                          {filteredTimeSlots?.length}{" "}
+                          {filteredTimeSlots?.length > 1 ? "spaces" : "space"}{" "}
+                          available
+                        </p> */}
+                        {onlineSlots}
+                        {console.log("Online Slots: ", onlineSlots)}
+
+                        <option value="">Choose Time Slot</option>
+                        {onlineSlots.map((slot, index) => (
+                          <option key={index} value={slot}>
+                            {slot}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Doctors Bill */}
               <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
@@ -589,7 +610,7 @@ function Appointments() {
                     type="text"
                     id="price"
                     onChange={handleChange}
-                    value={`$ ${doctorBill}`}
+                    value={`${doctorBill} TK`}
                     readOnly
                     className="input input-bordered w-full bg-gray-200"
                     required

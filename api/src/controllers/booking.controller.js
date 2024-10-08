@@ -16,8 +16,8 @@ const booking = asyncHandler(async (req, res) => {
   } = req.body;
 
   try {
-
     const doctorData = await Doctor.findById(docId);
+    // console.log("Doctor Data: ",doctorData)
     if (!doctorData) {
       return res.status(404).json(new APIResponse(404, null, "Doctor not found."));
     }
@@ -27,39 +27,24 @@ const booking = asyncHandler(async (req, res) => {
       const message = `You already take an appoinment on This ${date} at ${appointmentSlots}`;
       return res.send({ acknowledge: false, message });
     }
-    console.log("Booked Message: ",alreadyBooked)
+    // console.log("Booked Message from 31 line: ",alreadyBooked)
 
     const newAppointment = new Appointment({
       name, dateOfBirth, gender, phone,
       department, doctor, date,
       price, permission, uId, email, docId, appointmentSlots, meeting,onlineAppointmentSlots
     });
-
+    console.log("Appointment: ", newAppointment);
     await newAppointment.save();
 
-    return res.status(201).json(new APIResponse(201, newAppointment, "Doctor appointment submitted successfully."));
+    return res
+            .status(201)
+            .json(new APIResponse(201, newAppointment, "Doctor appointment submitted successfully."));
   } catch (error) {
     console.error('Error:', error.message);
     return res.status(500).json(new APIResponse(500, null, "Internal server error."));
   }
 });
-
-
-// Endpoint to fetch booked slots for a doctor on a particular date
-// const getBookedSlots = asyncHandler(async (req, res) => {
-//   const { doctorId, date } = req.query;
-
-//   try {
-//     const bookedAppointments = await Appointment.find({ docId: doctorId, date });
-//     console.log("Booked : ",bookedAppointments)
-//     const bookedSlots = bookedAppointments.map(app => app.appointmentSlots);
-
-
-//     return res.status(200).json({ bookedSlots });
-//   } catch (error) {
-//     return res.status(500).json(new APIResponse(500, null, "Error fetching booked slots."));
-//   }
-// });
 
 
 const getBooking = asyncHandler(async (req, res) => {
@@ -240,23 +225,22 @@ const avaiableDates = await Appointment.find({docId: query});
 
 const getDateAndTime = asyncHandler(async(req, res) =>{
   const {docId,date} = req.body;  
-  console.log("Date Server: ", date);
+  // console.log("Date Server: ", date);
     try {
         const appointments = await Appointment.find({ 
             docId: docId,
             date: date  // Match the specific date
         });
-        console.log("Server: ", appointments)
+        // console.log("Server: ", appointments)
         const availableSlots = ["06:00 PM - 06:30 PM", "06:30 PM - 07:00 PM", "07:00 PM - 07:30 PM", "07:30 PM - 08:00 PM"]
 
         const bookedSlots = appointments.map(appointment => appointment.appointmentSlots);
-        console.log(bookedSlots)
+        // console.log(bookedSlots)
 
         // Filter available slots by excluding the booked ones
         const freeSlots = availableSlots.filter(slot => !bookedSlots.includes(slot));
-        console.log(freeSlots)
+        // console.log(freeSlots)
 
-        // Send the free slots to the frontend
         return res.status(200).json({ freeSlots });
 
 
@@ -269,27 +253,24 @@ const getDateAndTime = asyncHandler(async(req, res) =>{
 
 const getOnlineDateAndTime = asyncHandler(async(req, res) =>{
   const {docId,date} = req.body;  
-  console.log("Date Server: ", date);
+  // console.log("Date Server: ", date);
     try {
         const appointments = await Appointment.find({ 
             docId: docId,
             date: date  // Match the specific date
         });
-        console.log("Server: ", appointments)
+        // console.log("Server: ", appointments)
         const availableSlots = ["08:10 PM - 08:40 PM", "08:50 PM - 09:20 PM", "09:30 PM - 10:00 PM"]
 
         const bookedSlots = appointments.map(appointment => appointment.appointmentSlots);
-        console.log(bookedSlots)
+        // console.log(bookedSlots)
 
         // Filter available slots by excluding the booked ones
         const freeSlots = availableSlots.filter(slot => !bookedSlots.includes(slot));
-        console.log(freeSlots)
+        // console.log(freeSlots)
 
-        // Send the free slots to the frontend
         return res.status(200).json({ freeSlots });
 
-
-        return slots;
     } catch (error) {
         console.error("Error fetching appointments: ", error);
         throw error;

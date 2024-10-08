@@ -11,7 +11,7 @@ router.route("/bookings").post(booking);
 router.route("/booked-slots/:id").get(avaiableTimeSLot);
 
 router.route("/get-date-time").post(getDateAndTime);
-router.route("/get-online-date-time").get(getOnlineDateAndTime);
+router.route("/get-online-date-time").post(getOnlineDateAndTime);
 
 router.route("/bookings").get(getAllBooking);
 router.route("/bookings/:email").get(getBooking);
