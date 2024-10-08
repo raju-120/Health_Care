@@ -92,11 +92,57 @@ export default function DashboardLayout() {
           className="drawer-toggle"
         />
         <div className="drawer-content flex flex-col justify">
-          <Outlet></Outlet>
+          {/* Breadcrumb */}
+          <div className="drawer">
+            <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
+            <div className="drawer-content flex flex-col justify">
+              {/* Breadcrumb */}
+              <div
+                className={`transition-all duration-300 ${document.getElementById("my-drawer-3")?.checked ? "blur-md" : ""}`}
+              >
+                <div className="navbar bg-base-300 w-full lg:hidden">
+                  <div className="flex-none lg:hidden">
+                    <label
+                      htmlFor="my-drawer-3"
+                      aria-label="open sidebar"
+                      className="btn btn-square btn-ghost"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        className="inline-block h-6 w-6 stroke-current"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M4 6h16M4 12h16M4 18h16"
+                        ></path>
+                      </svg>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="drawer-side">
+              <label
+                htmlFor="my-drawer-3"
+                aria-label="close sidebar"
+                className="drawer-overlay"
+              ></label>
+              <ul className="menu bg-base-200 min-h-full mt-20 w-80 p-4 bg-stone-400">
+                {menuItems}
+              </ul>
+            </div>
+          </div>
+
+          <Outlet />
         </div>
         <div className="drawer-side">
           <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
-          <ul className="menu p-8 w-96 h-full relevent bg-zinc-500 rounded-lg text-base-content">
+          <ul className="menu p-8 w-96 h-full bg-zinc-500 rounded-lg text-base-content">
             {menuItems}
           </ul>
         </div>
