@@ -112,7 +112,7 @@ export default function AppointmentRequestDoctor() {
                   {data?.friend === "pending" ? (
                     <span className="text-red-500">{data?.friend}</span>
                   ) : (
-                    <Link to="/chat">
+                    <Link to="/chat/:id">
                       <span className="text-green-500 text-2xl hover:opacity-50">
                         <BsMessenger />
                       </span>

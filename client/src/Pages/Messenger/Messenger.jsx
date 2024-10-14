@@ -516,9 +516,12 @@ export default function ChatWindow() {
                     {getPdfFiles?.length > 0 &&
                       getPdfFiles.map((pdfFile) => (
                         <div key={pdfFile?._id} className="user-message">
-                          {pdfFile?.senderId === selectedUser?._id &&
-                          pdfFile?.receiverId ===
-                            currentUser?.data?.user?._id ? (
+                          {(pdfFile?.senderId ===
+                            currentUser?.data?.user?._id &&
+                            pdfFile?.receiverId === selectedUser?._id) ||
+                          (pdfFile?.senderId === selectedUser?._id &&
+                            pdfFile?.receiverId ===
+                              currentUser?.data?.user?._id) ? (
                             <>
                               <p>PDF Content:</p>
                               <div
