@@ -29,16 +29,16 @@ export default function ChatWindow() {
   const [showCallModal, setShowCallModal] = useState(false);
   const [appointmentData, setAppointmentData] = useState([]);
 
-  // const user = doctors;
+  const user = doctors;
 
   const localStream = useRef(null);
   const remoteStream = useRef(null);
   const peerConnection = useRef(null);
 
   console.log("Appointment user ID:  ", appointmentData);
-  // console.log("Selected ID:  ", user);
+  console.log("Selected ID:  ", user);
 
-  console.log("users:  ", id);
+  // console.log("Appointment :  ", id);
 
   const iceServers = {
     iceServers: [
@@ -80,7 +80,7 @@ export default function ChatWindow() {
       try {
         const res = await fetch(`/api/appointment/booking/${id}`);
         const data = await res.json();
-        console.log("Data : ", data);
+        // console.log("Data : ", data);
         setAppointmentData(data?.data);
       } catch (error) {
         console.log("Error: ", error);
@@ -90,52 +90,52 @@ export default function ChatWindow() {
   }, [id]);
 
   // Fetch Doctor ID & User ID
-  // useEffect(() => {
-  //   const fetchDoctors = async () => {
-  //     try {
-  //       let url;
-  //       if (currentUser?.data?.user?.role === "doctor") {
-  //         url = `/api/auth/users`;
-  //       } else if (appointmentData?.docId) {
-  //         url = `/api/auth/doctors/${appointmentData?.docId}`;
-  //       } else {
-  //         console.warn("Doctor ID is undefined");
-  //         return; // Exit if docId is not available
-  //       }
-
-  //       const res = await fetch(url);
-  //       if (!res.ok) {
-  //         throw new Error("Failed to fetch doctors");
-  //       }
-
-  //       const data = await res.json();
-  //       // console.log("Data from User: ", data.data);
-  //       setDoctors(data?.data || []);
-  //     } catch (error) {
-  //       console.error("Error fetching users:", error);
-  //     }
-  //   };
-
-  //   fetchDoctors();
-  // }, [currentUser?.data?.user, appointmentData?.docId, appointmentData?.uId]);
-
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch(
-          currentUser?.data?.user?.role === "doctor"
-            ? `/api/auth/users`
-            : `/api/auth/doctors`
-        );
+        let url;
+        if (currentUser?.data?.user?.role === "doctor") {
+          url = `/api/auth/users`;
+        } else if (appointmentData?.docId) {
+          url = `/api/auth/doctors/${appointmentData?.docId}`;
+        } else {
+          console.warn("Doctor ID is undefined");
+          return; // Exit if docId is not available
+        }
+
+        const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error("Failed to fetch doctors");
+        }
+
         const data = await res.json();
-        console.log("Data from User: ", data.data);
+        // console.log("Data from User: ", data.data);
         setDoctors(data?.data || []);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
+
     fetchDoctors();
-  }, [currentUser?.data?.user]);
+  }, [currentUser?.data?.user, appointmentData?.docId, appointmentData?.uId]);
+
+  // useEffect(() => {
+  //   const fetchDoctors = async () => {
+  //     try {
+  //       const res = await fetch(
+  //         currentUser?.data?.user?.role === "doctor"
+  //           ? `/api/auth/users`
+  //           : `/api/auth/doctors`
+  //       );
+  //       const data = await res.json();
+  //       console.log("Data from User: ", data.data);
+  //       setDoctors(data?.data || []);
+  //     } catch (error) {
+  //       console.error("Error fetching users:", error);
+  //     }
+  //   };
+  //   fetchDoctors();
+  // }, [currentUser?.data?.user]);
 
   //Set user Selection & Set the state
   const handleUserSelect = (user) => {
@@ -448,7 +448,7 @@ export default function ChatWindow() {
       <div className="chat-users bg-gray-300 w-full rounded-lg h-full">
         <h2 className="text-blue-500">Available Users</h2>
         <ul>
-          {doctors.map((user) => (
+          {/* {doctors.map((user) => (
             <li
               key={user?._id}
               onClick={() => handleUserSelect(user)}
@@ -456,15 +456,15 @@ export default function ChatWindow() {
             >
               {user?.username}
             </li>
-          ))}
-          {/* <h1>Hi </h1> */}
-          {/* <li
+          ))} */}
+
+          <li
             key={user?._id}
             onClick={() => handleUserSelect(user)}
             className="lg:text-xl font-semibold hover:opacity-15"
           >
             {user?.username}
-          </li> */}
+          </li>
         </ul>
       </div>
 
@@ -523,15 +523,17 @@ export default function ChatWindow() {
                   </>
                 ) : (
                   <>
-                    {getPdfFiles?.length > 0 &&
-                      getPdfFiles.map((pdfFile) => (
+                    {getPdfFiles.map((pdfFile) => {
+                      // Check the condition for rendering PDF content
+                      const shouldRenderContent =
+                        (pdfFile?.senderId === currentUser?.data?.user?._id &&
+                          pdfFile?.receiverId === selectedUser?._id) ||
+                        (pdfFile?.senderId === selectedUser?._id &&
+                          pdfFile?.receiverId === currentUser?.data?.user?._id);
+
+                      return (
                         <div key={pdfFile?._id} className="user-message">
-                          {(pdfFile?.senderId ===
-                            currentUser?.data?.user?._id &&
-                            pdfFile?.receiverId === selectedUser?._id) ||
-                          (pdfFile?.senderId === selectedUser?._id &&
-                            pdfFile?.receiverId ===
-                              currentUser?.data?.user?._id) ? (
+                          {shouldRenderContent && ( // Only render if condition is true
                             <>
                               <p>PDF Content:</p>
                               <div
@@ -540,9 +542,28 @@ export default function ChatWindow() {
                                 }}
                               />
                             </>
-                          ) : null}
+                          )}
                         </div>
-                      ))}
+                      );
+                    })}
+                    {/* {getPdfFiles.map((pdfFile) => (
+                      <div key={pdfFile?._id} className="user-message">
+                        {(pdfFile?.senderId === currentUser?.data?.user?._id &&
+                          pdfFile?.receiverId === selectedUser?._id) ||
+                        (pdfFile?.senderId === selectedUser?._id &&
+                          pdfFile?.receiverId ===
+                            currentUser?.data?.user?._id) ? (
+                          <>
+                            <p>PDF Content:</p>
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: sanitizeHtml(pdfFile?.pdfContent),
+                              }}
+                            />
+                          </>
+                        ) : null}
+                      </div>
+                    ))} */}
                   </>
                 )}
               </div>

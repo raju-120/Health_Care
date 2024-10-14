@@ -59,7 +59,7 @@ export default function MyAppointment() {
 
   const handleDocId = (e, _id) => {
     e.preventDefault();
-    console.log("Appointment Id: ", _id);
+    // console.log("Appointment Id: ", _id);
     if (_id) {
       navigate(`/chat/${_id}`);
     } else {
