@@ -35,8 +35,9 @@ export default function ChatWindow() {
   const remoteStream = useRef(null);
   const peerConnection = useRef(null);
 
-  console.log("Appointment user ID:  ", appointmentData);
-  console.log("Selected ID:  ", user);
+  // console.log("Appointment Data:  ", appointmentData);
+  console.log("Appointment user ID:  ", appointmentData?.uId);
+  // console.log("Selected ID:  ", user);
 
   // console.log("Appointment :  ", id);
 
@@ -95,7 +96,7 @@ export default function ChatWindow() {
       try {
         let url;
         if (currentUser?.data?.user?.role === "doctor") {
-          url = `/api/auth/users`;
+          url = `/api/auth/user/${appointmentData?.uId}`;
         } else if (appointmentData?.docId) {
           url = `/api/auth/doctors/${appointmentData?.docId}`;
         } else {

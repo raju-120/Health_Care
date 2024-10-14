@@ -101,10 +101,7 @@ const getBooking = asyncHandler(async (req, res) => {
 
   const updateAppointmentStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { status, docapporve, friend, doctor, date, department, email,name } = req.body;
-
-    //console.log("Updating appointment with id:", id);
-    //console.log("New status:", status);
+    const { status, docapporve, friend, doctor, date, department, email, doctorEmail, name } = req.body;
 
     if (!status) {
         return res.status(400).json({ message: 'Status is required' });
@@ -122,9 +119,10 @@ const getBooking = asyncHandler(async (req, res) => {
             return res.status(404).json({ message: 'Appointment not found' });
         }
 
-        //console.log("Appointment updated successfully:", appointment);
+        if (req.user.role === 'system-admin') {
+            // Generate a Google Meet link (placeholder logic)
+            const googleMeetLink = `https://meet.google.com/${Math.random().toString(36).substring(2, 8)}`;
 
-        if(req.user.role === 'system-admin'){
             let config = {
                 service: 'gmail',
                 auth: {
@@ -132,9 +130,9 @@ const getBooking = asyncHandler(async (req, res) => {
                     pass: process.env.PASS_NODEMAILER
                 }
             };
-    
+
             let transporter = nodemailer.createTransport(config);
-    
+
             let MailGenerator = new Mailgen({
                 theme: 'default',
                 product: {
@@ -142,7 +140,7 @@ const getBooking = asyncHandler(async (req, res) => {
                     link: 'https://mailgen.js/',
                 }
             });
-    
+
             let response = {
                 body: {
                     name: name,
@@ -150,29 +148,49 @@ const getBooking = asyncHandler(async (req, res) => {
                     table: {
                         data: [
                             {
-                                /* item: 'Nodemailer Stack Book', */
-                                description: `Your appointment with ${doctor} in this ${department} department Date:${date} has been approved. Please arrive at least 20 minutes before your scheduled time.`
+                                description: `Your appointment with ${doctor} in the ${department} department on Date: ${date} has been approved. Please arrive at least 20 minutes before your scheduled time.`,
+                                link: googleMeetLink,
                             }
                         ]
                     },
                     outro: 'Thank you for your cooperation.'
                 }
             };
-    
-            let mail = MailGenerator.generate(response);
-            let message = {
+
+            let mailContent = MailGenerator.generate(response);
+
+            // Helper function to validate emails
+            const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+
+            // Prepare user email
+            let userMessage = isValidEmail(email) ? {
                 from: process.env.EMAIL_NODEMAILER,
                 to: email,
                 subject: "Approval of Your Appointment with Doctor",
-                html: mail
-            };
-    
-            transporter.sendMail(message)
+                html: mailContent
+            } : null;
+
+            // Prepare doctor email
+            let doctorMessage = isValidEmail(doctorEmail) ? {
+                from: process.env.EMAIL_NODEMAILER,
+                to: doctorEmail,
+                subject: "New Appointment Approved",
+                html: mailContent
+            } : null;
+
+            // Send emails sequentially if they are valid
+            const sendUserEmail = userMessage ? transporter.sendMail(userMessage) : Promise.resolve();
+            const sendDoctorEmail = doctorMessage ? transporter.sendMail(doctorMessage) : Promise.resolve();
+
+            // Send emails to both user and doctor
+            sendUserEmail
+                .then(() => sendDoctorEmail)
                 .then(() => {
-                    console.log('Email sent successfully');
+                    console.log('Emails sent successfully');
                     res.status(200).json({
                         msg: 'Appointment updated and email confirmation sent.',
-                        appointment
+                        appointment,
+                        googleMeetLink
                     });
                 })
                 .catch(error => {
@@ -184,12 +202,13 @@ const getBooking = asyncHandler(async (req, res) => {
                     });
                 });
         }
-
     } catch (error) {
         console.error("Error updating appointment:", error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+
 
 const avaiableTimeSLot = asyncHandler(async (req, res) => {
   const { id } = req.params;

@@ -1,40 +1,38 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { BsMessenger } from "react-icons/bs";
-import { /* Link, */ useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function AppointmentRequestDoctor() {
   const { currentUser } = useSelector((state) => state.user);
   const [allData, setAllData] = useState([]);
+  const [loadingId, setLoadingId] = useState(null);
   const navigate = useNavigate();
 
-  /*  console.log("User", currentUser?.data);
-    console.log("Data", allData); */
-
   useEffect(() => {
-    const getAllrequest = async () => {
+    const getAllRequests = async () => {
       try {
         const res = await fetch("/api/appointment/bookings", {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
-        if (!data.success) {
-          console.log(data.message);
-        } else {
+        if (data.success) {
           setAllData(data.data);
+        } else {
+          console.error(data.message);
         }
       } catch (error) {
-        console.error("Error fetching appointment booking list:", error);
+        console.error("Error fetching appointments:", error);
       }
     };
 
-    getAllrequest();
+    getAllRequests();
   }, []);
 
   const handleApprove = async (id, doctor, date, department, email, name) => {
+    setLoadingId(id); // Track the loading state for the specific appointment
+
     try {
       const response = await fetch(
         `/api/appointment/booking/update/doctor/${id}`,
@@ -58,35 +56,29 @@ export default function AppointmentRequestDoctor() {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to update status");
-      }
+      if (!response.ok) throw new Error("Failed to update status");
 
-      const updatedAppointment = await response.json();
-
-      // Update the state immediately with the new status
+      // Update the state locally to avoid needing a page refresh
       setAllData((prevData) =>
         prevData.map((appt) =>
-          appt._id === id ? { ...appt, ...updatedAppointment } : appt
+          appt._id === id ? { ...appt, docapporve: "approved" } : appt
         )
       );
     } catch (error) {
-      console.error("Error updating appointment:", error.message);
+      console.error("Error updating appointment:", error);
+    } finally {
+      setLoadingId(null); // Reset the loading state
     }
   };
 
   const handleDocId = (e, _id) => {
     e.preventDefault();
-    // console.log("Appointment Id: ", _id);
-    if (_id) {
-      navigate(`/chat/${_id}`);
-    } else {
-      console.error("Appointment Data is not found");
-    }
+    if (_id) navigate(`/chat/${_id}`);
+    else console.error("Appointment Data not found");
   };
 
   return (
-    <div className="mt-5 m-4 ">
+    <div className="mt-5 m-4">
       <div className="overflow-x-auto lg:max-h-[45rem]">
         <table className="table w-full bg-black">
           <thead>
@@ -101,56 +93,45 @@ export default function AppointmentRequestDoctor() {
             </tr>
           </thead>
           <tbody>
-            {allData?.map((data, i) => (
-              <tr key={data?._id} className="hover:opacity-100">
+            {allData.map((data, i) => (
+              <tr key={data._id} className="hover:opacity-100">
                 <td>{i + 1}</td>
+                <td className="text-md">{data.name}</td>
+                <td className="text-md">{data.date}</td>
+                <td className="text-md">{data.appointmentSlots}</td>
                 <td>
-                  <div className="flex items-center gap-3">
-                    <div>
-                      <div className="font-semibold text-md">{data?.name}</div>
-                    </div>
-                  </div>
-                </td>
-                <td className="text-md">{data?.date}</td>
-                <td className="text-md">{data?.appointmentSlots}</td>
-                <td>
-                  {data?.price && data?.paid ? (
+                  {data.price && data.paid ? (
                     <span className="text-green-500">Paid</span>
                   ) : (
                     <span className="text-red-500">Not Paid</span>
                   )}
                 </td>
                 <td>
-                  {data?.friend === "pending" ? (
-                    <span className="text-red-500">{data?.friend}</span>
+                  {data.friend === "pending" ? (
+                    <span className="text-red-500">Pending</span>
                   ) : (
-                    data?.meeting === "online" && (
+                    data.meeting === "online" && (
                       <button
                         className="btn text-xs"
-                        onClick={(e) => handleDocId(e, data?._id)}
+                        onClick={(e) => handleDocId(e, data._id)}
                       >
                         <BsMessenger className="text-xl text-blue-500" />
                       </button>
                     )
                   )}
                 </td>
-
                 <td>
-                  {data?.docapporve === "pending" ? (
+                  {data.docapporve === "pending" ? (
                     <button
                       className="btn btn-primary text-xs"
-                      onClick={() =>
-                        handleApprove(
-                          data?._id,
-                          data?.doctor,
-                          data?.date,
-                          data?.department,
-                          data?.email,
-                          data?.name
-                        )
-                      }
+                      onClick={() => handleApprove(data._id)}
+                      disabled={loadingId === data._id}
                     >
-                      <span className="text-white">{data?.docapporve}</span>
+                      {loadingId === data._id ? (
+                        <span className="text-white">Approving...</span>
+                      ) : (
+                        <span className="text-white">Approve</span>
+                      )}
                     </button>
                   ) : (
                     <span className="text-green-500">Approved</span>
