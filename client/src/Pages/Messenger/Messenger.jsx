@@ -26,7 +26,7 @@ export default function ChatWindow() {
   const [isRinging, setIsRinging] = useState(false);
   const [caller, setCaller] = useState(null);
   const [showCallModal, setShowCallModal] = useState(false);
-  const [appointmentData, setAppointmentData] = useState([]);
+  // const [appointmentData, setAppointmentData] = useState([]);
 
   const localStream = useRef(null);
   const remoteStream = useRef(null);
@@ -85,51 +85,51 @@ export default function ChatWindow() {
   }, [id]);
 
   //Fetch Doctor ID & User ID
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        let url;
-        if (currentUser?.data?.user?.role === "doctor") {
-          url = "/api/auth/users";
-        } else if (appointmentData?.docId) {
-          url = `/api/auth/doctors/${appointmentData.docId}`;
-        } else {
-          console.warn("Doctor ID is undefined");
-          return; // Exit if docId is not available
-        }
-
-        const res = await fetch(url);
-        if (!res.ok) {
-          throw new Error("Failed to fetch doctors");
-        }
-
-        const data = await res.json();
-        // console.log("Data from User: ", data.data);
-        setDoctors(data?.data || []);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    fetchDoctors();
-  }, [currentUser?.data?.user, appointmentData?.docId]);
   // useEffect(() => {
   //   const fetchDoctors = async () => {
   //     try {
-  //       const res = await fetch(
-  //         currentUser?.data?.user?.role === "doctor"
-  //           ? "/api/auth/users"
-  //           : `/api/auth/doctors`
-  //       );
+  //       let url;
+  //       if (currentUser?.data?.user?.role === "doctor") {
+  //         url = "/api/auth/users";
+  //       } else if (appointmentData?.docId) {
+  //         url = `/api/auth/doctors/${appointmentData.docId}`;
+  //       } else {
+  //         console.warn("Doctor ID is undefined");
+  //         return; // Exit if docId is not available
+  //       }
+
+  //       const res = await fetch(url);
+  //       if (!res.ok) {
+  //         throw new Error("Failed to fetch doctors");
+  //       }
+
   //       const data = await res.json();
-  //       console.log("Data from User: ", data.data);
+  //       // console.log("Data from User: ", data.data);
   //       setDoctors(data?.data || []);
   //     } catch (error) {
   //       console.error("Error fetching users:", error);
   //     }
   //   };
+
   //   fetchDoctors();
-  // }, [currentUser?.data?.user]);
+  // }, [currentUser?.data?.user, appointmentData?.docId]);
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const res = await fetch(
+          currentUser?.data?.user?.role === "doctor"
+            ? "/api/auth/users"
+            : `/api/auth/doctors`
+        );
+        const data = await res.json();
+        console.log("Data from User: ", data.data);
+        setDoctors(data?.data || []);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchDoctors();
+  }, [currentUser?.data?.user]);
 
   // Select to chat with
   useEffect(() => {
@@ -440,7 +440,7 @@ export default function ChatWindow() {
       <div className="chat-users bg-gray-300 w-full rounded-lg h-full">
         <h2 className="text-blue-500">Available Users</h2>
         <ul>
-          {/* {doctors.map((user) => (
+          {doctors.map((user) => (
             <li
               key={user?._id}
               onClick={() => handleUserSelect(user)}
@@ -448,13 +448,13 @@ export default function ChatWindow() {
             >
               {user?.username}
             </li>
-          ))} */}
-          <li
+          ))}
+          {/* <li
             onClick={() => handleUserSelect(doctors?._id)}
             className="lg:text-xl font-semibold hover:opacity-15"
           >
             {doctors?.username}
-          </li>
+          </li> */}
         </ul>
       </div>
 

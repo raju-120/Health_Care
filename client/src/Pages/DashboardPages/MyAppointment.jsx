@@ -129,18 +129,21 @@ export default function MyAppointment() {
                       {data?.friend === "pending" ? (
                         <span className="text-red-500">{data?.friend}</span>
                       ) : (
-                        <button
-                          className="btn text-xs"
-                          onClick={(e) => handleDocId(e, data?._id)}
-                        >
-                          {/* <Link to="/chat">
+                        data?.meeting === "online" && (
+                          <button
+                            className="btn text-xs"
+                            onClick={(e) => handleDocId(e, data?._id)}
+                          >
+                            <BsMessenger className="text-xl text-blue-500" />
+                          </button>
+                        )
+                      )}
+
+                      {/* <Link to="/chat">
                             <span className="text-green-500 text-2xl hover:opacity-50">
                               <BsMessenger />
                             </span>
                           </Link> */}
-                          <BsMessenger className=" text-xl text-blue-500" />
-                        </button>
-                      )}
                     </>
                   </td>
 
