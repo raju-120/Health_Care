@@ -85,7 +85,7 @@ const getBooking = asyncHandler(async (req, res) => {
 
   const getSpecificBooking = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    console.log("backend: ", id);
+    // console.log("backend: ", id);
   
     if (!id) {
       throw new ApiError(400, 'Appointment Id is required');

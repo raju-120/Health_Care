@@ -1,18 +1,21 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import PrescriptionModal from "./PrescriptionModal/prescriptionModal.jsx";
 import "./style.css";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+// import jsPDF from "jspdf";
+// import html2canvas from "html2canvas";
 import { AiOutlineVideoCamera } from "react-icons/ai";
 import Modal from "react-modal";
 import DOMPurify from "dompurify";
+import { useParams } from "react-router-dom";
 
 const socket = io("http://localhost:5000");
 
 export default function ChatWindow() {
   const { currentUser } = useSelector((state) => state.user);
+  const { id } = useParams();
+
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
@@ -23,20 +26,24 @@ export default function ChatWindow() {
   const [isRinging, setIsRinging] = useState(false);
   const [caller, setCaller] = useState(null);
   const [showCallModal, setShowCallModal] = useState(false);
+  const [appointmentData, setAppointmentData] = useState([]);
 
   const localStream = useRef(null);
   const remoteStream = useRef(null);
   const peerConnection = useRef(null);
 
-  // console.log("Selected User: ", selectedUser?.username);
+  // console.log("Doc ID Details:  ", doctors);
+  // console.log("Appointment Doc ID:  ", appointmentData?.docId);
+  console.log("Selected ID:  ", selectedUser);
 
   const iceServers = {
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" }, // STUN server configuration
     ],
   };
-
-  const createPeerConnection = () => {
+  //video calling connection
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const createPeerConnection = useCallback(() => {
     const peer = new RTCPeerConnection(iceServers);
 
     peer.onicecandidate = (event) => {
@@ -48,7 +55,7 @@ export default function ChatWindow() {
         });
       }
     };
-
+    //video calling connection peer track
     peer.ontrack = (event) => {
       if (remoteStream.current) {
         remoteStream.current.srcObject = event.streams[0];
@@ -61,25 +68,70 @@ export default function ChatWindow() {
 
     peerConnection.current = peer;
     console.log("Messenger Video call: ", peerConnection.current);
-  };
+  });
 
+  // Fetch the specific appoontment ID
+  useEffect(() => {
+    const fetchAppointmentId = async () => {
+      try {
+        const res = await fetch(`/api/appointment/booking/${id}`);
+        const data = await res.json();
+        setAppointmentData(data?.data);
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    };
+    fetchAppointmentId();
+  }, [id]);
+
+  //Fetch Doctor ID & User ID
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch(
-          currentUser?.data?.user?.role === "doctor"
-            ? "/api/auth/users"
-            : "/api/auth/doctors"
-        );
+        let url;
+        if (currentUser?.data?.user?.role === "doctor") {
+          url = "/api/auth/users";
+        } else if (appointmentData?.docId) {
+          url = `/api/auth/doctors/${appointmentData.docId}`;
+        } else {
+          console.warn("Doctor ID is undefined");
+          return; // Exit if docId is not available
+        }
+
+        const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error("Failed to fetch doctors");
+        }
+
         const data = await res.json();
+        // console.log("Data from User: ", data.data);
         setDoctors(data?.data || []);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
-    fetchDoctors();
-  }, [currentUser?.data?.user]);
 
+    fetchDoctors();
+  }, [currentUser?.data?.user, appointmentData?.docId]);
+  // useEffect(() => {
+  //   const fetchDoctors = async () => {
+  //     try {
+  //       const res = await fetch(
+  //         currentUser?.data?.user?.role === "doctor"
+  //           ? "/api/auth/users"
+  //           : `/api/auth/doctors`
+  //       );
+  //       const data = await res.json();
+  //       console.log("Data from User: ", data.data);
+  //       setDoctors(data?.data || []);
+  //     } catch (error) {
+  //       console.error("Error fetching users:", error);
+  //     }
+  //   };
+  //   fetchDoctors();
+  // }, [currentUser?.data?.user]);
+
+  // Select to chat with
   useEffect(() => {
     if (selectedUser) {
       const senderId = currentUser?.data?.user?._id;
@@ -107,8 +159,13 @@ export default function ChatWindow() {
         socket.off("receiveMessage");
       };
     }
-  }, [selectedUser, currentUser?.data?.user?._id]);
+  }, [
+    selectedUser,
+    currentUser?.data?.user?._id,
+    currentUser?.data?.accessToken,
+  ]);
 
+  // Sending mesaage function
   const handleSendMessage = async () => {
     const senderId = currentUser?.data?.user?._id;
     const receiverId = selectedUser?._id;
@@ -126,8 +183,9 @@ export default function ChatWindow() {
       setNewMessage("");
     }
   };
-
+  //Set user Selection & Set the state
   const handleUserSelect = (user) => {
+    console.log("Selected ID: ", user);
     setSelectedUser(user);
     setMessages([]);
   };
@@ -235,7 +293,7 @@ export default function ChatWindow() {
     return () => {
       socket.off("incomingCall");
     };
-  }, []);
+  }, [createPeerConnection, currentUser?.data?.user?.username]);
 
   // Handle incoming offer
   useEffect(() => {
@@ -268,7 +326,7 @@ export default function ChatWindow() {
     return () => {
       socket.off("offer");
     };
-  }, [selectedUser]);
+  }, [selectedUser, currentUser?.data?.user?.username, createPeerConnection]);
 
   // Handle incoming answer
   useEffect(() => {
@@ -348,41 +406,41 @@ export default function ChatWindow() {
     return DOMPurify.sanitize(html); // Sanitize to prevent XSS attacks
   };
 
-  const handleDownload = (pdfContent, filename) => {
-    // Create a temporary div to hold the HTML content
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = pdfContent;
-    document.body.appendChild(tempDiv); // Append to body for visibility
+  // const handleDownload = (pdfContent, filename) => {
+  //   // Create a temporary div to hold the HTML content
+  //   const tempDiv = document.createElement("div");
+  //   tempDiv.innerHTML = pdfContent;
+  //   document.body.appendChild(tempDiv); // Append to body for visibility
 
-    // Use a timeout to ensure content is rendered before capturing
-    setTimeout(() => {
-      html2canvas(tempDiv)
-        .then((canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          const doc = new jsPDF();
+  //   // Use a timeout to ensure content is rendered before capturing
+  //   setTimeout(() => {
+  //     html2canvas(tempDiv)
+  //       .then((canvas) => {
+  //         const imgData = canvas.toDataURL("image/png");
+  //         const doc = new jsPDF();
 
-          // Add image to PDF
-          doc.addImage(imgData, "PNG", 10, 10);
+  //         // Add image to PDF
+  //         doc.addImage(imgData, "PNG", 10, 10);
 
-          // Save the PDF
-          doc.save(filename);
+  //         // Save the PDF
+  //         doc.save(filename);
 
-          // Clean up the temporary div
-          document.body.removeChild(tempDiv);
-        })
-        .catch((err) => {
-          console.error("Error capturing element: ", err);
-          document.body.removeChild(tempDiv); // Clean up in case of error
-        });
-    }, 100); // Delay in milliseconds (adjust as necessary)
-  };
+  //         // Clean up the temporary div
+  //         document.body.removeChild(tempDiv);
+  //       })
+  //       .catch((err) => {
+  //         console.error("Error capturing element: ", err);
+  //         document.body.removeChild(tempDiv); // Clean up in case of error
+  //       });
+  //   }, 100); // Delay in milliseconds (adjust as necessary)
+  // };
 
   return (
     <div className="chat-container lg:mt-28 ">
       <div className="chat-users bg-gray-300 w-full rounded-lg h-full">
         <h2 className="text-blue-500">Available Users</h2>
         <ul>
-          {doctors.map((user) => (
+          {/* {doctors.map((user) => (
             <li
               key={user?._id}
               onClick={() => handleUserSelect(user)}
@@ -390,7 +448,13 @@ export default function ChatWindow() {
             >
               {user?.username}
             </li>
-          ))}
+          ))} */}
+          <li
+            onClick={() => handleUserSelect(doctors?._id)}
+            className="lg:text-xl font-semibold hover:opacity-15"
+          >
+            {doctors?.username}
+          </li>
         </ul>
       </div>
 

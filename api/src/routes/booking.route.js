@@ -16,9 +16,7 @@ router.route("/get-online-date-time").post(getOnlineDateAndTime);
 router.route("/bookings").get(getAllBooking);
 router.route("/bookings/:email").get(getBooking);
 
-// router.route("/booking/:id").get(getSpecificBooking);
-
-// router.route("/booking/:id").get(getSpecificBooking);
+router.route("/booking/:id").get(getSpecificBooking);
 
 
 

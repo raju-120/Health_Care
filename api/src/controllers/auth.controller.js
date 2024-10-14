@@ -621,8 +621,11 @@ const getAllDoctors = asyncHandler(async (req, res, next) =>{
 });
 
 const getSpecificDoctor = asyncHandler(async(req, res, next) =>{
-    const query = req.params.id;
-    const result = await Doctor.findById(query);
+    const {id} = req.params;
+    if (!id) {
+        throw new ApiError(400, 'Doctor Id is required');
+      }
+    const result = await Doctor.findById(id);
     res.status(201).json(
         new APIResponse(201, result,"Specific doctor details ar provided.")
     )

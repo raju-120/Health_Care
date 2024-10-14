@@ -82,7 +82,7 @@ export default function App() {
           {/* <Route path='/service/:id' element={<ServiceDetails />} /> */}
 
           {/* Messenger options */}
-          <Route path="/chat" element={<Messenger />} />
+          <Route path="/chat/:id" element={<Messenger />} />
           <Route path="/video-call" element={<VideoCalling />} />
 
           <Route path="/dashboard" element={<DashboardLayout />}>

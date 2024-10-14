@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { /* Link, */ useNavigate } from "react-router-dom";
 import { BsMessenger } from "react-icons/bs";
 
 export default function MyAppointment() {
@@ -27,7 +27,7 @@ export default function MyAppointment() {
         if (!data.success) {
           console.log(data.message);
         } else {
-          setAllData(data.data);
+          setAllData(data?.data);
         }
       } catch (error) {
         console.error("Error fetching admins:", error);
@@ -52,6 +52,16 @@ export default function MyAppointment() {
     console.log("first", _id);
     if (_id) {
       navigate(`/dashboard/invoice/${_id}`);
+    } else {
+      console.error("Payment is not complete");
+    }
+  };
+
+  const handleDocId = (e, _id) => {
+    e.preventDefault();
+    console.log("first", _id);
+    if (_id) {
+      navigate(`/chat/${_id}`);
     } else {
       console.error("Payment is not complete");
     }
@@ -114,15 +124,22 @@ export default function MyAppointment() {
                   </td>
 
                   <td>
+                    {/* {console.log("Doctor ID: ", data?.docId)} */}
                     <>
                       {data?.friend === "pending" ? (
                         <span className="text-red-500">{data?.friend}</span>
                       ) : (
-                        <Link to="/chat">
-                          <span className="text-green-500 text-2xl hover:opacity-50">
-                            <BsMessenger />
-                          </span>
-                        </Link>
+                        <button
+                          className="btn text-xs"
+                          onClick={(e) => handleDocId(e, data?._id)}
+                        >
+                          {/* <Link to="/chat">
+                            <span className="text-green-500 text-2xl hover:opacity-50">
+                              <BsMessenger />
+                            </span>
+                          </Link> */}
+                          <BsMessenger className=" text-xl text-blue-500" />
+                        </button>
                       )}
                     </>
                   </td>
