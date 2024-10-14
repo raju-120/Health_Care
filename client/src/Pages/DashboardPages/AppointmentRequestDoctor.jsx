@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { BsMessenger } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { /* Link, */ useNavigate } from "react-router-dom";
 
 export default function AppointmentRequestDoctor() {
   const { currentUser } = useSelector((state) => state.user);
   const [allData, setAllData] = useState([]);
+  const navigate = useNavigate();
+
   /*  console.log("User", currentUser?.data);
     console.log("Data", allData); */
 
@@ -73,6 +75,16 @@ export default function AppointmentRequestDoctor() {
     }
   };
 
+  const handleDocId = (e, _id) => {
+    e.preventDefault();
+    console.log("Appointment Id: ", _id);
+    if (_id) {
+      navigate(`/chat/${_id}`);
+    } else {
+      console.error("Appointment Data is not found");
+    }
+  };
+
   return (
     <div className="mt-5 m-4 ">
       <div className="overflow-x-auto lg:max-h-[45rem]">
@@ -112,13 +124,17 @@ export default function AppointmentRequestDoctor() {
                   {data?.friend === "pending" ? (
                     <span className="text-red-500">{data?.friend}</span>
                   ) : (
-                    <Link to="/chat/:id">
-                      <span className="text-green-500 text-2xl hover:opacity-50">
-                        <BsMessenger />
-                      </span>
-                    </Link>
+                    data?.meeting === "online" && (
+                      <button
+                        className="btn text-xs"
+                        onClick={(e) => handleDocId(e, data?._id)}
+                      >
+                        <BsMessenger className="text-xl text-blue-500" />
+                      </button>
+                    )
                   )}
                 </td>
+
                 <td>
                   {data?.docapporve === "pending" ? (
                     <button

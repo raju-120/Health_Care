@@ -182,7 +182,6 @@ const signup = asyncHandler(async(req, res) =>{
     ); */
 });
 
-
 const signin = asyncHandler(async(req, res) =>{
     const {email, password} = req.body;
     console.log('Sign in', req.body);
@@ -225,6 +224,18 @@ const signin = asyncHandler(async(req, res) =>{
         }
     );
 
+
+const specificUser = asyncHandler(async(req, res) =>{
+    const {id} = req.params;
+    if (!id) {
+        throw new ApiError(400, 'User Id is required');
+      }
+    const result = await User.findById(id);
+    res.status(201).json(
+        new APIResponse(201, result,"Specific user details are Found.")
+    )
+
+})
 /* User End */
 
 const google= asyncHandler(async( req, res) =>{
@@ -627,7 +638,7 @@ const getSpecificDoctor = asyncHandler(async(req, res, next) =>{
       }
     const result = await Doctor.findById(id);
     res.status(201).json(
-        new APIResponse(201, result,"Specific doctor details ar provided.")
+        new APIResponse(201, result,"Specific doctor details are Found.")
     )
 });
 
@@ -747,5 +758,6 @@ export {
         getDoctorsByDepartment,
         getDepartments,
         seedDepartments,
-        // getAvailableSlots
+        // getAvailableSlots,
+        specificUser
     };

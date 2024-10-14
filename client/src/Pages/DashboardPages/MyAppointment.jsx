@@ -59,11 +59,11 @@ export default function MyAppointment() {
 
   const handleDocId = (e, _id) => {
     e.preventDefault();
-    console.log("first", _id);
+    console.log("Appointment Id: ", _id);
     if (_id) {
       navigate(`/chat/${_id}`);
     } else {
-      console.error("Payment is not complete");
+      console.error("Appointment Data is not found");
     }
   };
 

@@ -17,6 +17,7 @@ import { docLogoutUser,
     userDelete,
     doctorDelete,
     getDepartments,
+    specificUser,
     // getDoctorsByDepartment,
     // getAvailableSlots
 } from "../controllers/auth.controller.js";
@@ -46,6 +47,8 @@ router.route('/admin-delete/:id').delete(systemAdminVerifyJWT,adminDelete);
 router.route('/signup').post(signup);
 router.route('/signin').post(signin);
 router.route('/users').get(getAllUsers);
+router.route('/user/:id').get(specificUser);
+
 
 //Doctors sections
 

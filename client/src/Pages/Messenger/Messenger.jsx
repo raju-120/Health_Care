@@ -21,20 +21,24 @@ export default function ChatWindow() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [doctors, setDoctors] = useState([]);
+  // const [user, setUser] = useState([]);
   const [getPdfFiles, setGetPDFFiles] = useState([]);
   const [chatChange, setChatChange] = useState(true);
   const [isRinging, setIsRinging] = useState(false);
   const [caller, setCaller] = useState(null);
   const [showCallModal, setShowCallModal] = useState(false);
-  // const [appointmentData, setAppointmentData] = useState([]);
+  const [appointmentData, setAppointmentData] = useState([]);
+
+  // const user = doctors;
 
   const localStream = useRef(null);
   const remoteStream = useRef(null);
   const peerConnection = useRef(null);
 
-  // console.log("Doc ID Details:  ", doctors);
-  // console.log("Appointment Doc ID:  ", appointmentData?.docId);
-  console.log("Selected ID:  ", selectedUser);
+  console.log("Appointment user ID:  ", appointmentData);
+  // console.log("Selected ID:  ", user);
+
+  console.log("users:  ", id);
 
   const iceServers = {
     iceServers: [
@@ -76,6 +80,7 @@ export default function ChatWindow() {
       try {
         const res = await fetch(`/api/appointment/booking/${id}`);
         const data = await res.json();
+        console.log("Data : ", data);
         setAppointmentData(data?.data);
       } catch (error) {
         console.log("Error: ", error);
@@ -84,15 +89,15 @@ export default function ChatWindow() {
     fetchAppointmentId();
   }, [id]);
 
-  //Fetch Doctor ID & User ID
+  // Fetch Doctor ID & User ID
   // useEffect(() => {
   //   const fetchDoctors = async () => {
   //     try {
   //       let url;
   //       if (currentUser?.data?.user?.role === "doctor") {
-  //         url = "/api/auth/users";
+  //         url = `/api/auth/users`;
   //       } else if (appointmentData?.docId) {
-  //         url = `/api/auth/doctors/${appointmentData.docId}`;
+  //         url = `/api/auth/doctors/${appointmentData?.docId}`;
   //       } else {
   //         console.warn("Doctor ID is undefined");
   //         return; // Exit if docId is not available
@@ -112,13 +117,14 @@ export default function ChatWindow() {
   //   };
 
   //   fetchDoctors();
-  // }, [currentUser?.data?.user, appointmentData?.docId]);
+  // }, [currentUser?.data?.user, appointmentData?.docId, appointmentData?.uId]);
+
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
           currentUser?.data?.user?.role === "doctor"
-            ? "/api/auth/users"
+            ? `/api/auth/users`
             : `/api/auth/doctors`
         );
         const data = await res.json();
@@ -130,6 +136,13 @@ export default function ChatWindow() {
     };
     fetchDoctors();
   }, [currentUser?.data?.user]);
+
+  //Set user Selection & Set the state
+  const handleUserSelect = (user) => {
+    // console.log("Selected ID: ", user);
+    setSelectedUser(user);
+    setMessages([]);
+  };
 
   // Select to chat with
   useEffect(() => {
@@ -182,12 +195,6 @@ export default function ChatWindow() {
       });
       setNewMessage("");
     }
-  };
-  //Set user Selection & Set the state
-  const handleUserSelect = (user) => {
-    console.log("Selected ID: ", user);
-    setSelectedUser(user);
-    setMessages([]);
   };
 
   // Get PDF File
@@ -355,6 +362,7 @@ export default function ChatWindow() {
     };
   }, []);
 
+  // Calling Features
   const answerCall = async () => {
     setShowCallModal(false);
     setIsRinging(false);
@@ -449,11 +457,13 @@ export default function ChatWindow() {
               {user?.username}
             </li>
           ))}
+          {/* <h1>Hi </h1> */}
           {/* <li
-            onClick={() => handleUserSelect(doctors?._id)}
+            key={user?._id}
+            onClick={() => handleUserSelect(user)}
             className="lg:text-xl font-semibold hover:opacity-15"
           >
-            {doctors?.username}
+            {user?.username}
           </li> */}
         </ul>
       </div>
