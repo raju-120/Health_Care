@@ -21,13 +21,13 @@ export default function ChatWindow() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [doctors, setDoctors] = useState([]);
-  // const [user, setUser] = useState([]);
   const [getPdfFiles, setGetPDFFiles] = useState([]);
   const [chatChange, setChatChange] = useState(true);
   const [isRinging, setIsRinging] = useState(false);
   const [caller, setCaller] = useState(null);
   const [showCallModal, setShowCallModal] = useState(false);
   const [appointmentData, setAppointmentData] = useState([]);
+  // const [isCallActive, setIsCallActive] = useState(false);
 
   const user = doctors;
 
@@ -36,9 +36,8 @@ export default function ChatWindow() {
   const peerConnection = useRef(null);
 
   // console.log("Appointment Data:  ", appointmentData);
-  console.log("Appointment user ID:  ", appointmentData?.uId);
+  // console.log("Appointment user ID:  ", appointmentData?.uId);
   // console.log("Selected ID:  ", user);
-
   // console.log("Appointment :  ", id);
 
   const iceServers = {
@@ -60,6 +59,7 @@ export default function ChatWindow() {
         });
       }
     };
+
     //video calling connection peer track
     peer.ontrack = (event) => {
       if (remoteStream.current) {
