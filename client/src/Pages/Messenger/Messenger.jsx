@@ -297,7 +297,7 @@ export default function ChatWindow() {
             <>
               <div className="message-container">
                 <div className="flex justify-between">
-                  <div className="text-start mb-5 sticky top-0 bg-white z-10 p-2 w-full">
+                  <div className="text-start mb-5 sticky top-0 bg-white  p-2 w-full">
                     <button
                       className="btn btn-primary mr-5 "
                       value="chat"
@@ -374,25 +374,51 @@ export default function ChatWindow() {
               </div>
 
               {isCallModalOpen && (
-                <Modal
-                  isOpen={isCallModalOpen}
-                  onRequestClose={declineCall}
-                  className="mt-14 p-5"
-                >
-                  <h2>Video Call with {selectedUser?.username}</h2>
-                  <div className="video-container">
-                    <div ref={localVideoRef} className="local-video" />
-                    <div ref={remoteVideoRef} className="remote-video" />
-                  </div>
-                  <button onClick={leaveChannel}>End Call</button>
-                </Modal>
+                <div className="fixed bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center">
+                  <Modal
+                    isOpen={isCallModalOpen}
+                    onRequestClose={declineCall}
+                    className="p-5 w-full mt-24 max-w-4xl mx-auto  bg-white rounded-lg"
+                  >
+                    <h2 className="text-xl font-bold mb-4">
+                      Video Call with {selectedUser?.username}
+                    </h2>
+                    <div className="video-container mb-4 gap-2">
+                      <div
+                        ref={localVideoRef}
+                        className="local-video bg-gray-300 rounded-lg h-96 w-full"
+                      />
+                      <div
+                        ref={remoteVideoRef}
+                        className="remote-video bg-gray-300 rounded-lg h-96 w-full "
+                      />
+                    </div>
+                    <button
+                      onClick={leaveChannel}
+                      className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition"
+                    >
+                      End Call
+                    </button>
+                  </Modal>
+                </div>
               )}
+
               {isRinging && (
                 <Modal isOpen={isRinging} onRequestClose={declineCall}>
                   <h2>Incoming Call</h2>
                   <p>Caller: {caller}</p>
-                  <button onClick={acceptCall}>Accept</button>
-                  <button onClick={declineCall}>Decline</button>
+                  <button
+                    className="btn btn-outline btn-success"
+                    onClick={acceptCall}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="btn btn-outline btn-warning"
+                    onClick={declineCall}
+                  >
+                    Decline
+                  </button>
                 </Modal>
               )}
 
