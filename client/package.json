@@ -13,6 +13,7 @@
     "@react-google-maps/api": "^2.19.3",
     "@reduxjs/toolkit": "^2.2.1",
     "@stripe/stripe-js": "^4.0.0",
+    "agora-rtc-sdk-ng": "^4.22.1",
     "aos": "^3.0.0-beta.6",
     "axios": "^1.7.0",
     "bootstrap": "^5.3.3",

@@ -3,14 +3,26 @@ import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import PrescriptionModal from "./PrescriptionModal/prescriptionModal.jsx";
 import "./style.css";
+import "./agoraStyle.css";
 // import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
 import { AiOutlineVideoCamera } from "react-icons/ai";
 import Modal from "react-modal";
 import DOMPurify from "dompurify";
 import { useParams } from "react-router-dom";
+import ringingSound from "../../assets/MP3/phone-ringing.mp3";
+
+import AgoraRTC from "agora-rtc-sdk-ng"; // Import Agora SDK
 
 const socket = io("http://localhost:5000");
+// Replace with your App ID and temporary token from Agora console
+const APP_ID = "025ba60212fc444fa127d79c69a4d0c5";
+const token =
+  "007eJxTYNjxOjk4lmPu2fZr6zeJLORILTx9+cyudxZM7kdzQ16LC4coMKSaWaSapiVamBpamJkYJxtZJKYZpxpamBiYWCamWhqYOTVJpDcEMjJcW3eNiZEBAkF8LoayzJTU/PjkxJwcBgYAOb8iEQ==";
+const CHANNEL_NAME = "video_call";
+
+// Use a sound for the ringing
+const audio = new Audio(ringingSound);
 
 export default function ChatWindow() {
   const { currentUser } = useSelector((state) => state.user);
@@ -25,55 +37,20 @@ export default function ChatWindow() {
   const [chatChange, setChatChange] = useState(true);
   const [isRinging, setIsRinging] = useState(false);
   const [caller, setCaller] = useState(null);
-  const [showCallModal, setShowCallModal] = useState(false);
+  // const [showCallModal, setShowCallModal] = useState(false);
   const [appointmentData, setAppointmentData] = useState([]);
   // const [isCallActive, setIsCallActive] = useState(false);
 
+  // State to manage call status
+  const [isCallModalOpen, setIsCallModalOpen] = useState(false);
+  const [isCalling, setIsCalling] = useState(false);
+
   const user = doctors;
 
-  const localStream = useRef(null);
-  const remoteStream = useRef(null);
-  const peerConnection = useRef(null);
-
-  // console.log("Appointment Data:  ", appointmentData);
-  // console.log("Appointment user ID:  ", appointmentData?.uId);
-  // console.log("Selected ID:  ", user);
-  // console.log("Appointment :  ", id);
-
-  const iceServers = {
-    iceServers: [
-      { urls: "stun:stun.l.google.com:19302" }, // STUN server configuration
-    ],
-  };
-  //video calling connection
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const createPeerConnection = useCallback(() => {
-    const peer = new RTCPeerConnection(iceServers);
-
-    peer.onicecandidate = (event) => {
-      if (event.candidate) {
-        socket.emit("ice-candidate", {
-          candidate: event.candidate,
-          to: selectedUser?.username,
-          from: currentUser?.data?.user?.username,
-        });
-      }
-    };
-
-    //video calling connection peer track
-    peer.ontrack = (event) => {
-      if (remoteStream.current) {
-        remoteStream.current.srcObject = event.streams[0];
-      }
-    };
-
-    localStream.current.getTracks().forEach((track) => {
-      peer.addTrack(track, localStream.current);
-    });
-
-    peerConnection.current = peer;
-    console.log("Messenger Video call: ", peerConnection.current);
-  });
+  // Use `useRef` to hold the Agora client instance.
+  const client = useRef(null);
+  const localVideoRef = useRef(null); // For displaying local video
+  const remoteVideoRef = useRef(null); // For displaying remote video
 
   // Fetch the specific appoontment ID
   useEffect(() => {
@@ -220,193 +197,6 @@ export default function ChatWindow() {
     getPrescriptions();
   }, []);
 
-  // Handle Video Call trigger
-  const handleVideoCall = async () => {
-    const senderId = currentUser?.data?.user?._id;
-    const receiverId = selectedUser?._id;
-
-    if (senderId && receiverId) {
-      try {
-        localStream.current = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-
-        const videoCallWindow = window.open("/video-call", "_blank");
-
-        // Transfer the necessary data (like peerConnection) to the new window
-        videoCallWindow.localStream = localStream.current;
-        videoCallWindow.selectedUser = selectedUser;
-        videoCallWindow.currentUser = currentUser;
-
-        // Once the new window is ready, start the peer connection and offer
-        videoCallWindow.onload = async () => {
-          videoCallWindow.createPeerConnection();
-
-          // createPeerConnection();
-
-          const offer = await peerConnection.current.createOffer();
-          await peerConnection.current.setLocalDescription(offer);
-
-          socket.emit("incomingCall", {
-            from: senderId,
-            to: receiverId,
-            offer: offer, // Include the offer to streamline the process
-          });
-        };
-      } catch (error) {
-        console.error("Error starting the video call: ", error);
-      }
-    }
-  };
-
-  // Handle incoming call (ringing)
-  useEffect(() => {
-    socket.on("incomingCall", ({ from, offer }) => {
-      console.log("Incoming call from: ", from);
-
-      setIsRinging(true);
-      setCaller(from);
-      setShowCallModal(true); // Trigger the call modal
-
-      // When the call is answered, the following logic will proceed
-      const answerCall = async () => {
-        setShowCallModal(false);
-        setIsRinging(false);
-
-        localStream.current = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-        createPeerConnection(); // Create the peer connection
-
-        // Set remote description with the offer received
-        await peerConnection.current.setRemoteDescription(
-          new RTCSessionDescription(offer)
-        );
-
-        // Create and send the answer back
-        const answer = await peerConnection.current.createAnswer();
-        await peerConnection.current.setLocalDescription(answer);
-
-        socket.emit("answer", {
-          answer,
-          to: from, // Send answer back to the caller
-          from: currentUser?.data?.user?.username,
-        });
-      };
-      answerCall();
-    });
-
-    return () => {
-      socket.off("incomingCall");
-    };
-  }, [createPeerConnection, currentUser?.data?.user?.username]);
-
-  // Handle incoming offer
-  useEffect(() => {
-    socket.on("offer", async ({ offer, from }) => {
-      setIsRinging(true);
-      setCaller(from);
-      setShowCallModal(true);
-
-      localStream.current = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      createPeerConnection();
-
-      await peerConnection.current.setRemoteDescription(
-        new RTCSessionDescription(offer)
-      );
-
-      const answer = await peerConnection.current.createAnswer();
-      await peerConnection.current.setLocalDescription(answer);
-
-      socket.emit("answer", {
-        answer,
-        to: from,
-        from: currentUser?.data?.user?.username,
-      });
-    });
-
-    // Clean up offer listener
-    return () => {
-      socket.off("offer");
-    };
-  }, [selectedUser, currentUser?.data?.user?.username, createPeerConnection]);
-
-  // Handle incoming answer
-  useEffect(() => {
-    socket.on("answer", async ({ answer }) => {
-      if (peerConnection.current) {
-        await peerConnection.current.setRemoteDescription(
-          new RTCSessionDescription(answer)
-        );
-      }
-    });
-  }, []);
-
-  // Handle incoming ICE candidates
-  useEffect(() => {
-    socket.on("ice-candidate", async ({ candidate }) => {
-      if (candidate) {
-        await peerConnection.current.addIceCandidate(
-          new RTCIceCandidate(candidate)
-        );
-      }
-    });
-
-    // Clean up ICE candidate listener
-    return () => {
-      socket.off("ice-candidate");
-    };
-  }, []);
-
-  // Calling Features
-  const answerCall = async () => {
-    setShowCallModal(false);
-    setIsRinging(false);
-
-    const senderId = currentUser?.data?.user?._id;
-
-    // Open a new window for the video call
-    const videoCallWindow = window.open("/video-call", "_blank");
-
-    // Pass relevant data to the new window
-    videoCallWindow.localStream = localStream.current;
-    videoCallWindow.selectedUser = caller;
-    videoCallWindow.currentUser = currentUser;
-
-    // Emit the answer through WebSocket when window is ready
-    videoCallWindow.onload = async () => {
-      videoCallWindow.createPeerConnection();
-
-      socket.emit("answerCall", { from: caller, to: senderId });
-
-      const answer =
-        await videoCallWindow.peerConnection.current.createAnswer();
-      await videoCallWindow.peerConnection.current.setLocalDescription(answer);
-
-      // Send answer back to the caller via WebSocket
-      socket.emit("answer", {
-        answer,
-        to: caller,
-        from: currentUser?.data?.user?.username,
-      });
-
-      // Open a new window for the video call
-      // const videoCallWindow = window.open("/video-call", "_blank");
-      // videoCallWindow.opener = null; // Prevent the new window from accessing the parent window
-    };
-  };
-
-  const declineCall = () => {
-    setShowCallModal(false);
-    setIsRinging(false);
-    setCaller(null);
-  };
-
   const handleChatChange = (e) => {
     setChatChange(e.target.value === "chat");
   };
@@ -415,50 +205,76 @@ export default function ChatWindow() {
     return DOMPurify.sanitize(html); // Sanitize to prevent XSS attacks
   };
 
-  // const handleDownload = (pdfContent, filename) => {
-  //   // Create a temporary div to hold the HTML content
-  //   const tempDiv = document.createElement("div");
-  //   tempDiv.innerHTML = pdfContent;
-  //   document.body.appendChild(tempDiv); // Append to body for visibility
+  // Initialize Agora client
+  const initializeAgora = useCallback(() => {
+    client.current = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+    client.current.on("user-published", async (user, mediaType) => {
+      await client.current.subscribe(user, mediaType);
+      if (mediaType === "video") {
+        const remoteTrack = user.videoTrack;
+        remoteTrack.play(remoteVideoRef.current);
+      }
+    });
 
-  //   // Use a timeout to ensure content is rendered before capturing
-  //   setTimeout(() => {
-  //     html2canvas(tempDiv)
-  //       .then((canvas) => {
-  //         const imgData = canvas.toDataURL("image/png");
-  //         const doc = new jsPDF();
+    client.current.on("user-unpublished", () => {
+      remoteVideoRef.current.innerHTML = ""; // Clear the video element
+    });
+  }, []);
 
-  //         // Add image to PDF
-  //         doc.addImage(imgData, "PNG", 10, 10);
+  const joinChannel = async () => {
+    try {
+      await client.current.join(APP_ID, CHANNEL_NAME, token, currentUser?._id);
+      const localTrack = await AgoraRTC.createCameraVideoTrack();
+      localTrack.play(localVideoRef.current);
+      await client.current.publish([localTrack]);
+    } catch (error) {
+      console.error("Error joining channel:", error);
+    }
+  };
 
-  //         // Save the PDF
-  //         doc.save(filename);
+  const leaveChannel = async () => {
+    await client.current.leave();
+    setIsCallModalOpen(false);
+  };
 
-  //         // Clean up the temporary div
-  //         document.body.removeChild(tempDiv);
-  //       })
-  //       .catch((err) => {
-  //         console.error("Error capturing element: ", err);
-  //         document.body.removeChild(tempDiv); // Clean up in case of error
-  //       });
-  //   }, 100); // Delay in milliseconds (adjust as necessary)
-  // };
+  const handleAgoraVideoCall = () => {
+    initializeAgora();
+    joinChannel();
+    setIsCallModalOpen(true);
+  };
+
+  // Handle incoming call (ringing)
+  useEffect(() => {
+    const incomingCallHandler = ({ from }) => {
+      ringingSound.play(); // Play ringing sound
+      setIsRinging(true);
+      setCaller(from);
+      setIsCallModalOpen(true); // Show the call modal
+    };
+
+    socket.on("incomingCall", incomingCallHandler);
+    return () => {
+      socket.off("incomingCall", incomingCallHandler);
+    };
+  }, []);
+
+  const acceptCall = () => {
+    ringingSound.pause(); // Stop ringing sound
+    setIsRinging(false);
+    handleAgoraVideoCall();
+  };
+
+  const declineCall = () => {
+    ringingSound.pause(); // Stop ringing sound
+    setIsRinging(false);
+    setCaller(null);
+  };
 
   return (
     <div className="chat-container lg:mt-28 ">
       <div className="chat-users bg-gray-300 w-full rounded-lg h-full">
         <h2 className="text-blue-500">Available Users</h2>
         <ul>
-          {/* {doctors.map((user) => (
-            <li
-              key={user?._id}
-              onClick={() => handleUserSelect(user)}
-              className="lg:text-xl font-semibold hover:opacity-15"
-            >
-              {user?.username}
-            </li>
-          ))} */}
-
           <li
             key={user?._id}
             onClick={() => handleUserSelect(user)}
@@ -498,12 +314,18 @@ export default function ChatWindow() {
                     </button>
                   </div>
                   <div>
-                    <button
-                      className="text-4xl bg-gary-400 hover:opacity-65 hover:text-gray-700 hover:bg-gray-400 rounded-lg"
-                      onClick={handleVideoCall}
-                    >
-                      <AiOutlineVideoCamera />
-                    </button>
+                    {!isCalling ? (
+                      <button
+                        className="text-4xl bg-gray-400 hover:opacity-65 hover:text-gray-700 hover:bg-gray-400 rounded-lg"
+                        onClick={handleAgoraVideoCall}
+                      >
+                        <AiOutlineVideoCamera />
+                      </button>
+                    ) : (
+                      <button className="btn btn-danger" onClick={declineCall}>
+                        End Call
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -547,46 +369,30 @@ export default function ChatWindow() {
                         </div>
                       );
                     })}
-                    {/* {getPdfFiles.map((pdfFile) => (
-                      <div key={pdfFile?._id} className="user-message">
-                        {(pdfFile?.senderId === currentUser?.data?.user?._id &&
-                          pdfFile?.receiverId === selectedUser?._id) ||
-                        (pdfFile?.senderId === selectedUser?._id &&
-                          pdfFile?.receiverId ===
-                            currentUser?.data?.user?._id) ? (
-                          <>
-                            <p>PDF Content:</p>
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: sanitizeHtml(pdfFile?.pdfContent),
-                              }}
-                            />
-                          </>
-                        ) : null}
-                      </div>
-                    ))} */}
                   </>
                 )}
               </div>
 
-              {isRinging && (
+              {isCallModalOpen && (
                 <Modal
-                  isOpen={showCallModal}
+                  isOpen={isCallModalOpen}
                   onRequestClose={declineCall}
-                  contentLabel="Incoming Call"
-                  ariaHideApp={false}
+                  className="mt-14 p-5"
                 >
+                  <h2>Video Call with {selectedUser?.username}</h2>
+                  <div className="video-container">
+                    <div ref={localVideoRef} className="local-video" />
+                    <div ref={remoteVideoRef} className="remote-video" />
+                  </div>
+                  <button onClick={leaveChannel}>End Call</button>
+                </Modal>
+              )}
+              {isRinging && (
+                <Modal isOpen={isRinging} onRequestClose={declineCall}>
                   <h2>Incoming Call</h2>
                   <p>Caller: {caller}</p>
-                  <button className="btn btn-success mr-4" onClick={answerCall}>
-                    Accept
-                  </button>
-                  <button
-                    className="btn btn-warning mr-4"
-                    onClick={declineCall}
-                  >
-                    Decline
-                  </button>
+                  <button onClick={acceptCall}>Accept</button>
+                  <button onClick={declineCall}>Decline</button>
                 </Modal>
               )}
 
