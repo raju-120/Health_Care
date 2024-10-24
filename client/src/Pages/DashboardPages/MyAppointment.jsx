@@ -107,7 +107,7 @@ export default function MyAppointment() {
                       {data?.price && !data?.paid ? (
                         <button
                           onClick={(e) => handleClick(e, data?._id)}
-                          className="hover:opacity-50"
+                          className="hover:opacity-50 btn btn-outline btn-success text-xs"
                         >
                           Pay
                         </button>
@@ -126,8 +126,9 @@ export default function MyAppointment() {
                   <td>
                     {/* {console.log("Doctor ID: ", data?.docId)} */}
                     <>
-                      {data?.friend === "pending" ? (
-                        <span className="text-red-500">{data?.friend}</span>
+                      {data?.friend === "pending" ||
+                      data?.status === "pending" ? (
+                        <span className="text-red-500">Pending</span>
                       ) : (
                         data?.meeting === "online" && (
                           <button

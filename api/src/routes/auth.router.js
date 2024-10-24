@@ -22,7 +22,7 @@ import { docLogoutUser,
     // getAvailableSlots
 } from "../controllers/auth.controller.js";
 
-import { AdminVerifyJWT, conditionalAuth, docUpVerifyJwt, docVerifyJwt, systemAdminJWTLOgout, systemAdminVerifyJWT, verifyJwt } from "../middlewares/auth.middleware.js";
+import { AdminVerifyJWT, conditionalAuth, docUpVerifyJwt, docVerifyJwt, systemAdminJWTLOgout, systemAdminVerifyJWT, updateUserVerifyJwt, verifyJwt } from "../middlewares/auth.middleware.js";
 import { adminDelete, adminLogOut, adminSignIn,adminSignup, getAllAdminList, systemAdminOut, systemAdminSignIn, systemAdminSignup } from "../controllers/adminAuth.controller.js";
 import {adminUpload} from "../middlewares/adminmulter.middleware.js";
 
@@ -68,7 +68,7 @@ router.route('/google').post(google);
 
 
 //update Doctor & user information
-router.route('/update/:id').post(verifyJwt,userUpdate);
+router.route('/update/:id').post(updateUserVerifyJwt,userUpdate);
 router.route('/docupdate/:id').post(docUpVerifyJwt,doctorUpdate);
 
 

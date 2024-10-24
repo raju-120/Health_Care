@@ -539,7 +539,7 @@ const userUpdate = asyncHandler(  async (req, res) =>{
         /* if(req.user?._id !== req.params?.id){
             throw new ApiError(401, 'You can only update your own details!');
         }; */
-
+        console.log("User Update", req.body);
         try{
             const{  username, email,password,avatar } = req.body;
 

@@ -113,6 +113,7 @@ const getBooking = asyncHandler(async (req, res) => {
 
     try {
         const appointment = await Appointment.findByIdAndUpdate(id, { status, docapporve, friend }, { new: true });
+        console.log("Data: ", appointment);
 
         if (!appointment) {
             console.log("Appointment not found for id:", id);
@@ -143,17 +144,17 @@ const getBooking = asyncHandler(async (req, res) => {
 
             let response = {
                 body: {
-                    name: name,
+                    name: `${name}`,
                     intro: 'Your Appointment has been Approved.',
                     table: {
                         data: [
                             {
                                 description: `Your appointment with ${doctor} in the ${department} department on Date: ${date} has been approved. Please arrive at least 20 minutes before your scheduled time.`,
-                                link: googleMeetLink,
+                                
                             }
                         ]
                     },
-                    outro: 'Thank you for your cooperation.'
+                    outro: 'Thank you for your co-operation.'
                 }
             };
 
@@ -189,8 +190,7 @@ const getBooking = asyncHandler(async (req, res) => {
                     console.log('Emails sent successfully');
                     res.status(200).json({
                         msg: 'Appointment updated and email confirmation sent.',
-                        appointment,
-                        googleMeetLink
+                        appointment
                     });
                 })
                 .catch(error => {
@@ -281,7 +281,7 @@ const getOnlineDateAndTime = asyncHandler(async(req, res) =>{
         // console.log("Server: ", appointments)
         const availableSlots = ["08:10 PM - 08:40 PM", "08:50 PM - 09:20 PM", "09:30 PM - 10:00 PM"]
 
-        const bookedSlots = appointments.map(appointment => appointment.appointmentSlots);
+        const bookedSlots = appointments.map(appointment => appointment.onlineAppointmentSlots);
         // console.log(bookedSlots)
 
         // Filter available slots by excluding the booked ones

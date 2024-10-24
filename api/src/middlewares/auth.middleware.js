@@ -7,11 +7,13 @@ import { Admin } from "../models/admin.model.js";
 import { SystemAdmin } from "../models/systemAdmin.model.js";
 
 
+
+
 export const verifyJwt = asyncHandler(async(req, _, next) => {
     try {
-        console.log("Logout", req.cookies );
+        console.log("Token", req.body );
         //console.log("Logout First", req.cookies?.accessToken);
-        const token = req.body.data.accessToken || req.header("Authorization")?.replace("Bearer ", "")
+        const token = req.body.data.accessToken || req.header("Authorization")?.replace("Bearer ", "") || req.body.accessToken
 
         if (!token) {
             throw new ApiError(401, "Unauthorized request")
@@ -33,32 +35,36 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
     }
 })
 
-                        //Doctors
+export const updateUserVerifyJwt = asyncHandler(async(req, _, next) => {
+    try {
+        console.log("Token", req.body );
+        //console.log("Logout First", req.cookies?.accessToken);
+        const token = req.body.accessToken || req.header("Authorization")?.replace("Bearer ", "");
 
-   /*  export const docVerifyJwt = asyncHandler(async(req, _, next) => {
-        try {
-            //console.log('token:', req.header("Authorization")?.replace("Bearer ", "") )
-            const token = req.header("Authorization")?.replace("Bearer ", "");
-    
-            const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-            console.log( req.cookies?.accessToken)
-    
-            const docUser = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
-            
-            console.log('I am here for decoded token', decodedToken);
-    
-            if ( !docUser) {
-            const doctor = await Doctor.findById(decodedToken?._id).select("-password -refreshToken");
-            console.log('I am here', doctor);
-            req.docUser = docUser;
-            next();
-            } 
-        }catch (error) {
-            throw new ApiError(401, error?.message || "Invalid access token");
-        };
-    }); */
+        if (!token) {
+            throw new ApiError(401, "Unauthorized request")
+        }
+
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+
+        const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
+
+        if (!user) {
+
+            throw new ApiError(401, "Invalid Access Token")
+        }
+
+        req.user = user;
+        next();
+    }catch(error){
+        throw new ApiError(401, error?.message || "invalid access_token")
+    }
+})
 
 
+
+
+ 
     export const docVerifyJwt = asyncHandler(async (req, res, next) => {
         try {
             //console.log('DOc: ',req.body.accessToken);
