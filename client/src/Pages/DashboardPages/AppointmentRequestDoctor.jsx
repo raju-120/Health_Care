@@ -7,6 +7,7 @@ export default function AppointmentRequestDoctor() {
   const { currentUser } = useSelector((state) => state.user);
   const [allData, setAllData] = useState([]);
   const [loadingId, setLoadingId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function AppointmentRequestDoctor() {
     setLoadingId(id); // Track the loading state for the specific appointment
 
     try {
+      setLoading(true);
       const response = await fetch(
         `/api/appointment/booking/update/doctor/${id}`,
         {
@@ -64,10 +66,13 @@ export default function AppointmentRequestDoctor() {
           appt._id === id ? { ...appt, docapporve: "approved" } : appt
         )
       );
+      setLoading(false);
     } catch (error) {
       console.error("Error updating appointment:", error);
+      setLoading(false);
     } finally {
       setLoadingId(null); // Reset the loading state
+      setLoading(false);
     }
   };
 
@@ -87,6 +92,7 @@ export default function AppointmentRequestDoctor() {
               <th>Patient Name</th>
               <th>Date</th>
               <th>Slot</th>
+              <th>Meeting</th>
               <th>Bill</th>
               <th>Talk</th>
               <th>Action</th>
@@ -98,7 +104,10 @@ export default function AppointmentRequestDoctor() {
                 <td>{i + 1}</td>
                 <td className="text-md">{data.name}</td>
                 <td className="text-md">{data.date}</td>
-                <td className="text-md">{data.appointmentSlots}</td>
+                <td className="text-md">
+                  {data.appointmentSlots || data.onlineAppointmentSlots}
+                </td>
+                <td>{data?.meeting}</td>
                 <td>
                   {data.price && data.paid ? (
                     <span className="text-green-500">Paid</span>

@@ -81,6 +81,8 @@ export default function MyAppointment() {
                 </th>
                 <th className="text-xl font-semibold text-black">Department</th>
                 <th className="text-xl font-semibold text-black">Date</th>
+                <th className="text-xl font-semibold text-black">Slots</th>
+                <th className="text-xl font-semibold text-black">Meeting</th>
                 <th className="text-xl font-semibold text-black">Bill</th>
                 <th className="text-xl font-semibold text-black">Talk</th>
                 <th className="text-xl font-semibold text-black">Action</th>
@@ -101,7 +103,10 @@ export default function MyAppointment() {
                   <td className="text-md">{data?.doctor}</td>
                   <td className="text-md">{data?.department}</td>
                   <td className="text-md">{data?.date}</td>
-                  {/* <td className="text-md">{data?.appointmentSlots}</td> */}
+                  <td className="text-md">
+                    {data?.appointmentSlots || data?.onlineAppointmentSlots}
+                  </td>
+                  <td className="text-md">{data?.meeting}</td>
                   <td className="text-lg">
                     <>
                       {data?.price && !data?.paid ? (
