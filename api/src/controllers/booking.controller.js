@@ -113,7 +113,7 @@ const getBooking = asyncHandler(async (req, res) => {
 
     try {
         const appointment = await Appointment.findByIdAndUpdate(id, { status, docapporve, friend }, { new: true });
-        console.log("Data: ", appointment);
+        console.log("Approval of Data: ", appointment);
 
         if (!appointment) {
             console.log("Appointment not found for id:", id);
@@ -144,7 +144,7 @@ const getBooking = asyncHandler(async (req, res) => {
 
             let response = {
                 body: {
-                    name: `${name}`,
+                    username: `${name}`,
                     intro: 'Your Appointment has been Approved.',
                     table: {
                         data: [
