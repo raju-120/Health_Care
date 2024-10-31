@@ -12,12 +12,16 @@ const addressSchema = new mongoose.Schema({
 });
 
 const patientSchema = new mongoose.Schema({
+    uId: {
+        type: String,
+        required: true,
+    },
     name: { type: String, required: true },
     age: { type: Number, required: true },
     sex: { type: String, required: true },
     dob: { type: Date, required: true },
     bloodGroup: { type: String, required: true },
-    fatherMotherName: { type: String, required: true },
+    fatherName: { type: String, required: true },
     maritalStatus: { type: String, required: true },
     email: { type: String, required: true },
     nationalId: { type: String },

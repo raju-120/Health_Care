@@ -1,14 +1,16 @@
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 export default function PatientRegistrationForm() {
+  const { currentUser } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     name: "",
     age: "",
     sex: "",
     dob: "",
     bloodGroup: "",
-    fatherMotherName: "",
+    fatherName: "",
     maritalStatus: "Unmarried",
     email: "",
     nationalId: "",
@@ -53,7 +55,10 @@ export default function PatientRegistrationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    const registration = {
+      ...formData,
+      uId: currentUser?.data?.user?._id,
+    };
 
     try {
       const response = await fetch("/api/patient/patient-reg-form", {
@@ -61,7 +66,7 @@ export default function PatientRegistrationForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(registration),
       });
 
       if (response.ok) {
@@ -85,7 +90,7 @@ export default function PatientRegistrationForm() {
           sex: "",
           dob: "",
           bloodGroup: "",
-          fatherMotherName: "",
+          fatherName: "",
           maritalStatus: "Unmarried",
           email: "",
           nationalId: "",
@@ -210,7 +215,7 @@ export default function PatientRegistrationForm() {
             </label>
             <input
               type="text"
-              id="fatherMotherName"
+              id="fatherName"
               value={formData.fatherMotherName}
               onChange={handleChange}
               required

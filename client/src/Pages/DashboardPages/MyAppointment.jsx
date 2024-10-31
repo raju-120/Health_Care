@@ -6,6 +6,7 @@ import { BsMessenger } from "react-icons/bs";
 export default function MyAppointment() {
   const { currentUser } = useSelector((state) => state?.user);
   const [allData, setAllData] = useState([]);
+  // const [allRegData, setAllRegData] = useState([]);
   const navigate = useNavigate();
 
   //console.log("user: " , currentUser?.data?.user?.email);
@@ -85,6 +86,7 @@ export default function MyAppointment() {
                 <th className="text-xl font-semibold text-black">Meeting</th>
                 <th className="text-xl font-semibold text-black">Bill</th>
                 <th className="text-xl font-semibold text-black">Talk</th>
+                {/* <th className="text-xl font-semibold text-black">Reg Form</th> */}
                 <th className="text-xl font-semibold text-black">Action</th>
               </tr>
             </thead>
