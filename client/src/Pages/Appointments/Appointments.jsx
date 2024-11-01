@@ -24,13 +24,6 @@ function Appointments() {
   const [appointmentSlots, setAppointmentSlots] = useState([]);
   const navigate = useNavigate();
 
-  // const [availableSlots, setAvailableSlots] = useState([]);
-  // const [selectedDoctorSlots, setSelectedDoctorSlots] = useState([]);
-
-  console.log("FormData: ", formData);
-  // console.log("Appointment Slots: ", appointmentSlots);
-  // console.log("Doc ID: ", selectedDoctor?._id);
-
   const [select, setSelect] = useState({
     isAgree: false,
   });
@@ -90,6 +83,7 @@ function Appointments() {
     }
   }, [selectedDept, doctors]);
 
+  //Date changing
   const handleDateChange = async (e) => {
     const date = e.target.value;
     const docId = selectedDoctor._id;
@@ -169,21 +163,11 @@ function Appointments() {
               ? doctor?.advPrice
               : doctor?.price,
         }));
-
-        // fetch(
-        //   `/api/appointments/doctor/${doctor?._id}/booked-slots?date=${selectedDate}`
-        // )
-        //   .then((res) => res.json())
-        //   .then((data) => {
-        //     setAppointmentSlots(data?.bookedSlots || []);
-        //   })
-        //   .catch((err) =>
-        //     console.error("Error fetching booked slots:", err?.message)
-        //   );
       }
     }
   };
 
+  //selecting the gender
   const handleGenderChange = (e) => {
     setFormData({
       ...formData,
@@ -228,25 +212,23 @@ function Appointments() {
       const res = await fetch("/api/appointment/bookings", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-type": "application/json",
         },
         body: JSON.stringify(appointmentData),
       });
-
       const data = await res.json();
-      if (data.success === false) {
+      if (!data?.success) {
         setLoading(false);
-        setError(data.message);
-        toast.error("Error: ", data.message);
+        setError(data?.message);
+        toast.error(data?.message);
       } else {
-        toast.success("Appointment booked successfully!");
         setLoading(false);
+        toast.success("Appointment booked successfully");
         navigate("/dashboard");
       }
     } catch (error) {
-      setLoading(false);
-      setError("Failed to create appointment. Please try again.");
-      toast.error("Failed to create appointment.");
+      setError(error);
+      toast.error(error);
     }
   };
 
@@ -284,8 +266,6 @@ function Appointments() {
                 id="name"
                 className="input input-bordered w-full"
                 required
-                /* pattern="[A-Za-z\s]+"
-              title="Please enter only alphabetic characters and spaces" */
                 value={formData.name || ""}
                 onChange={handleChange}
               />
@@ -465,13 +445,6 @@ function Appointments() {
                         className="input input-bordered w-full"
                         required
                       >
-                        {/* {console.log("Data Length: ", filteredTimeSlots?.length)} */}
-
-                        {/* <p>
-                          {filteredTimeSlots?.length}{" "}
-                          {filteredTimeSlots?.length > 1 ? "spaces" : "space"}{" "}
-                          available
-                        </p> */}
                         {slots}
 
                         <option value="">Choose Time Slot</option>
@@ -580,13 +553,6 @@ function Appointments() {
                         className="input input-bordered w-full"
                         required
                       >
-                        {/* {console.log("Data Length: ", filteredTimeSlots?.length)} */}
-
-                        {/* <p>
-                          {filteredTimeSlots?.length}{" "}
-                          {filteredTimeSlots?.length > 1 ? "spaces" : "space"}{" "}
-                          available
-                        </p> */}
                         {onlineSlots}
                         {console.log("Online Slots: ", onlineSlots)}
 
@@ -629,6 +595,7 @@ function Appointments() {
           </button>
           {error && <p className="text-red-500 mt-4">{error?.message}</p>}
         </form>
+        {}
       </div>
       <Toaster position="center-top" />
     </div>
@@ -636,89 +603,3 @@ function Appointments() {
 }
 
 export default Appointments;
-
-// {
-//   select.meeting === 'online' &&
-//   (
-//     <>
-//       {/* Department */}
-//       <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-//         <h1 className="lg:w-1/3 text-left">Department :</h1>
-//         <div className="lg:w-2/3">
-//           <select id="department" onChange={handleChange} className="input input-bordered w-full" required >
-//             <option value="">Choose department</option>
-//             {deptData?.map((dept, index) => (
-//               <option key={index} value={dept?.deptname}>{dept?.deptname}</option>
-//             ))}
-//           </select>
-//         </div>
-//       </div>
-
-//        {/* Doctor */}
-//       <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-//           <h1 className="lg:w-1/3 text-left">Doctor :</h1>
-//           <div className="lg:w-2/3">
-//             <select id="doctor" onChange={handleChange} className="input input-bordered w-full" required >
-//               <option value="">Choose doctor</option>
-//               {filteredDoctors?.map((doctor) => (
-//                 <option key={doctor?._id} value={doctor?.username}>
-//                   {doctor?.username}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-//       </div>
-
-//       {/* Appointment Date */}
-//       <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-//         <h1 className="lg:w-1/3 text-left">Appointment Date :</h1>
-//         <div className="lg:w-2/3">
-//           <input
-//             type="date"
-//             id="date"
-//             min={minDate}
-//             max={maxDate}
-//             onChange={handleChange}
-//             className="input input-bordered w-full"
-//             required
-//           />
-//         </div>
-//       </div>
-
-//       {/* Time */}
-//       {/* {selectedDoctor && (
-//         <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-//           <h1 className="lg:w-1/3 text-left">Time :</h1>
-//           <div className="lg:w-2/3">
-//             {fullyBooked ? (
-//               <p className="text-red-500">All slots for this date are booked. Please choose another date.</p>
-//             ) : (
-//               <select id="appointmentSlots" onChange={handleChange} className="input input-bordered w-full" required >
-//                 <option value="">Choose Time Slot</option>
-//                 {filteredTimeSlots.map((slot, index) => (
-//                   <option key={index} value={slot}>{slot}</option>
-//                 ))}
-//               </select>
-//             )}
-//           </div>
-//         </div>
-//       )}  */}
-
-//       {/* Doctors Bill */}
-//       <div className="flex flex-col lg:flex-row lg:gap-4 items-center lg:w-2/3 mt-5">
-//         <h1 className="lg:w-1/3 text-left">Doctors Bill:</h1>
-//         <div className="lg:w-2/3">
-//           <input
-//             type="text"
-//             id="price"
-//             onChange={handleChange}
-//             value={`$ ${doctorBill}`}
-//             readOnly
-//             className="input input-bordered w-full bg-gray-200"
-//             required
-//           />
-//         </div>
-//       </div>
-//     </>
-//   )
-// }

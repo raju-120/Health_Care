@@ -12,34 +12,33 @@ const booking = asyncHandler(async (req, res) => {
   const {
     name, dateOfBirth, gender, phone, department,
     doctor, date, price, permission, uId, email, docId,
-    appointmentSlots, meeting,onlineAppointmentSlots
+    appointmentSlots, meeting, onlineAppointmentSlots
   } = req.body;
 
   try {
+    // Check if doctor exists
     const doctorData = await Doctor.findById(docId);
-    // console.log("Doctor Data: ",doctorData)
     if (!doctorData) {
       return res.status(404).json(new APIResponse(404, null, "Doctor not found."));
     }
-    
-    const alreadyBooked = await Appointment.find({ email, date, });
-    if (alreadyBooked.length) {
-      const message = `You already take an appoinment on This ${date} at ${appointmentSlots}`;
-      return res.send({ acknowledge: false, message });
-    }
-    // console.log("Booked Message from 31 line: ",alreadyBooked)
 
+    // Check if user already has an appointment on the same date
+    const existingAppointment = await Appointment.findOne({ email, date });
+    if (existingAppointment) {
+      const message = `You already have an appointment on ${date} at ${existingAppointment.appointmentSlots}.`;
+      return res.status(400).json({ acknowledge: false, message });
+    }
+
+    // Create a new appointment if no conflicts
     const newAppointment = new Appointment({
-      name, dateOfBirth, gender, phone,
-      department, doctor, date,
-      price, permission, uId, email, docId, appointmentSlots, meeting,onlineAppointmentSlots
+      name, dateOfBirth, gender, phone, department,
+      doctor, date, price, permission, uId, email,
+      docId, appointmentSlots, meeting, onlineAppointmentSlots
     });
-    console.log("Appointment: ", newAppointment);
     await newAppointment.save();
 
-    return res
-            .status(201)
-            .json(new APIResponse(201, newAppointment, "Doctor appointment submitted successfully."));
+    return res.status(201).json(new APIResponse(201, newAppointment, "Doctor appointment submitted successfully."));
+    
   } catch (error) {
     console.error('Error:', error.message);
     return res.status(500).json(new APIResponse(500, null, "Internal server error."));
@@ -47,6 +46,7 @@ const booking = asyncHandler(async (req, res) => {
 });
 
 
+//Get Booking based on the user email ID 
 const getBooking = asyncHandler(async (req, res) => {
     try {
       const email = req.params.email;

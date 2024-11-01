@@ -70,8 +70,11 @@ export default function MyAppointment() {
 
   return (
     <div>
-      <div className="m-4 p-3 bg-stone-200 rounded-md">
-        <div className="overflow-y-auto lg:max-h-[45rem]">
+      <h1 className="text-center text-4xl font-bold mt-4 mb-4">
+        Appointment List
+      </h1>
+      <div className="m-2 p-2 bg-stone-200 rounded-md">
+        <div className="overflow-y-auto">
           <table className="table ">
             {/* head */}
             <thead>
@@ -87,12 +90,12 @@ export default function MyAppointment() {
                 <th className="text-xl font-semibold text-black">Bill</th>
                 <th className="text-xl font-semibold text-black">Talk</th>
                 {/* <th className="text-xl font-semibold text-black">Reg Form</th> */}
-                <th className="text-xl font-semibold text-black">Action</th>
+                <th className="text-xl font-semibold text-black">Status</th>
               </tr>
             </thead>
             <tbody>
               {allData?.map((data) => (
-                <tr key={data?._id}>
+                <tr className="hover" key={data?._id}>
                   <td>
                     <div className="flex items-center gap-3">
                       <div>
