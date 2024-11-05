@@ -64,13 +64,10 @@ export default function AppointmentRequestDoctor() {
           )
         );
         setLoading(false);
-        toast.success("Appointment approved successfully!");
+        toast.success("Successfully Appointment Approved From Doctor!");
       }
-      // setLoading(false);
-      // toast.success("Appointment approved successfully!");
     } catch (error) {
       setLoading(false);
-      // console.error("Error updating appointment:", error.message);
       toast.error(error?.message);
     }
   };

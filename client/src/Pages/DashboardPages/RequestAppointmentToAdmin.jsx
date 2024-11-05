@@ -6,7 +6,8 @@ import { toast, Toaster } from "react-hot-toast";
 export default function RequestAppointmentToAdmin() {
   const { currentUser } = useSelector((state) => state.user);
   const [allData, setAllData] = useState([]);
-  const [loadingStates, setLoadingStates] = useState({});
+  const [loading, setLoading] = useState(false);
+  // const [loadingStates, setLoadingStates] = useState({});
   const navigate = useNavigate();
 
   // Fetch all appointment data
@@ -42,9 +43,10 @@ export default function RequestAppointmentToAdmin() {
     }
   };
 
-  const handleApprove = async (id, doctor, date, department, email) => {
-    setLoadingStates((prevState) => ({ ...prevState, [id]: true }));
+  const handleApprove = async (id, doctor, date, department, email, name) => {
+    // setLoadingStates((prevState) => ({ ...prevState, [id]: true }));
     try {
+      setLoading(true);
       const response = await fetch(`/api/appointment/booking/update/${id}`, {
         method: "PUT",
         headers: {
@@ -52,11 +54,13 @@ export default function RequestAppointmentToAdmin() {
           Authorization: `Bearer ${currentUser?.data?.accessToken}`,
         },
         body: JSON.stringify({
+          name,
           doctor,
           date,
           department,
           email,
           status: "approved",
+          accessToken: currentUser?.data?.accessToken,
         }),
       });
 
@@ -65,17 +69,24 @@ export default function RequestAppointmentToAdmin() {
         toast.error(`Error: ${result.message}`);
       } else {
         setAllData((prevData) =>
-          prevData.map((appt) =>
-            appt._id === id ? { ...appt, status: "approved" } : appt
+          prevData.map((appointment) =>
+            appointment?._id === id
+              ? { ...appointment, status: "approved" }
+              : appointment
           )
         );
-        toast.success("Appointment approved successfully!");
+        setLoading(false);
+        toast.success(
+          "Successfully Appointment Approve from the System Admin!"
+        );
       }
     } catch (error) {
       console.error("Error updating appointment:", error.message);
-    } finally {
-      setLoadingStates((prevState) => ({ ...prevState, [id]: false }));
+      toast.error(error?.message);
     }
+    // finally {
+    //   setLoadingStates((prevState) => ({ ...prevState, [id]: false }));
+    // }
   };
 
   return (
@@ -110,7 +121,7 @@ export default function RequestAppointmentToAdmin() {
                   <td>{data?.meeting}</td>
                   <td>
                     {data?.price && !data?.paid ? (
-                      <button className="hover:opacity-50">Pay</button>
+                      <button className="hover:opacity-50">Unpaid</button>
                     ) : (
                       <button onClick={(e) => handleClickInvoice(e, data?._id)}>
                         <span className="text-green-500 hover:opacity-50">
@@ -120,7 +131,27 @@ export default function RequestAppointmentToAdmin() {
                     )}
                   </td>
                   <td>
-                    <button
+                    {data?.status === "pending" ? (
+                      <button
+                        className="btn btn-primary text-xs"
+                        onClick={() =>
+                          handleApprove(
+                            data?._id,
+                            data?.name,
+                            data?.doctor,
+                            data?.date,
+                            data?.department,
+                            data?.email
+                          )
+                        }
+                        disabled={loading}
+                      >
+                        {loading ? "Approving" : "Confirm"}
+                      </button>
+                    ) : (
+                      <span className="text-green-500">Approved</span>
+                    )}
+                    {/* <button
                       className="bg-green-500 text-white p-2 rounded mr-2"
                       onClick={() =>
                         handleApprove(
@@ -140,7 +171,7 @@ export default function RequestAppointmentToAdmin() {
                         : data?.status === "approved"
                           ? "Approved"
                           : "Confirm"}
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))}

@@ -18,9 +18,9 @@ router.route("/bookings/:email").get(getBooking);
 
 router.route("/booking/:id").get(getSpecificBooking);
 
-
-
+//Approval appointment from Doctor
 router.route("/booking/update/doctor/:id").put( docApproveVerifyJwt,doctorApprovalStatus);
+//Approval appointment from System Admin
 router.route("/booking/update/:id").put(systemAdminVerifyJWT,updateAppointmentStatus);
 
 router.route("/booking/create-payment-intent").post(paymentIntent);

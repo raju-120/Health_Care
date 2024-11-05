@@ -102,112 +102,114 @@ const getBooking = asyncHandler(async (req, res) => {
 
   const updateAppointmentStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { status, docapporve, friend, doctor, date, department, email, doctorEmail, name } = req.body;
-
+    const { status, doctor, date, department, email, doctorEmail, name } = req.body;
+    
+    console.log("Approval: ", req.body);
     if (!status) {
-        return res.status(400).json({ message: 'Status is required' });
+      return res.status(400).json({ message: 'Status is required' });
     }
-
-    if (req.user.role !== 'system-admin' && req.user.role !== 'admin' && req.user.role !== 'doctor') {
-        throw new ApiError(403, "Forbidden: You don't have permission to update this appointment");
+  
+    if (req.user.role !== 'system-admin' && req.user.role !== 'admin') {
+      throw new ApiError(403, "Forbidden: You don't have permission to update this appointment");
     }
-
+  
     try {
-        const appointment = await Appointment.findByIdAndUpdate(id, { status, docapporve, friend }, { new: true });
-        console.log("Approval of Data: ", appointment);
-
-        if (!appointment) {
-            console.log("Appointment not found for id:", id);
-            return res.status(404).json({ message: 'Appointment not found' });
+      const appointment = await Appointment.findByIdAndUpdate(
+        id,
+        { status, doctor, date, department, email, doctorEmail, name },
+        { new: true }
+      );
+      console.log("Approval of Data: ", appointment);
+  
+      if (!appointment) {
+        console.log("Appointment not found for id:", id);
+        return res.status(404).json({ message: 'Appointment not found' });
+      }
+  
+      // Email sending logic if the role is 'system-admin'
+      if (req.user.role === 'system-admin') {
+        let config = {
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL_NODEMAILER,
+            pass: process.env.PASS_NODEMAILER,
+          },
+        };
+  
+        let transporter = nodemailer.createTransport(config);
+  
+        let MailGenerator = new Mailgen({
+          theme: 'default',
+          product: {
+            name: 'EvenCare',
+            link: 'https://mailgen.js/',
+          },
+        });
+  
+        let response = {
+          body: {
+            username: `${name}`,
+            intro: 'Your Appointment has been Approved.',
+            table: {
+              data: [
+                {
+                  description: `Your appointment with ${doctor} in the ${department} department on Date: ${date} has been approved. Please arrive at least 20 minutes before your scheduled time.`,
+                },
+              ],
+            },
+            outro: 'Thank you for your co-operation.',
+          },
+        };
+  
+        let mailContent = MailGenerator.generate(response);
+  
+        // Helper function to validate emails
+        const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  
+        // Prepare user email
+        let userMessage = isValidEmail(email)
+          ? {
+              from: process.env.EMAIL_NODEMAILER,
+              to: email,
+              subject: 'Approval of Your Appointment with Doctor',
+              html: mailContent,
+            }
+          : null;
+  
+        // Prepare doctor email
+        let doctorMessage = isValidEmail(doctorEmail)
+          ? {
+              from: process.env.EMAIL_NODEMAILER,
+              to: doctorEmail,
+              subject: 'New Appointment Approved',
+              html: mailContent,
+            }
+          : null;
+  
+        // Send emails to both user and doctor
+        try {
+          if (userMessage) await transporter.sendMail(userMessage);
+          if (doctorMessage) await transporter.sendMail(doctorMessage);
+  
+          console.log('Emails sent successfully');
+        } catch (error) {
+          console.error('Error sending email:', error);
+          // Log email failure but do not send an extra response
         }
-
-        if (req.user.role === 'system-admin') {
-            // Generate a Google Meet link (placeholder logic)
-            const googleMeetLink = `https://meet.google.com/${Math.random().toString(36).substring(2, 8)}`;
-
-            let config = {
-                service: 'gmail',
-                auth: {
-                    user: process.env.EMAIL_NODEMAILER,
-                    pass: process.env.PASS_NODEMAILER
-                }
-            };
-
-            let transporter = nodemailer.createTransport(config);
-
-            let MailGenerator = new Mailgen({
-                theme: 'default',
-                product: {
-                    name: 'EvenCare',
-                    link: 'https://mailgen.js/',
-                }
-            });
-
-            let response = {
-                body: {
-                    username: `${name}`,
-                    intro: 'Your Appointment has been Approved.',
-                    table: {
-                        data: [
-                            {
-                                description: `Your appointment with ${doctor} in the ${department} department on Date: ${date} has been approved. Please arrive at least 20 minutes before your scheduled time.`,
-                                
-                            }
-                        ]
-                    },
-                    outro: 'Thank you for your co-operation.'
-                }
-            };
-
-            let mailContent = MailGenerator.generate(response);
-
-            // Helper function to validate emails
-            const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
-
-            // Prepare user email
-            let userMessage = isValidEmail(email) ? {
-                from: process.env.EMAIL_NODEMAILER,
-                to: email,
-                subject: "Approval of Your Appointment with Doctor",
-                html: mailContent
-            } : null;
-
-            // Prepare doctor email
-            let doctorMessage = isValidEmail(doctorEmail) ? {
-                from: process.env.EMAIL_NODEMAILER,
-                to: doctorEmail,
-                subject: "New Appointment Approved",
-                html: mailContent
-            } : null;
-
-            // Send emails sequentially if they are valid
-            const sendUserEmail = userMessage ? transporter.sendMail(userMessage) : Promise.resolve();
-            const sendDoctorEmail = doctorMessage ? transporter.sendMail(doctorMessage) : Promise.resolve();
-
-            // Send emails to both user and doctor
-            sendUserEmail
-                .then(() => sendDoctorEmail)
-                .then(() => {
-                    console.log('Emails sent successfully');
-                    res.status(200).json({
-                        msg: 'Appointment updated and email confirmation sent.',
-                        appointment
-                    });
-                })
-                .catch(error => {
-                    console.error("Error sending email:", error);
-                    res.status(500).json({
-                        msg: 'Appointment updated but failed to send email confirmation.',
-                        appointment,
-                        error
-                    });
-                });
-        }
+      }
+  
+      // Send a single response after email sending
+      res.status(200).json({
+        success: true,
+        message: 'Appointment updated and email confirmation sent.',
+        appointment,
+      });
     } catch (error) {
-        console.error("Error updating appointment:", error);
-        res.status(500).json({ message: 'Internal server error' });
+      console.error('Error updating appointment:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-});
+  });
+  
 
 const doctorApprovalStatus = asyncHandler(async(req, res) =>{
   const { id } = req.params;
