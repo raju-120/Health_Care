@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { avaiableTimeSLot, booking, getAllBooking, /* getBookedSlots, */ getBooking, getDateAndTime, getOnlineDateAndTime, getSpecificBooking, updateAppointmentStatus } from "../controllers/booking.controller.js";
+import { avaiableTimeSLot, booking, doctorApprovalStatus, getAllBooking, /* getBookedSlots, */ getBooking, getDateAndTime, getOnlineDateAndTime, getSpecificBooking, updateAppointmentStatus } from "../controllers/booking.controller.js";
 import {  /* verifyJwtApproval, */systemAdminVerifyJWT,docApproveVerifyJwt } from "../middlewares/auth.middleware.js";
 import { payment, paymentIntent } from "../controllers/payment.controller.js";
 
@@ -20,8 +20,8 @@ router.route("/booking/:id").get(getSpecificBooking);
 
 
 
-router.route("/booking/update/doctor/:id").put( docApproveVerifyJwt/* ,systemAdminVerifyJWT, */,updateAppointmentStatus);
-router.route("/booking/update/:id").put( /* docApproveVerifyJwt, */systemAdminVerifyJWT,updateAppointmentStatus);
+router.route("/booking/update/doctor/:id").put( docApproveVerifyJwt,doctorApprovalStatus);
+router.route("/booking/update/:id").put(systemAdminVerifyJWT,updateAppointmentStatus);
 
 router.route("/booking/create-payment-intent").post(paymentIntent);
 router.route("/booking/payment").post(payment);

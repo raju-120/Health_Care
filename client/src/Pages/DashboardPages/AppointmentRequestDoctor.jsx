@@ -7,8 +7,8 @@ import { toast, Toaster } from "react-hot-toast";
 export default function AppointmentRequestDoctor() {
   const { currentUser } = useSelector((state) => state.user);
   const [allData, setAllData] = useState([]);
-  // const [loadingId, setLoadingId] = useState(null);
-  const [loadingStates, setLoadingStates] = useState({});
+  const [loading, setLoading] = useState(false);
+  // const [loadingStates, setLoadingStates] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,10 +19,10 @@ export default function AppointmentRequestDoctor() {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
-        if (data.success) {
-          setAllData(data.data);
-        } else {
+        if (data?.success === false) {
           console.error(data.message);
+        } else {
+          setAllData(data?.data);
         }
       } catch (error) {
         console.error("Error fetching appointments:", error);
@@ -32,53 +32,9 @@ export default function AppointmentRequestDoctor() {
     getAllRequests();
   }, []);
 
-  // const handleApprove = async (id, doctor, date, department, email, name) => {
-  //   // setLoadingId(id); // Track the loading state for the specific appointment
-  //   setLoadingStates((prevState) => ({ ...prevState, [id]: true }));
-  //   try {
-  //     // setLoading(true);
-  //     const response = await fetch(
-  //       `/api/appointment/booking/update/doctor/${id}`,
-  //       {
-  //         method: "PUT",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${currentUser?.data?.accessToken}`,
-  //         },
-  //         body: JSON.stringify({
-  //           status: "pending",
-  //           docapporve: "approved",
-  //           friend: "approved",
-  //           doctor,
-  //           date,
-  //           department,
-  //           email,
-  //           name,
-  //           accessToken: currentUser?.data?.accessToken,
-  //         }),
-  //       }
-  //     );
-
-  //     if (!response.ok) throw new Error("Failed to update status");
-
-  //     // Update the state locally to avoid needing a page refresh
-  //     setAllData((prevData) =>
-  //       prevData.map((appt) =>
-  //         appt._id === id ? { ...appt, docapporve: "approved" } : appt
-  //       )
-  //     );
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error("Error updating appointment:", error);
-  //     setLoading(false);
-  //   } finally {
-  //     setLoadingId(null); // Reset the loading state
-  //     setLoading(false);
-  //   }
-  // };
-  const handleApprove = async (id, doctor, date, department, email) => {
-    setLoadingStates((prevState) => ({ ...prevState, [id]: true }));
+  const handleApprove = async (id) => {
     try {
+      setLoading(true);
       const response = await fetch(
         `/api/appointment/booking/update/doctor/${id}`,
         {
@@ -91,11 +47,6 @@ export default function AppointmentRequestDoctor() {
             status: "pending",
             docapporve: "approved",
             friend: "approved",
-            doctor,
-            date,
-            department,
-            email,
-            name,
             accessToken: currentUser?.data?.accessToken,
           }),
         }
@@ -106,16 +57,21 @@ export default function AppointmentRequestDoctor() {
         toast.error(`Error: ${result.message}`);
       } else {
         setAllData((prevData) =>
-          prevData.map((appt) =>
-            appt._id === id ? { ...appt, status: "approved" } : appt
+          prevData.map((appointment) =>
+            appointment?._id === id
+              ? { ...appointment, docapporve: "approved" }
+              : appointment
           )
         );
+        setLoading(false);
         toast.success("Appointment approved successfully!");
       }
+      // setLoading(false);
+      // toast.success("Appointment approved successfully!");
     } catch (error) {
-      console.error("Error updating appointment:", error.message);
-    } finally {
-      setLoadingStates((prevState) => ({ ...prevState, [id]: false }));
+      setLoading(false);
+      // console.error("Error updating appointment:", error.message);
+      toast.error(error?.message);
     }
   };
 
@@ -173,25 +129,13 @@ export default function AppointmentRequestDoctor() {
                   )}
                 </td>
                 <td>
-                  {data.docapporve === "pending" ? (
+                  {data?.docapporve === "pending" ? (
                     <button
                       className="btn btn-primary text-xs"
                       onClick={() => handleApprove(data._id)}
-                      // disabled={loadingId === data._id}
-                      disabled={
-                        loadingStates[data?._id] || data?.status === "approved"
-                      }
+                      disabled={loading}
                     >
-                      {loadingStates[data?._id]
-                        ? "Approving..."
-                        : data?.status === "approved"
-                          ? "Approved"
-                          : "Confirm"}
-                      {/* {loadingId === data._id ? (
-                        <span className="text-white">Approving...</span>
-                      ) : (
-                        <span className="text-white">Approve</span>
-                      )} */}
+                      {loading ? "Approving" : "Confirm"}
                     </button>
                   ) : (
                     <span className="text-green-500">Approved</span>

@@ -8,6 +8,7 @@ import { Doctor } from "../models/doctor.model.js";
 
 
 
+
 const booking = asyncHandler(async (req, res) => {
   const {
     name, dateOfBirth, gender, phone, department,
@@ -208,7 +209,31 @@ const getBooking = asyncHandler(async (req, res) => {
     }
 });
 
+const doctorApprovalStatus = asyncHandler(async(req, res) =>{
+  const { id } = req.params;
+  // console.log("Doctor Approval ID: ", id);
+  // console.log("Doctor Approval: ", req.body);
+  const { status, docapporve, friend } = req.body;
 
+  if (!status) {
+    return res.status(400).json({ message: 'Status is required' });
+  }
+  if (req.user.role !== 'doctor') {
+    throw new ApiError(403, "Forbidden: You don't have permission to update this appointment ID");
+  }
+  // console.log("Doctor Approval: ", id, status,req.user.role);
+  try{
+    const appointment = await Appointment.findByIdAndUpdate(id, { status, docapporve, friend }, { new: true });
+    console.log("Approval of Data: ", appointment);
+    res.status(200).json({
+      success: true,
+      message: "Appointment from Doctor is confirmed",
+    })
+  }catch(error){
+    console.error("Error updating appointment:", error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+})
 
 const avaiableTimeSLot = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -311,6 +336,7 @@ export {
     updateAppointmentStatus,
     avaiableTimeSLot,
     getDateAndTime,
-    getOnlineDateAndTime
+    getOnlineDateAndTime,
+    doctorApprovalStatus
 };
 

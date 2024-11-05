@@ -59,6 +59,7 @@ export default function Profile() {
     setFormData({...formData, onlineSlots: [...formData.onlineSlots || '']});
   }; */
 
+  // Image uploading to the google firebase
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
@@ -92,6 +93,7 @@ export default function Profile() {
     );
   };
 
+  // Update Profile Information based on role
   const handleSubmit = async (e) => {
     e.preventDefault();
     const isDoctor = currentUser?.data?.user?.role === "doctor";
