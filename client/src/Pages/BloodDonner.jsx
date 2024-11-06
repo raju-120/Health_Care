@@ -115,7 +115,7 @@ export default function BloodDonner() {
 
       {/* Donor List search section by blood group */}
       <section className="mb-24 mt-[-7em]">
-        <div className="container lg:max-w-[1250px] mx-auto lg:px-5">
+        <div className="container mx-auto lg:px-5">
           <form className="w-full" onSubmit={(e) => e.preventDefault()}>
             <div className="mb-8">
               <div className="relative flex items-center">

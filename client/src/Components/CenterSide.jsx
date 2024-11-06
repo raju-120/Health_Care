@@ -297,9 +297,12 @@ export default function CenterSide() {
         </div>
       </div>
 
-      <section className="cs_hero cs_style_5 position-relative" id="home">
+      <section
+        className="cs_hero cs_style_5 position-relative mt-[-40px]"
+        id="home"
+      >
         <div
-          className="cs_hero_top cs_bg_filled cs_primary_bg cs_bg_filed "
+          className="cs_hero_top cs_bg_filled cs_primary_bg cs_bg_filed"
           data-src="assets/images/hero_bg_11.jpeg"
         >
           <div className="container">

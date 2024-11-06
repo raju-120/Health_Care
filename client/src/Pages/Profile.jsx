@@ -15,7 +15,7 @@ import {
   updateUserStart /* updateUserSuccess */,
 } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Profile() {
   const { currentUser } = useSelector((state) => state?.user);
@@ -487,6 +487,7 @@ export default function Profile() {
           </button>
         </div>
       </div>
+      <Toaster position="center-top" />
     </div>
   );
 }

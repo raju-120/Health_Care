@@ -60,7 +60,8 @@ export default function Headers() {
       </div>
       {/* <!-- End Preloader --> */}
       <header
-        className="cs_site_header cs_style_1 cs_sticky_header" /* style={{padding:"0 100px"}} */
+        className="cs_site_header cs_style_1 cs_sticky_header lg:max-w-[1900px]"
+        style={{ padding: "5px" }}
       >
         <div className="cs_main_header">
           <div className="container">

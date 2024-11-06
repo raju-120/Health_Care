@@ -79,6 +79,7 @@ export default function MyAppointment() {
             {/* head */}
             <thead>
               <tr>
+                <th className="text-xl font-semibold text-black">Index</th>
                 <th className="text-xl font-semibold text-black">Name</th>
                 <th className="text-xl font-semibold text-black">
                   Doctor Name
@@ -94,8 +95,9 @@ export default function MyAppointment() {
               </tr>
             </thead>
             <tbody>
-              {allData?.map((data) => (
+              {allData?.map((data, i) => (
                 <tr className="hover" key={data?._id}>
+                  <td>{i + 1}</td>
                   <td>
                     <div className="flex items-center gap-3">
                       <div>
