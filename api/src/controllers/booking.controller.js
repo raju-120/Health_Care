@@ -213,8 +213,6 @@ const updateAppointmentStatus = asyncHandler(async (req, res) => {
 
 const doctorApprovalStatus = asyncHandler(async(req, res) =>{
   const { id } = req.params;
-  // console.log("Doctor Approval ID: ", id);
-  // console.log("Doctor Approval: ", req.body);
   const { status, docapporve, friend } = req.body;
 
   if (!status) {
@@ -223,7 +221,7 @@ const doctorApprovalStatus = asyncHandler(async(req, res) =>{
   if (req.user.role !== 'doctor') {
     throw new ApiError(403, "Forbidden: You don't have permission to update this appointment ID");
   }
-  // console.log("Doctor Approval: ", id, status,req.user.role);
+  
   try{
     const appointment = await Appointment.findByIdAndUpdate(id, { status, docapporve, friend }, { new: true });
     console.log("Approval of Data: ", appointment);
@@ -237,56 +235,53 @@ const doctorApprovalStatus = asyncHandler(async(req, res) =>{
   }
 })
 
-const avaiableTimeSLot = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { date } = req.query;
+// const avaiableTimeSLot = asyncHandler(async (req, res) => {
+//   const { id } = req.params;
+//   const { date } = req.query;
   
-  console.log("Date from server ID: ", id);
+//   console.log("Date from server ID: ", id);
   
-  // Query for doctor or appointment
-  // const query = { doctor: id };
-  const query = await Doctor.findById(id);
-  // console.log("Doc Details: ", query);
+//   Query for doctor or appointment
+//   const query = { doctor: id };
+//   const query = await Doctor.findById(id);
+//   console.log("Doc Details: ", query);
 
-  // const findDocId = {docId === query}
+//   const findDocId = {docId === query}
 
-  // Find available dates and appointments for the doctor
-const avaiableDates = await Appointment.find({docId: query});
-  console.log("Doc Details: ", avaiableDates);
+//   Find available dates and appointments for the doctor
+//   const avaiableDates = await Appointment.find({docId: query});
+//   console.log("Doc Details: ", avaiableDates);
 
-  // Get the already booked appointments for the specific date
-  // const appointmentQuery = { date, doctor: id };
-  // const alreadyBooked = await Appointment.find(appointmentQuery);
+//   Get the already booked appointments for the specific date
+//   const appointmentQuery = { date, doctor: id };
+//   const alreadyBooked = await Appointment.find(appointmentQuery);
 
-  // Check and filter available slots
-  // avaiableDates.forEach(option => {
-  //   const dateOptionBooked = alreadyBooked.filter(book => book.doctor === option.doctor);
-  //   const bookedSlots = dateOptionBooked.map(book => book.slot);
-  //   const remainingSlots = option.slots.filter(slot => !bookedSlots.includes(slot));
-  //   option.slots = remainingSlots;
-  // });
+//   Check and filter available slots
+//   avaiableDates.forEach(option => {
+//     const dateOptionBooked = alreadyBooked.filter(book => book.doctor === option.doctor);
+//     const bookedSlots = dateOptionBooked.map(book => book.slot);
+//     const remainingSlots = option.slots.filter(slot => !bookedSlots.includes(slot));
+//     option.slots = remainingSlots;
+//   });
 
-  // res.send(avaiableDates);
-});
+//   res.send(avaiableDates);
+// });
 
 const getDateAndTime = asyncHandler(async(req, res) =>{
   const {docId,date} = req.body;  
-  // console.log("Date Server: ", date);
+
     try {
         const appointments = await Appointment.find({ 
             docId: docId,
-            date: date  // Match the specific date
+            date: date  
         });
-        // console.log("Server: ", appointments)
+        
         const availableSlots = ["06:00 PM - 06:30 PM", "06:30 PM - 07:00 PM", "07:00 PM - 07:30 PM", "07:30 PM - 08:00 PM"]
 
         const bookedSlots = appointments.map(appointment => appointment.appointmentSlots);
-        // console.log(bookedSlots)
-
-        // Filter available slots by excluding the booked ones
+        
         const freeSlots = availableSlots.filter(slot => !bookedSlots.includes(slot));
-        // console.log(freeSlots)
-
+        
         return res.status(200).json({ freeSlots });
 
 
@@ -299,21 +294,18 @@ const getDateAndTime = asyncHandler(async(req, res) =>{
 
 const getOnlineDateAndTime = asyncHandler(async(req, res) =>{
   const {docId,date} = req.body;  
-  // console.log("Date Server: ", date);
+
     try {
         const appointments = await Appointment.find({ 
             docId: docId,
-            date: date  // Match the specific date
+            date: date  
         });
-        // console.log("Server: ", appointments)
+
         const availableSlots = ["08:10 PM - 08:40 PM", "08:50 PM - 09:20 PM", "09:30 PM - 10:00 PM"]
 
         const bookedSlots = appointments.map(appointment => appointment.onlineAppointmentSlots);
-        // console.log(bookedSlots)
-
-        // Filter available slots by excluding the booked ones
+        
         const freeSlots = availableSlots.filter(slot => !bookedSlots.includes(slot));
-        // console.log(freeSlots)
 
         return res.status(200).json({ freeSlots });
 
@@ -322,11 +314,6 @@ const getOnlineDateAndTime = asyncHandler(async(req, res) =>{
         throw error;
     }
 })
-
-
-
-
-
 
 
 export {

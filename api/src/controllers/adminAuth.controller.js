@@ -271,7 +271,7 @@ const adminSignIn = asyncHandler(async (req, res, next) => {
         throw new ApiError(404, "User email is not found!");
     }
 
-    const validPassword = await user.isPasswordCorrect(password); // Call on instance
+    const validPassword = await user.isPasswordCorrect(password);
     if (!validPassword) {
         throw new ApiError(401, "System Admin password won't match!");
     }

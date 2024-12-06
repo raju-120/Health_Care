@@ -23,9 +23,9 @@ const messageSchema = new mongoose.Schema({
         type: String,
         
     },
-    pdfFile: {  // Storing binary PDF data and its content type
+    pdfFile: {  
         data: { type: Buffer },  // Binary data of the PDF
-        contentType: { type: String, default: 'application/pdf' }  // Typically 'application/pdf'
+        contentType: { type: String, default: 'application/pdf' }  
     }
 }, { timestamps: true });
 

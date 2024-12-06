@@ -1,17 +1,14 @@
 import { BloodDoner } from "../models/bloodDonner.model.js";
-// import { ApiError } from "../utils/ApiError.js";
 import { APIResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js"
 
 const bloodDonnerRegister = asyncHandler(async(req, res) =>{
-    // console.log(req.body);
     const {firstname,lastname,email,phone,division,area,lastdonatedate,bloodgroup} = req.body;
 
     const existedUser = await BloodDoner.findOne({
         $or : [{email}]
     })
     if(existedUser){
-        // throw new ApiError("This user already registered");
         return res.status(500).json({ message: 'This user email already registered' });
     }
 

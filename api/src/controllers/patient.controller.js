@@ -6,8 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 const patientRegistration = asyncHandler(async(req, res) =>{
     try {
       const patientData = req.body;
-  
-      // Check if email or nationalId already exists (optional validation)
+
       const existingPatient = await Patient.findOne({
         $or: [{ email: patientData.email }, { nationalId: patientData.nationalId }],
       });
@@ -39,7 +38,7 @@ const patientRegistration = asyncHandler(async(req, res) =>{
   // Get all patients
 const getAllPatients = asyncHandler(async (req, res) => {
     try {
-      const patients = await Patient.find(); // Fetch all patients from the database
+      const patients = await Patient.find(); 
       res.status(200).json(patients);
     } catch (error) {
       console.error('Error fetching patients:', error);

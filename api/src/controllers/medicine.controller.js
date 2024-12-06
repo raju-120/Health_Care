@@ -1,5 +1,4 @@
 import { Medicine } from "../models/medicine.modal.js";
-import { ApiError } from "../utils/ApiError.js";
 import { APIResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 

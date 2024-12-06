@@ -322,83 +322,13 @@ const docLogoutUser = asyncHandler (async(req, res) =>{
 });
 
 
-
-
-
-
-
-/* const doctorSignUp = asyncHandler(async(req, res) =>{
-    const {username,email,bmdc,specialty,qualification,designation,institute,
-        department,phone,appointmentnumber,address,password,time,gender,price} 
-        = req.body;
-
-    let avatarUrl = null;
-    const existedUser = await Doctor.findOne({
-        $or:[{ email }]
-    });
-    if(existedUser){
-        throw new ApiError(402, "This email id already used")
-    };
-
-    try {
-        if (req.file) {
-          const result = await cloudinary.uploader.upload(req.file.path, {
-            folder: 'avatars',
-          });
-          avatarUrl = result.secure_url;
-        }
-    
-        const newDoctor = new Doctor({
-            username,
-            email,
-            bmdc,
-            specialty,
-            qualification,
-            designation,
-            institute,
-            department,
-            phone,
-            appointmentnumber,
-            address,
-            avatar: avatarUrl,
-            password,time,gender,price
-        });
-    
-        await newDoctor.save();
-        
-        const createdUser = await Doctor.findById(newDoctor._id).select(
-            "-password -refreshToken"
-        )
-    
-        if(!createdUser) {
-            throw new ApiError(500, "Doctor's id not created.There must be fill up all the fields!");
-        };
-
-        return res.status(201).json( 
-            new APIResponse(200, createdUser, "Doctor registered successfully."));
-
-      } catch (error) {
-        console.error('Error during image upload:', error);
-        throw new ApiError(500, 'Image upload failed');
-      } finally {
-
-        if (req.file) {
-          const fs = require('fs');
-          fs.unlinkSync(req.file.path); 
-        }
-      }
-}); */
-
-
 const doctorSignUp = asyncHandler(async (req, res) => {
-    console.log("first", req.body);
 
-    // Extract fields from the request body
     const { username, email, bmdc, specialty, qualification, designation, institute,
         department, phone, appointmentnumber, address, password, time, gender, price, advPrice,
         slots: slotsString, onlineSlots: onlineSlotsString } = req.body;
 
-    // Convert JSON strings to arrays
+    
     let slots = [];
     let onlineSlots = [];
 
@@ -454,32 +384,28 @@ const doctorSignUp = asyncHandler(async (req, res) => {
 });
 
 
-
-
-
-
-  const seedDepartments = async () => {
-    const departmentCount = await Department.countDocuments();
-    if (departmentCount === 0) {
-      const defaultDepartments = [
-        { deptname: 'CARDIOLOGY' },
-        { deptname: 'NEUROLOGY' },
-        { deptname: 'ORTHOPEDICS' },
-        { deptname: 'CHILDREN SPECIALIST' },
-        { deptname: 'DIABETES & ENDOCRINOLOGY' },
-        { deptname: 'ENT' },
-        { deptname: 'DENTISTRY' },
-        { deptname: 'DERMATOLOGY' },
-        { deptname: 'GENERAL SURGERY' },
-        { deptname: 'MEDICINE SPECIALIST' },
-        { deptname: 'NEUROSURGERY' },
-      ];
-      await Department.insertMany(defaultDepartments);
-      console.log('Default departments added to the database');
-    } else {
-      console.log('Departments already exist in the database');
-    }
-  };  
+const seedDepartments = async () => {
+const departmentCount = await Department.countDocuments();
+if (departmentCount === 0) {
+    const defaultDepartments = [
+    { deptname: 'CARDIOLOGY' },
+    { deptname: 'NEUROLOGY' },
+    { deptname: 'ORTHOPEDICS' },
+    { deptname: 'CHILDREN SPECIALIST' },
+    { deptname: 'DIABETES & ENDOCRINOLOGY' },
+    { deptname: 'ENT' },
+    { deptname: 'DENTISTRY' },
+    { deptname: 'DERMATOLOGY' },
+    { deptname: 'GENERAL SURGERY' },
+    { deptname: 'MEDICINE SPECIALIST' },
+    { deptname: 'NEUROSURGERY' },
+    ];
+    await Department.insertMany(defaultDepartments);
+    console.log('Default departments added to the database');
+} else {
+    console.log('Departments already exist in the database');
+}
+};  
 
 const getDepartments = asyncHandler(async (req, res) => {
     const departments = await Department.find({});
@@ -536,10 +462,8 @@ const doctorSignIn = asyncHandler(async(req, res)=>{
 });
 
 const userUpdate = asyncHandler(  async (req, res) =>{
-        /* if(req.user?._id !== req.params?.id){
-            throw new ApiError(401, 'You can only update your own details!');
-        }; */
-        console.log("User Update", req.body);
+        
+        // console.log("User Update", req.body);
         try{
             const{  username, email,password,avatar } = req.body;
 
@@ -700,43 +624,6 @@ const doctorDelete = asyncHandler(async (req, res) => {
     });
 });
 
-
-// const getAvailableSlots = asyncHandler(async (req, res) => {
-//     try {
-//       const { docId, date, appointmentType } = req.body; // Expecting docId, date, and type (online or offline) from the frontend
-  
-//       // Fetch the doctor data
-//       const doctorData = await Doctor.findById(docId);
-  
-//       if (!doctorData) {
-//         return res.status(404).json(new APIResponse(404, null, "Doctor not found."));
-//       }
-  
-//       // Get either 'onlineSlots' or 'slots' based on the appointment type
-//       let availableSlots = appointmentType === 'online' ? doctorData.onlineSlots : doctorData.slots;
-  
-//       // Fetch all booked appointments for the doctor on the selected date
-//       const bookedAppointments = await Appointment.find({ docId, date });
-  
-//       // Extract the slots that are already booked
-//       const bookedSlots = bookedAppointments.map(app => app.appointmentSlot);
-  
-//       // Filter out the booked slots from the available slots
-//       const filteredSlots = availableSlots.filter(slot => !bookedSlots.includes(slot));
-  
-//       return res.status(200).json(
-//         new APIResponse(200, filteredSlots, "Available slots for the selected date.")
-//       );
-//     } catch (error) {
-//       console.error('Error:', error.message);
-//       return res.status(500).json(
-//         new APIResponse(500, null, "Failed to fetch available slots.")
-//       );
-//     }
-//   });
-  
-
-
 export {
         signup,
         signin,
@@ -758,6 +645,5 @@ export {
         getDoctorsByDepartment,
         getDepartments,
         seedDepartments,
-        // getAvailableSlots,
         specificUser
     };

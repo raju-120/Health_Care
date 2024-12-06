@@ -1,4 +1,3 @@
-/* require('dotenv').config({path: '../../.env'}); */
 import dotenv from "dotenv";
 import connectDB from "./db/dbIndex.js";
 import http from "http"
@@ -24,7 +23,6 @@ import Medicine from './routes/medicine.route.js';
 import ComplainedBox from './routes/coomplain.route.js';
 import Prescriptions from './routes/prescription.route.js';
 import PatientRegForm from './routes/patient.route.js';
-/* import { handlePDFUpload } from "./middlewares/multer.middleware.js"; */
 
 
 
@@ -141,10 +139,6 @@ app.use("/api/complainbox",ComplainedBox );
 dotenv.config({
     path: '../../env'
 });
-
-/* app.get("*", (req, res) => {
-	res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-}); */
 
 connectDB()
 .then(() =>{

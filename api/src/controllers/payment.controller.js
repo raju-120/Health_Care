@@ -8,8 +8,6 @@ import { APIResponse } from "../utils/ApiResponse.js";
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-//console.log("Stripe key: ", process.env.STRIPE_SECRET_KEY)
-
 const { ObjectId } = mongoose.Types;
 
 const paymentIntent = asyncHandler(async(req, res) =>{

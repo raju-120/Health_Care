@@ -62,7 +62,7 @@ adminSchema.methods.generateRefreshToken = function() {
     return jwt.sign({
         _id: this._id,
     },
-    process.env.REFRESH_TOKEN_SECRET, // Use REFRESH_TOKEN_SECRET for refresh tokens
+    process.env.REFRESH_TOKEN_SECRET,
     {
         expiresIn: process.env.REFRESH_TOKEN_EXPIRY
     });

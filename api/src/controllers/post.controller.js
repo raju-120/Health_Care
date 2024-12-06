@@ -6,31 +6,17 @@ import { APIResponse } from "../utils/ApiResponse.js";
 import Services from "../models/services.js";
 import Solutions from "../models/Solution.model.js";
 
-
+// Social Media Type post method
 const dropPost = asyncHandler(async (req, res)=>{
     const {username, descriptions, comment} = req.body ;
-/*     
-    if([username,description,comment].some((field) =>
-     field?.trim() === "")
-     ){
-        throw new ApiError(400, "All fields are required");
-     } */
-    
-/*     const avatarLocalPath =req.files?.avatar[2]?.path; */
-    let avatarLocalPath;
-    /* let avatarArray = [];
 
-    req.files?.avatar */
-  if(req.files && Array.isArray(req.files.avatar) && req.files.avatar.length >0 ){
+    let avatarLocalPath;
+
+    if(req.files && Array.isArray(req.files.avatar) && req.files.avatar.length >0 ){
         
         avatarLocalPath =req.files?.avatar[0]?.path;
         console.log(req.files?.avatar);
     } 
-    //console.log("Avatar path name: ", avatarLocalPath);
-
-/*     if(!avatarLocalPath) {
-        throw new ApiError(400, "Avatar file is required");
-    } */
 
     let avatar;
     
@@ -38,12 +24,6 @@ const dropPost = asyncHandler(async (req, res)=>{
 
         avatar = await uploadOnCloudinary(avatarLocalPath);
     }
-    // if(!avatar){
-    //     throw new ApiError(400, "Avatar file is required");
-    // };
-
-    // console.log("Avatar: ", avatar);
-
 
     if(avatarLocalPath){
         const posting = await POST.create({

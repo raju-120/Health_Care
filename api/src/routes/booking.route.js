@@ -1,7 +1,19 @@
 import { Router } from "express";
-import { avaiableTimeSLot, booking, doctorApprovalStatus, getAllBooking, /* getBookedSlots, */ getBooking, getDateAndTime, getOnlineDateAndTime, getSpecificBooking, updateAppointmentStatus } from "../controllers/booking.controller.js";
-import {  /* verifyJwtApproval, */systemAdminVerifyJWT,docApproveVerifyJwt } from "../middlewares/auth.middleware.js";
-import { payment, paymentIntent } from "../controllers/payment.controller.js";
+import { 
+    avaiableTimeSLot, 
+    doctorApprovalStatus, 
+    getAllBooking, 
+    getBooking, 
+    getDateAndTime, 
+    getOnlineDateAndTime, 
+    getSpecificBooking,
+    updateAppointmentStatus } from "../controllers/booking.controller.js";
+import { 
+    systemAdminVerifyJWT,
+    docApproveVerifyJwt } from "../middlewares/auth.middleware.js";
+import { 
+    payment, 
+    paymentIntent } from "../controllers/payment.controller.js";
 
 const router = Router()
 
@@ -25,9 +37,6 @@ router.route("/booking/update/:id").put(systemAdminVerifyJWT,updateAppointmentSt
 
 router.route("/booking/create-payment-intent").post(paymentIntent);
 router.route("/booking/payment").post(payment);
-
-
-
 
 
 export default router;
