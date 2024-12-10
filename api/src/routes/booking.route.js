@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { 
-    avaiableTimeSLot, 
+    booking,
+    /* avaiableTimeSLot,  */
     doctorApprovalStatus, 
     getAllBooking, 
     getBooking, 
@@ -20,7 +21,7 @@ const router = Router()
 
 router.route("/bookings").post(booking);
 
-router.route("/booked-slots/:id").get(avaiableTimeSLot);
+// router.route("/booked-slots/:id").get(avaiableTimeSLot);
 
 router.route("/get-date-time").post(getDateAndTime);
 router.route("/get-online-date-time").post(getOnlineDateAndTime);

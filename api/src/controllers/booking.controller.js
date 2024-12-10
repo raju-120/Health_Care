@@ -323,7 +323,7 @@ export {
     getSpecificBooking,
     getAllBooking,
     updateAppointmentStatus,
-    avaiableTimeSLot,
+    // avaiableTimeSLot,
     getDateAndTime,
     getOnlineDateAndTime,
     doctorApprovalStatus
