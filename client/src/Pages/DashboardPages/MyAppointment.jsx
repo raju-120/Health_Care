@@ -89,6 +89,7 @@ export default function MyAppointment() {
                 <th className="text-xl font-semibold text-black">Slots</th>
                 <th className="text-xl font-semibold text-black">Meeting</th>
                 <th className="text-xl font-semibold text-black">Bill</th>
+                <th className="text-xl font-semibold text-black">B.Verified</th>
                 <th className="text-xl font-semibold text-black">Talk</th>
                 {/* <th className="text-xl font-semibold text-black">Reg Form</th> */}
                 <th className="text-xl font-semibold text-black">Status</th>
@@ -134,6 +135,7 @@ export default function MyAppointment() {
                       )}
                     </>
                   </td>
+                  <td>none</td>
 
                   <td>
                     {/* {console.log("Doctor ID: ", data?.docId)} */}

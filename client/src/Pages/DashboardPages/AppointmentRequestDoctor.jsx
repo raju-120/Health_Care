@@ -90,6 +90,7 @@ export default function AppointmentRequestDoctor() {
               <th>Slot</th>
               <th>Meeting</th>
               <th>Bill</th>
+              <th>B.Verified</th>
               <th>Talk</th>
               <th>Action</th>
             </tr>
@@ -111,6 +112,8 @@ export default function AppointmentRequestDoctor() {
                     <span className="text-red-500">Not Paid</span>
                   )}
                 </td>
+                <td>none</td>
+
                 <td>
                   {data.friend === "pending" ? (
                     <span className="text-red-500">Pending</span>

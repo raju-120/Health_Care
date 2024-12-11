@@ -96,22 +96,27 @@ export default function RequestAppointmentToAdmin() {
           <table className="table w-full">
             <thead>
               <tr>
-                <th className="text-xl font-semibold text-black">Name</th>
-                <th className="text-xl font-semibold text-black">
+                <th className="text-md font-semibold text-black">Index</th>
+                <th className="text-md font-semibold text-black">Name</th>
+                <th className="text-md font-semibold text-black">U.Info</th>
+                <th className="text-md font-semibold text-black">
                   Doctor Name
                 </th>
-                <th className="text-xl font-semibold text-black">Department</th>
-                <th className="text-xl font-semibold text-black">Date</th>
-                <th className="text-xl font-semibold text-black">Slot</th>
-                <th className="text-xl font-semibold text-black">Meeting</th>
-                <th className="text-xl font-semibold text-black">Bill</th>
-                <th className="text-xl font-semibold text-black">Action</th>
+                <th className="text-md font-semibold text-black">Department</th>
+                <th className="text-md font-semibold text-black">Date</th>
+                <th className="text-md font-semibold text-black">Slot</th>
+                <th className="text-md font-semibold text-black">Meeting</th>
+                <th className="text-md font-semibold text-black">Bill</th>
+                <th className="text-md font-semibold text-black">B.Verified</th>
+                <th className="text-md font-semibold text-black">Action</th>
               </tr>
             </thead>
             <tbody>
-              {allData?.map((data) => (
+              {allData?.map((data, i) => (
                 <tr key={data?._id}>
+                  <td>{i + 1}</td>
                   <td>{data?.name}</td>
+                  <td>Info</td>
                   <td>{data?.doctor}</td>
                   <td>{data?.department}</td>
                   <td>{data?.date}</td>
@@ -130,6 +135,7 @@ export default function RequestAppointmentToAdmin() {
                       </button>
                     )}
                   </td>
+                  <td>none</td>
                   <td>
                     {data?.status === "pending" ? (
                       <button
