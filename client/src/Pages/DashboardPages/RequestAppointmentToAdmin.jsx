@@ -44,7 +44,7 @@ export default function RequestAppointmentToAdmin() {
   };
 
   const handleApprove = async (id, doctor, date, department, email, name) => {
-    // setLoadingStates((prevState) => ({ ...prevState, [id]: true }));
+    console.log("first ID: ", id);
     try {
       setLoading(true);
       const response = await fetch(`/api/appointment/booking/update/${id}`, {
@@ -60,6 +60,7 @@ export default function RequestAppointmentToAdmin() {
           department,
           email,
           status: "approved",
+          isVerified: "approved",
           accessToken: currentUser?.data?.accessToken,
         }),
       });
@@ -71,7 +72,7 @@ export default function RequestAppointmentToAdmin() {
         setAllData((prevData) =>
           prevData.map((appointment) =>
             appointment?._id === id
-              ? { ...appointment, status: "approved" }
+              ? { ...appointment, status: "approved", isVerified: "approved" }
               : appointment
           )
         );
@@ -84,9 +85,6 @@ export default function RequestAppointmentToAdmin() {
       console.error("Error updating appointment:", error.message);
       toast.error(error?.message);
     }
-    // finally {
-    //   setLoadingStates((prevState) => ({ ...prevState, [id]: false }));
-    // }
   };
 
   return (
@@ -135,7 +133,13 @@ export default function RequestAppointmentToAdmin() {
                       </button>
                     )}
                   </td>
-                  <td>none</td>
+                  <td>
+                    {data?.isVerified === "pending" ? (
+                      <span className="text-red-500">Not Verified</span>
+                    ) : (
+                      <span className="text-green-500">Verified</span>
+                    )}
+                  </td>
                   <td>
                     {data?.status === "pending" ? (
                       <button

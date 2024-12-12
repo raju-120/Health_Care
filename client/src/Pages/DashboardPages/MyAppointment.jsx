@@ -16,7 +16,7 @@ export default function MyAppointment() {
     const getAllAdmins = async () => {
       try {
         const res = await fetch(
-          `/api/appointment/bookings/${currentUser?.data?.user?.email}`,
+          `/api/appointment/bookings?${currentUser?.data?.user?.email}`,
           {
             method: "GET",
             headers: {
@@ -99,15 +99,7 @@ export default function MyAppointment() {
               {allData?.map((data, i) => (
                 <tr className="hover" key={data?._id}>
                   <td>{i + 1}</td>
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <div className="font-semibold text-md">
-                          {data?.name}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
+                  <td>{data?.name}</td>
                   <td className="text-md">{data?.doctor}</td>
                   <td className="text-md">{data?.department}</td>
                   <td className="text-md">{data?.date}</td>
@@ -135,14 +127,20 @@ export default function MyAppointment() {
                       )}
                     </>
                   </td>
-                  <td>none</td>
-
                   <td>
-                    {/* {console.log("Doctor ID: ", data?.docId)} */}
+                    <>
+                      {data?.isVerified === "pending" ? (
+                        <span className="text-red-500">Not Verified</span>
+                      ) : (
+                        <span className="text-green-500">Verified</span>
+                      )}
+                    </>
+                  </td>
+                  <td>
                     <>
                       {data?.friend === "pending" ||
                       data?.status === "pending" ? (
-                        <span className="text-red-500">Pending</span>
+                        <span className="text-red-500">pending</span>
                       ) : (
                         data?.meeting === "online" && (
                           <button
@@ -153,28 +151,15 @@ export default function MyAppointment() {
                           </button>
                         )
                       )}
-
-                      {/* <Link to="/chat">
-                            <span className="text-green-500 text-2xl hover:opacity-50">
-                              <BsMessenger />
-                            </span>
-                          </Link> */}
                     </>
                   </td>
-
-                  <td className="text-lg ">
-                    {currentUser?.data?.user?.role === "admin" ||
-                    currentUser?.data?.user?.role === "systemAdmin" ? (
-                      <button className="bg-orange-600 p-1 rounded hover:opacity-75">
-                        {data?.status}
-                      </button>
+                  <td>
+                    {data.status === "pending" ? (
+                      <span className="text-red-500">pending</span>
                     ) : (
-                      <span>{data?.status}</span>
+                      <span className="text-green-500">approved</span>
                     )}
                   </td>
-                  {/* <td>
-                  <Link to='/patientinfo'>Form</Link>
-                </td> */}
                 </tr>
               ))}
             </tbody>

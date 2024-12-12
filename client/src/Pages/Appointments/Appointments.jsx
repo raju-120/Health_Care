@@ -100,10 +100,10 @@ function Appointments() {
     });
 
     const data = await res.json();
-    console.log("Data: ", data.freeSlots);
+    // console.log("Data: ", data.freeSlots);
     setSlots(data.freeSlots);
 
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
 
   // Online get time slots
@@ -123,10 +123,10 @@ function Appointments() {
     });
 
     const data = await res.json();
-    console.log("Data: ", data.freeSlots);
+    // console.log("Data: ", data.freeSlots);
     setOnlineSlots(data.freeSlots);
 
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
 
   // Handle form changes
@@ -202,10 +202,11 @@ function Appointments() {
       permission: "progress",
       docapprove: "pending",
       uId: currentUser?.data?.user?._id,
-      doctorId: formData.docId,
+      // doctorId: formData.docId,
       email: currentUser?.data?.user?.email,
       meeting: formData.meeting,
     };
+    // console.log("Data: ", appointmentData)
 
     try {
       setLoading(true);
@@ -554,7 +555,7 @@ function Appointments() {
                         required
                       >
                         {onlineSlots}
-                        {console.log("Online Slots: ", onlineSlots)}
+                        {/* {console.log("Online Slots: ", onlineSlots)} */}
 
                         <option value="">Choose Time Slot</option>
                         {onlineSlots.map((slot, index) => (

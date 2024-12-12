@@ -8,7 +8,6 @@ export default function AppointmentRequestDoctor() {
   const { currentUser } = useSelector((state) => state.user);
   const [allData, setAllData] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [loadingStates, setLoadingStates] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -112,7 +111,13 @@ export default function AppointmentRequestDoctor() {
                     <span className="text-red-500">Not Paid</span>
                   )}
                 </td>
-                <td>none</td>
+                <td>
+                  {data?.isVerified === "pending" ? (
+                    <span className="text-red-500">Not Verified</span>
+                  ) : (
+                    <span className="text-green-500">Verified</span>
+                  )}
+                </td>
 
                 <td>
                   {data.friend === "pending" ? (

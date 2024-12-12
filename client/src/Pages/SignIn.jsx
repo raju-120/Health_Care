@@ -5,8 +5,8 @@ import {
   signInSuccess,
 } from "../redux/user/userSlice";
 //import OAuth from "../Components/OAuth";
-import toast from "react-hot-toast";
-import React, { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function SignIn() {
@@ -54,6 +54,7 @@ export default function SignIn() {
       navigate("/");
     } catch (error) {
       dispatch(signInFailure(error.message));
+      toast.error("user credential did not matched.");
     }
   };
 
@@ -176,6 +177,7 @@ export default function SignIn() {
                 <Link to="/sign-up"> Sign-Up</Link>{" "}
               </span>{" "}
             </p>
+            <Toaster position="center-top" />
           </div>
         )}
 
