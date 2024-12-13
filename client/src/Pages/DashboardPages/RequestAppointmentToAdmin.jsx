@@ -43,11 +43,16 @@ export default function RequestAppointmentToAdmin() {
     }
   };
 
-  const handleApprove = async (id, doctor, date, department, email, name) => {
-    console.log("first ID: ", id);
+  const handleApprove = async (_id, doctor, date, department, email, name) => {
+    console.log("ID: ", _id);
+    console.log("name: ", name);
+    console.log("Doctor: ", doctor);
+    console.log("date: ", date);
+    console.log("email: ", email);
+    console.log("department: ", department);
     try {
       setLoading(true);
-      const response = await fetch(`/api/appointment/booking/update/${id}`, {
+      const response = await fetch(`/api/appointment/booking/update/${_id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -57,8 +62,8 @@ export default function RequestAppointmentToAdmin() {
           name,
           doctor,
           date,
-          department,
           email,
+          department,
           status: "approved",
           isVerified: "approved",
           accessToken: currentUser?.data?.accessToken,
@@ -71,7 +76,7 @@ export default function RequestAppointmentToAdmin() {
       } else {
         setAllData((prevData) =>
           prevData.map((appointment) =>
-            appointment?._id === id
+            appointment?._id === _id
               ? { ...appointment, status: "approved", isVerified: "approved" }
               : appointment
           )
@@ -146,12 +151,12 @@ export default function RequestAppointmentToAdmin() {
                         className="btn btn-primary text-xs"
                         onClick={() =>
                           handleApprove(
-                            data?._id,
-                            data?.name,
-                            data?.doctor,
-                            data?.date,
-                            data?.department,
-                            data?.email
+                            data?._id, // ID
+                            data?.doctor, // Doctor
+                            data?.date, // Date
+                            data?.department, // Department
+                            data?.email, // Email
+                            data?.name // Name
                           )
                         }
                         disabled={loading}

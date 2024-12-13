@@ -561,7 +561,6 @@ const userUpdate = asyncHandler(async (req, res) => {
   // console.log("User Update", req.body);
   try {
     const { username, email, password, avatar } = req.body;
-
     const user = await User.findByIdAndUpdate(
       req.user?._id,
       {

@@ -148,7 +148,9 @@ const updateAppointmentStatus = asyncHandler(async (req, res) => {
     isVerified,
   } = req.body;
 
-  console.log("Approval: ", req.body);
+  // console.log("Approval ID: ", id);
+  // console.log("Approval Request Body: ", req.body);
+
   if (!status) {
     return res.status(400).json({ message: "Status is required" });
   }
@@ -161,6 +163,7 @@ const updateAppointmentStatus = asyncHandler(async (req, res) => {
   }
 
   try {
+    // Update appointment in the database
     const appointment = await Appointment.findByIdAndUpdate(
       id,
       {
@@ -173,16 +176,15 @@ const updateAppointmentStatus = asyncHandler(async (req, res) => {
         name,
         isVerified,
       },
-      { new: true },
+      { new: true }, // Return the updated document
     );
-    // console.log("Approval of Data: ", appointment);
 
     if (!appointment) {
       console.log("Appointment not found for id:", id);
-      return res.status(404).json({ message: "Appointment not found" });
+      return res.status(404).json({ message: "Appointment Id is not found" });
     }
 
-    // Email sending logic if the role is 'system-admin'
+    // Email sending logic for 'system-admin' role
     if (req.user.role === "system-admin") {
       let config = {
         service: "gmail",
@@ -202,14 +204,19 @@ const updateAppointmentStatus = asyncHandler(async (req, res) => {
         },
       });
 
+      // Generate email content
       let response = {
         body: {
-          username: `${name}`,
+          username: `${name}` || "User", // Fallback to 'User' if name is undefined
           intro: "Your Appointment has been Approved.",
           table: {
             data: [
               {
-                description: `Your appointment with ${doctor} in the ${department} department on Date: ${date} has been approved. Please arrive at least 20 minutes before your scheduled time.`,
+                description: `Your appointment with ${
+                  doctor || "the doctor"
+                } in the ${department || "the department"} on Date: ${
+                  date || "the specified date"
+                } has been approved. Please arrive at least 20 minutes before your scheduled time.`,
               },
             ],
           },

@@ -148,7 +148,6 @@ export default function Profile() {
   };
 
   //sign out
-
   const handleSingOut = async () => {
     console.log(currentUser);
     if (currentUser?.data?.user?.role === "doctor") {
