@@ -44,12 +44,12 @@ export default function RequestAppointmentToAdmin() {
   };
 
   const handleApprove = async (_id, doctor, date, department, email, name) => {
-    console.log("ID: ", _id);
-    console.log("name: ", name);
-    console.log("Doctor: ", doctor);
-    console.log("date: ", date);
-    console.log("email: ", email);
-    console.log("department: ", department);
+    // console.log("ID: ", _id);
+    // console.log("name: ", name);
+    // console.log("Doctor: ", doctor);
+    // console.log("date: ", date);
+    // console.log("email: ", email);
+    // console.log("department: ", department);
     try {
       setLoading(true);
       const response = await fetch(`/api/appointment/booking/update/${_id}`, {
@@ -87,6 +87,7 @@ export default function RequestAppointmentToAdmin() {
         );
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error updating appointment:", error.message);
       toast.error(error?.message);
     }
@@ -151,12 +152,12 @@ export default function RequestAppointmentToAdmin() {
                         className="btn btn-primary text-xs"
                         onClick={() =>
                           handleApprove(
-                            data?._id, // ID
-                            data?.doctor, // Doctor
-                            data?.date, // Date
-                            data?.department, // Department
-                            data?.email, // Email
-                            data?.name // Name
+                            data?._id,
+                            data?.doctor,
+                            data?.date,
+                            data?.department,
+                            data?.email,
+                            data?.name
                           )
                         }
                         disabled={loading}
@@ -166,27 +167,6 @@ export default function RequestAppointmentToAdmin() {
                     ) : (
                       <span className="text-green-500">Approved</span>
                     )}
-                    {/* <button
-                      className="bg-green-500 text-white p-2 rounded mr-2"
-                      onClick={() =>
-                        handleApprove(
-                          data?._id,
-                          data?.doctor,
-                          data?.date,
-                          data?.department,
-                          data?.email
-                        )
-                      }
-                      disabled={
-                        loadingStates[data?._id] || data?.status === "approved"
-                      }
-                    >
-                      {loadingStates[data?._id]
-                        ? "Approving..."
-                        : data?.status === "approved"
-                          ? "Approved"
-                          : "Confirm"}
-                    </button> */}
                   </td>
                 </tr>
               ))}

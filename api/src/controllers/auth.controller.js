@@ -225,30 +225,41 @@ const signin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   console.log("Sign in", req.body);
 
-  if (!email && !password) {
-    throw new ApiError(400, "Email & Password required!");
+  // Validate input
+  if (!email || !password) {
+    throw new ApiError(400, "Email & Password are required!");
   }
 
+  // Find user by email
   const user = await User.findOne({ email });
   if (!user) {
-    return ApiError(404, "User email is not found!");
-  }
-  //   const hashedPassword = await
-  const validPassword = await user.isPasswordCorrect(password);
-  if (!validPassword) {
-    new ApiError(404, "User password won't matched!");
+    throw new ApiError(404, "User email not found!");
   }
 
-  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-    user?._id,
-  );
-  const loggedInUser = await User.findById(user?._id).select(
+  // Compare hashed password with the provided password
+  const validPassword = await user.isPasswordCorrect(password);
+  if (!validPassword) {
+    throw new ApiError(401, "Invalid password!");
+  }
+
+  // Generate access and refresh tokens
+  const accessToken = user.generateAccessToken();
+  const refreshToken = user.generateRefreshToken();
+
+  // Save refresh token to the database
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  // Exclude sensitive fields from the user object
+  const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken",
   );
 
+  // Set cookies for access and refresh tokens
   const options = {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production", // Ensure secure cookies in production
+    sameSite: "Strict",
   };
 
   return res
@@ -263,7 +274,7 @@ const signin = asyncHandler(async (req, res) => {
           accessToken,
           refreshToken,
         },
-        "user logged in successfully",
+        "User logged in successfully",
       ),
     );
 });

@@ -238,7 +238,7 @@ function Appointments() {
   const filteredTimeSlots =
     selectedDoctor?.slots?.filter((slot) => !appointmentSlots.includes(slot)) ||
     [];
-
+  console.log("SLots : ", filteredTimeSlots);
   useEffect(() => {
     if (selectedDate && filteredTimeSlots.length === 0) {
       setFullyBooked(true);

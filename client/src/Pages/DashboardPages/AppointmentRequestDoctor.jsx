@@ -50,7 +50,6 @@ export default function AppointmentRequestDoctor() {
           }),
         }
       );
-
       const result = await response.json();
       if (!result.success) {
         toast.error(`Error: ${result.message}`);
@@ -67,6 +66,7 @@ export default function AppointmentRequestDoctor() {
       }
     } catch (error) {
       setLoading(false);
+      console.error("Error updating appointment:", error.message);
       toast.error(error?.message);
     }
   };
