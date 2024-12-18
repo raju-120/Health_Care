@@ -36,12 +36,13 @@ function PatientDetails() {
       </div>
       <div className="lg:p-10 max-w-[800px] mx-auto flex justify-center mt-5 bg-white shadow-lg rounded-lg">
         <div className="w-full space-y-5">
-          {/* <h2 className="text-2xl font-semibold">Patient Information</h2> */}
+          {/* <h2 className="text-2xl font-semibold">Patient Information: </h2> */}
 
           <div className="flex flex-col lg:flex-row lg:space-x-5 gap-4 lg:mb-5">
             <div className="w-full">
               <label className="block text-left font-medium">
-                Name : {patient.name}
+                Name :{" "}
+                <span className="uppercase font-bold">{patient.name}</span>
               </label>
             </div>
           </div>
