@@ -270,7 +270,7 @@ export default function CenterSide() {
   return (
     <div className="">
       {/*  //<!-- Start Preloader --> */}
-      <div className="cs_preloader cs_accent_color_v1">
+      {/* <div className="cs_preloader cs_accent_color_v1">
         <div className="cs_preloader_in">
           <div className="cs_wave_first">
             <svg
@@ -295,7 +295,7 @@ export default function CenterSide() {
             </svg>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <section
         className="cs_hero cs_style_5 position-relative mt-[-40px]"
