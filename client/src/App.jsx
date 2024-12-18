@@ -33,6 +33,7 @@ import AppointmentRequestDoctor from "./Pages/DashboardPages/AppointmentRequestD
 import RequestAppointmentToAdmin from "./Pages/DashboardPages/RequestAppointmentToAdmin";
 import PatientRegistrationForm from "./Pages/Patient Registration Form/PatientRegistrationForm";
 import VideoCalling from "./Pages/Messenger/VideoCalling/videoCalling";
+import PatientDetails from "./Pages/Patient Registration Form/PatientDetails";
 
 /* import { paymentLoader } from './Pages/DashboardPages/Payment/paymentLoader'; 
 import Map from './Pages/Map';
@@ -73,6 +74,7 @@ export default function App() {
           <Route path="/doctorlists" element={<Doctors />} />
           <Route path="/doctorlists/:id" element={<DoctorList />} />
           <Route path="/patientinfo" element={<PatientRegistrationForm />} />
+          <Route path="/patient-details/:uId" element={<PatientDetails />} />
 
           {/* <Route path='/tips' element={<Tips />}/>
       <Route path='/create-advertising' element={ <CreateAdvertising /> }/>

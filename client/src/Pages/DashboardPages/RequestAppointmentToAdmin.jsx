@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 
 export default function RequestAppointmentToAdmin() {
   const { currentUser } = useSelector((state) => state.user);
   const [allData, setAllData] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [loadingStates, setLoadingStates] = useState({});
   const navigate = useNavigate();
+  // const [loadingStates, setLoadingStates] = useState({});
+
+  console.log("Data: ", allData);
 
   // Fetch all appointment data
   useEffect(() => {
@@ -44,12 +46,6 @@ export default function RequestAppointmentToAdmin() {
   };
 
   const handleApprove = async (_id, doctor, date, department, email, name) => {
-    // console.log("ID: ", _id);
-    // console.log("name: ", name);
-    // console.log("Doctor: ", doctor);
-    // console.log("date: ", date);
-    // console.log("email: ", email);
-    // console.log("department: ", department);
     try {
       setLoading(true);
       const response = await fetch(`/api/appointment/booking/update/${_id}`, {
@@ -92,6 +88,9 @@ export default function RequestAppointmentToAdmin() {
       toast.error(error?.message);
     }
   };
+  // const handleUserInfo = async (_id) => {
+  //   console.log("ID: ", _id);
+  // };
 
   return (
     <div>
@@ -120,7 +119,11 @@ export default function RequestAppointmentToAdmin() {
                 <tr key={data?._id}>
                   <td>{i + 1}</td>
                   <td>{data?.name}</td>
-                  <td>Info</td>
+                  <td>
+                    <Link to={`/patient-details/${data?.uId}`}>
+                      Patient Info
+                    </Link>
+                  </td>
                   <td>{data?.doctor}</td>
                   <td>{data?.department}</td>
                   <td>{data?.date}</td>
