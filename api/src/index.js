@@ -35,7 +35,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 
 // Routes
-app.get("/api", (req, res) => {
+app.get("/", (req, res) => {
   res.send(`Server is running on port ${process.env.PORT}`);
 });
 app.use("/api/auth", authRouter);
@@ -116,6 +116,7 @@ io.on("connection", (socket) => {
       console.error("Error processing PDF:", error.message);
     }
   });
+
 
   socket.on("disconnect", () => {
     console.log(`Client disconnected: ${socket.id}`);
