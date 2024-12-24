@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const connectDB = async () => {
-    console.log('MONGODB_URL:', process.env.MONGODB_URL); // Log the URL
+    console.log('MONGODB_URL db index:', process.env.MONGODB_URL); // Log the URL
     try {
         if (!process.env.MONGODB_URL) {
             throw new Error('MONGODB_URL is not defined');
