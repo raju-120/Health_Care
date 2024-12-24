@@ -7,10 +7,6 @@ import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
 import Message from "./models/message.model.js";
 import bodyParser from "body-parser";
-
-
-
-//routes
 import authRouter from "./routes/auth.router.js";
 import dropPostRouter from "./routes/post.routes.js";
 import commentsRouter from "./routes/comment.routes.js";
@@ -34,6 +30,45 @@ app.use(express.urlencoded({extended: true, limit: "16kb"}));
 app.use(express.static("public"));
 app.use(cookieParser());
 app.use(bodyParser.json());
+
+
+// Routes end points
+app.get("/api", (req, res) => {  
+    res.send(`Server is running ${process.env.PORT}`);
+  },);
+app.use("/api/auth", authRouter);
+app.use("/api/posts", dropPostRouter);
+app.use("/api/comments", commentsRouter);
+app.use("/api/message", MessageRouter);
+app.use("/api/add", AdvertiseRouter);
+app.use("/api/appointment",Appointments );
+app.use("/api/payment", Payment);
+app.use("/api/donner", BloodDonner);
+
+app.use("/api/medicine",Medicine );
+
+app.use("/api/prescription", Prescriptions);
+
+app.use("/api/patient", PatientRegForm);
+
+app.use("/api/complainbox",ComplainedBox );
+
+
+
+dotenv.config({
+    path: '../../env'
+});
+
+connectDB()
+.then(() =>{
+    server.listen(process.env.PORT || 5001, ()=>{
+        console.log(`Server is running on ${process.env.PORT}`)
+    });
+})
+.catch((error) =>{
+    console.log('Mongo Db Connection failed!', error);
+})
+
 
 
 const server = http.createServer(app);
@@ -116,39 +151,6 @@ socket.on('ice-candidate', ({ candidate, to, from }) => {
 
   
 
-  
-app.use("/api/auth", authRouter);
-app.use("/api/posts", dropPostRouter);
-app.use("/api/comments", commentsRouter);
-app.use("/api/message", MessageRouter);
-app.use("/api/add", AdvertiseRouter);
-app.use("/api/appointment",Appointments );
-app.use("/api/payment", Payment);
-app.use("/api/donner", BloodDonner);
-
-app.use("/api/medicine",Medicine );
-
-app.use("/api/prescription", Prescriptions);
-
-app.use("/api/patient", PatientRegForm);
-
-app.use("/api/complainbox",ComplainedBox );
-
-
-
-dotenv.config({
-    path: '../../env'
-});
-
-connectDB()
-.then(() =>{
-    server.listen(process.env.PORT || 5001, ()=>{
-        console.log(`Server is running on ${process.env.PORT}`)
-    });
-})
-.catch((error) =>{
-    console.log('Mongo Db Connection failed!', error);
-})
 
 
 
