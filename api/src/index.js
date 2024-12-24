@@ -85,8 +85,8 @@ socket.on('ice-candidate', ({ candidate, to, from }) => {
                 message,
                 senderusername,
                 receiverusername,
-                pdfFile: pdfBuffer && pdfContentType ? {  // Use 'pdfFile' to match schema
-                    data: Buffer.from(pdfBuffer),  // Convert from ArrayBuffer to Buffer
+                pdfFile: pdfBuffer && pdfContentType ? {  
+                    data: Buffer.from(pdfBuffer),  
                     contentType: pdfContentType
                 } : null,
             });
