@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import dotenv from "dotenv";
 // import connectDB from "./db/dbIndex.js";
+import mongoose from "mongoose";
 import http from "http";
 import express from "express";
 import cors from "cors";
@@ -54,13 +55,14 @@ app.use("/api/complainbox", ComplainedBox);
 
 // Database Connection
 const connectDB = async () => {
-    console.log('MONGODB_URL db index:', process.env.MONGODB_URL); // Log the URL
+    const MONGODB_URL = process.env.MONGODB_URL;
+    console.log('MONGODB_URL db index:', MONGODB_URL); // Log the URL
     try {
-        if (!process.env.MONGODB_URL) {
+        if (!MONGODB_URL) {
             throw new Error('MONGODB_URL is not defined');
         }
 
-        const connectionInstance = await mongoose.connect(process.env.MONGODB_URL, {
+        const connectionInstance = await mongoose.connect(MONGODB_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
