@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 const connectDB = async () => {
     try {
-        // Use the connection string directly from the environment variable
+        console.log('MONGODB_URL-Index:', process.env.MONGODB_URL); // Debug log
         const connectionInstance = await mongoose.connect(process.env.MONGODB_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -10,7 +12,7 @@ const connectDB = async () => {
         console.log(`MONGODB Connected! DB HOST: ${connectionInstance.connection.host}`);
     } catch (error) {
         console.error("MONGODB connection failed", error);
-        process.exit(1); // Exit the process if connection fails
+        process.exit(1);
     }
 };
 
