@@ -1,18 +1,17 @@
 import mongoose from "mongoose";
-import { DB_NAME } from "../constants.js";
-import { seedDepartments } from "../controllers/auth.controller.js";
 
-
-const connectDB = async () =>{
-    try{
-        const connectionInstance = await mongoose.connect(`${process.env.MONGODB}/${DB_NAME}`)
-        console.log(`MONGODB Connected !! DB HOST : ${connectionInstance.connection.host}`);
-        //seedDepartments();
-    }catch(error){
-        console.log("MONGODB connection failed", error);
-        process.exit(1);
+const connectDB = async () => {
+    try {
+        // Use the connection string directly from the environment variable
+        const connectionInstance = await mongoose.connect(process.env.MONGODB_URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log(`MONGODB Connected! DB HOST: ${connectionInstance.connection.host}`);
+    } catch (error) {
+        console.error("MONGODB connection failed", error);
+        process.exit(1); // Exit the process if connection fails
     }
 };
-
 
 export default connectDB;
