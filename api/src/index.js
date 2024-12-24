@@ -51,6 +51,8 @@ app.use("/api/prescription", Prescriptions);
 app.use("/api/patient", PatientRegForm);
 app.use("/api/complainbox", ComplainedBox);
 
+
+// console.log("MONGODB_URL New Part:", process.env.MONGODB_URL);
 // Database Connection
 connectDB()
   .then(() => {
