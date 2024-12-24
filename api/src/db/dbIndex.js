@@ -3,13 +3,14 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const connectDB = async () => {
-    console.log('MONGODB_URL db index:', process.env.MONGODB_URL); // Log the URL
+    const mongoDb= "mongodb+srv://care:<db_password>@cluster0.mnswpgh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+    console.log('MONGODB_URL db index:', mongoDb); // Log the URL
     try {
-        if (!process.env.MONGODB_URL) {
-            throw new Error('MONGODB_URL is not defined');
+        if (!process.env.mongoDb) {
+            throw new Error('mongoDb is not defined');
         }
 
-        const connectionInstance = await mongoose.connect(process.env.MONGODB_URL, {
+        const connectionInstance = await mongoose.connect(process.env.mongoDb, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });

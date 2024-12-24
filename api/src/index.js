@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import dotenv from "dotenv";
-// import connectDB from "./db/dbIndex.js";
-import mongoose from "mongoose";
+import connectDB from "./db/dbIndex.js";
 import http from "http";
 import express from "express";
 import cors from "cors";
@@ -52,27 +51,7 @@ app.use("/api/prescription", Prescriptions);
 app.use("/api/patient", PatientRegForm);
 app.use("/api/complainbox", ComplainedBox);
 
-
 // Database Connection
-const connectDB = async () => {
-    const MONGODB_URL = process.env.MONGODB_URL;
-    console.log('MONGODB_URL db index:', MONGODB_URL); // Log the URL
-    try {
-        if (!MONGODB_URL) {
-            throw new Error('MONGODB_URL is not defined');
-        }
-
-        const connectionInstance = await mongoose.connect(MONGODB_URL, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-
-        console.log(`MONGODB Connected! DB HOST: ${connectionInstance.connection.host}`);
-    } catch (error) {
-        console.error("MONGODB connection failed", error);
-        process.exit(1);
-    }
-};
 connectDB()
   .then(() => {
     server.listen(process.env.PORT || 5001, () => {
