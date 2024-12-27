@@ -14,8 +14,8 @@ import ringingSound from "../../assets/MP3/phone-ringing.mp3";
 
 import AgoraRTC from "agora-rtc-sdk-ng"; // Import Agora SDK
 
-const socket = io("http://localhost:5000");
-// const socket = io("https://health-care-server-3bv5.onrender.com/");
+// const socket = io("http://localhost:5000");
+const socket = io("https://health-care-server-0t0x.onrender.com");
 
 
 // Replace with your App ID and temporary token from Agora console

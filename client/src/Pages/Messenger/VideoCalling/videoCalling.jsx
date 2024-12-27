@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:5000");
-// const socket = io("https://health-care-server-3bv5.onrender.com/");
+// const socket = io("http://localhost:5000");
+const socket = io("https://health-care-server-0t0x.onrender.com");
 
 const VideoCallWindow = () => {
   const remoteStream = useRef(null);
