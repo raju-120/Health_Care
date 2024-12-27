@@ -7,6 +7,7 @@ export default defineConfig({
     proxy: {
       '/api' : {
         target: 'http://localhost:5000',
+        // target: 'https://health-care-server-3bv5.onrender.com/api',
         secure: true,
       },
     },

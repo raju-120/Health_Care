@@ -175,108 +175,143 @@ const refreshDocAccessToken = asyncHandler(async (req, res) => {
 const signup = asyncHandler(async (req, res) => {
   const { username, email, password, role } = req.body;
 
+  // Check if username or email already exists
   const existedUser = await User.findOne({
     $or: [{ email }],
   });
 
   if (existedUser) {
-    throw new ApiError(409, "Email are already existed!");
+    throw new ApiError(401, "Email already exists!");
   }
 
-  const user = await User.create({
+  // Create user
+  const user = new User({
     username,
     email,
     password,
+    role,
   });
 
+  await user.save();
+
   const createdUser = await User.findById(user._id).select(
-    "-password -refreshToken",
+    "-password -refreshToken"
   );
 
   if (!createdUser) {
     throw new ApiError(
       500,
-      "User not created.There must some credential error!",
+      "User not created. There must be some credential error!"
     );
   }
 
   return res
     .status(201)
-    .json(new APIResponse(200, createdUser, "User register successfully."));
-
-  /* const hashedPassword = bcrypt.hashSync(password, 10);
-
-    const newUser = await User.create({
-        username,
-        email,
-        avatar,
-        password : hashedPassword
-    });
-    if(!newUser) {
-        return new ApiError(500, "User not created");
-    }
-
-    return res.status(201).json(
-        new APIResponse(200, newUser, "User sign up created successfully.")
-    ); */
+    .json(
+      new APIResponse(200, createdUser, "User registered successfully.")
+    );
 });
 
+// User Sign In
 const signin = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
   console.log("Sign in", req.body);
+  const { email, password } = req.body;
 
-  // Validate input
-  if (!email || !password) {
-    throw new ApiError(400, "Email & Password are required!");
+  if (!email && !password) {
+    throw new ApiError(400, "Email & Password required!");
   }
 
-  // Find user by email
   const user = await User.findOne({ email });
   if (!user) {
-    throw new ApiError(404, "User email not found!");
+    throw new ApiError(401, "User email not found!");
   }
 
-  // Compare hashed password with the provided password
   const validPassword = await user.isPasswordCorrect(password);
   if (!validPassword) {
-    throw new ApiError(401, "Invalid password!");
+    new ApiError(404, "User password won't matched!");
   }
 
-  // Generate access and refresh tokens
-  const accessToken = user.generateAccessToken();
-  const refreshToken = user.generateRefreshToken();
-
-  // Save refresh token to the database
-  user.refreshToken = refreshToken;
-  await user.save();
-
-  // Exclude sensitive fields from the user object
-  const loggedInUser = await User.findById(user._id).select(
-    "-password -refreshToken",
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id,
   );
 
-  // Set cookies for access and refresh tokens
+  const userLoggedIn = await User.findById(user._id);
+
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // Ensure secure cookies in production
-    sameSite: "Strict",
+    secure: true,
   };
 
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", options)
+    .cookie("refreshToken", options)
     .json(
       new APIResponse(
         200,
         {
-          user: loggedInUser,
+          user: userLoggedIn,
           accessToken,
           refreshToken,
         },
-        "User logged in successfully",
+        "Doctor logged in successfully",
       ),
     );
+  // const { email, password } = req.body;
+  // console.log("Sign in", req.body);
+
+  // // Validate input
+  // if (!email || !password) {
+  //   throw new ApiError(400, "Email & Password are required!");
+  // }
+
+  // // Find user by email
+  // const user = await User.findOne({ email });
+  // if (!user) {
+  //   throw new ApiError(404, "User email not found!");
+  // }
+
+  // // Compare hashed password with the provided password
+  // const validPassword = await user.isPasswordCorrect(password);
+  // if (!validPassword) {
+  //   throw new ApiError(401, "Invalid password!");
+  // }
+
+  // // Generate access and refresh tokens
+  // const accessToken = user.generateAccessToken();
+  // const refreshToken = user.generateRefreshToken();
+
+  // // Save refresh token to the database
+  // user.refreshToken = refreshToken;
+  // await user.save();
+
+  // // Exclude sensitive fields from the user object
+  // const loggedInUser = await User.findById(user._id).select(
+  //   "-password -refreshToken",
+  // );
+
+  // // Set cookies for access and refresh tokens
+  // const options = {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === "production", // Ensure secure cookies in production
+  //   sameSite: "Strict",
+  // };
+
+  // return res
+  //   .status(200)
+  //   .cookie("accessToken", accessToken, options)
+  //   .cookie("refreshToken", refreshToken, options)
+  //   .json(
+  //     new APIResponse(
+  //       200,
+  //       {
+  //         user: loggedInUser,
+  //         accessToken,
+  //         refreshToken,
+  //       },
+  //       "User logged in successfully",
+  //     ),
+  //   );
 });
 
 const specificUser = asyncHandler(async (req, res) => {

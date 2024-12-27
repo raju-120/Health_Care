@@ -113,7 +113,6 @@ doctorSchema.methods.generateAccessToken = function()
         })
     };
 
-
 doctorSchema.methods.generateRefreshToken = function()
     {
         return jwt.sign(

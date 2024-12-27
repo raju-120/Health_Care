@@ -26,6 +26,7 @@ export const verifyJwt = asyncHandler(async(req, _, next) => {
 
             throw new ApiError(401, "Invalid Access Token")
         }
+        console.log("User Middleware", user)
 
         req.user = user;
         next();
