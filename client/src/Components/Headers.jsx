@@ -14,12 +14,6 @@ import { /* Fragment, */ useState } from "react";
 import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-// import { FaTimes } from "react-icons/fa";
-// import { CiMenuFries } from "react-icons/ci";
-// import { BsMessenger } from "react-icons/bs";
-// import { initializeJQuery } from "../assets/js/animated-text.min";
-
-// import Image from "../assets/images/icons/phone_icon_3.svg";
 
 export default function Headers() {
   const { currentUser } = useSelector((state) => state?.user);
@@ -60,7 +54,7 @@ export default function Headers() {
       </div>
       {/* <!-- End Preloader --> */}
       <header
-        className="cs_site_header cs_style_1 cs_sticky_header lg:max-w-[1900px]"
+        className="cs_site_header cs_style_1 cs_sticky_header lg:max-w-[1900px] bg-gray-200"
         style={{ padding: "5px" }}
       >
         <div className="cs_main_header">
@@ -71,7 +65,7 @@ export default function Headers() {
                   <img src={logo} />
                 </Link>
                 <div className="cs_nav cs_primary_font">
-                  <ul className="cs_nav_list cs_fs_28">
+                  <ul className="cs_nav_list cs_fs_20">
                     <li>
                       <Link to="/">
                         <>Home</>
@@ -123,19 +117,12 @@ export default function Headers() {
                           <Link to="/dashboard/profile">
                             <img
                               src={currentUser?.data?.user?.avatar}
-                              className="w-16 h-16 rounded-full"
+                              className="w-10 h-10 rounded-full"
                               alt="profile"
                             />
                           </Link>
                         </div>
-                        {/* <ul
-                        tabIndex={0}
-                        className="text-center text-xl menu dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-3 shadow">
-                        <Link to="/dashboard">
-                          <h1 className='mb-2'>Dashboard</h1>
-                        </Link>
-                        <button className='btn btn-warning text-centet text-lg btn-md'>Signout</button>
-                      </ul> */}
+                        
                       </div>
                     ) : (
                       <ul className="flex gap-8 item-center  uppercase text-xl">
@@ -151,71 +138,7 @@ export default function Headers() {
           </div>
         </div>
       </header>
-      {/* <header className='bg-slate-600'>
-        <div className='h-30 flex justify-between z-80 text-white lg:py-2 lg:px-20 px-5  py-5'>
-          <div className='flex flex-col items-center '>
-            
-            <img src={logo} alt="logo" className='lg:h-16 lg:w-16 h-14 w-14 lg:ml-20 mr-20 rounded-lg'/>
-            <h1>
-              <span className='text-lime-600 text-lg'>Personal </span>
-              <span className='text-green-500 text-lg'>HealthCare</span>
-            </h1>
-
-          </div>
-          <div className='lg:flex md:flex lg:flex-1  items-center justify-center font-normal hidden mr-16'>
-           
-            <ul className='flex gap-8 item-center text-zinc-200 uppercase text-lg'>
-              <Link to='/'>
-                <li className='hover:text-gray-300'>Home</li>
-              </Link>
-
-              <Link to='/tips'>
-                <li className='hover:text-gray-300'>Tips</li>
-              </Link>
-
-              
-              <Link to='/appointment'>
-                <li className='hover:text-gray-300'>Appointment</li>
-              </Link>
-
-              <Link to='/service'>
-                <li className='hover:text-gray-300'>Service</li>
-              </Link>
-             
-              <Link to='/about'>
-                <li className='hover:text-gray-300'>About</li>
-              </Link>
-            </ul>
-
-          </div>
-
-          <div className='lg:flex md:flex font-normal items-center hidden'>
-
-            <Link className='mr-8 text-2xl text-blue-400' to="/chat">
-              <BsMessenger />
-            </Link>
-
-            <Link to='/dashboard'>
-              {
-                currentUser ? (
-                  <img src={currentUser?.data?.user?.avatar} className='w-16 h-16 rounded-full' alt='profile'/>
-                ) : (
-                  <ul className='flex gap-8 item-center text-zinc-200 uppercase text-xl'>
-                    <li className='hover:text-gray-700 uppercase'>Sign In</li>
-                  </ul>
-                )
-              }
-            </Link>
-          </div>
-          
-          <div>
-            {click && menu }
-          </div>
-          <button className='block sm:hidden translate-x-50' onClick={handleClick}>
-            {click ? <FaTimes /> : <CiMenuFries/>}
-          </button>
-        </div>
-    </header> */}
+      
     </div>
   );
 }
