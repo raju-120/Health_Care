@@ -61,14 +61,16 @@ export default function App() {
 
         <Route path="/admin" element={<AdminSignIn />} />
         <Route path="/systemadmin" element={<SystemAdminSignIn />} />
-
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/service" element={<Services />} />
+        <Route path="/donner" element={<BloodDonner />} />
+        
         {/* Private Route Section */}
         <Route element={<PrivateRoute />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/service" element={<Services />} />
+          
           <Route path="/appointment" element={<Appointments />} />
-          <Route path="/donner" element={<BloodDonner />} />
+          
           {/* <Route path='/map' element={<Map />}/> */}
 
           <Route path="/doctorlists" element={<Doctors />} />

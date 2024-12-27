@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 export default function ServiceDetail() {
   const { id } = useParams();
   const [service, setService] = useState(null);
-  // console.log('i am here for service id: ',id)
-  // console.log('i am here for service id: ',service)
 
   useEffect(() => {
     const fetchService = async () => {
