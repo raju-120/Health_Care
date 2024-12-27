@@ -87,7 +87,7 @@ export default function CheckOutForm({ booking }) {
         date,
         bookingId: _id,
       };
-      fetch("/api/appointment/booking/payment", {
+      fetch("https://health-care-server-0t0x.onrender.com/api/appointment/booking/payment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
