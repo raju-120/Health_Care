@@ -14,7 +14,7 @@ export default function Payment() {
   useEffect(() => {
     const fetchBookingData = async () => {
       try {
-        const response = await fetch(`/api/appointment/booking/${id}`);
+        const response = await fetch(`https://health-care-server-0t0x.onrender.com/api/appointment/booking/${id}`);
         if (response.ok) {
           const data = await response.json();
           setBooking(data?.data);

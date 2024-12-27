@@ -14,7 +14,7 @@ export default function PaymentInvoice() {
     useEffect(() => {
         const getSpecificID = async () => {
             try {
-                const result = await fetch(`/api/payment/paymentid/${id}`);
+                const result = await fetch(`https://health-care-server-0t0x.onrender.com/api/payment/paymentid/${id}`);
                 const data = await result.json();
                 setSpecificID(data);
             } catch (error) {

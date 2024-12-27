@@ -17,7 +17,7 @@ export default function CheckOutForm({ booking }) {
 
   useEffect(() => {
     if (price) {
-      fetch("/api/appointment/booking/create-payment-intent", {
+      fetch("https://health-care-server-0t0x.onrender.com/api/appointment/booking/create-payment-intent", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

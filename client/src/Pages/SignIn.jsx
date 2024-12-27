@@ -34,7 +34,7 @@ export default function SignIn() {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch("/api/auth/signin", {
+      const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export default function SignIn() {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch("/api/auth/doctorssignin", {
+      const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/doctorssignin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ export default function SignIn() {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch("/api/auth/systemadminsignin", {
+      const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/systemadminsignin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

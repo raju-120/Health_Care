@@ -30,7 +30,7 @@ export default function DoctorList() {
   useEffect(() => {
     const getAllAdmins = async () => {
       try {
-        const res = await fetch("/api/auth/doctors", {
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/doctors", {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -54,7 +54,9 @@ export default function DoctorList() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(currentUser?.data?.user?.role === 'admin' ? `/api/auth/admin/delete-doctor/${id}` : `/api/auth/system-admin/delete-doctor/${id}`, {
+      const res = await fetch(currentUser?.data?.user?.role === 'admin' ? 
+        `https://health-care-server-0t0x.onrender.com/api/auth/admin/delete-doctor/${id}` 
+        : `https://health-care-server-0t0x.onrender.com/api/auth/system-admin/delete-doctor/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

@@ -25,7 +25,7 @@ export default function AdminList() {
   useEffect(() => {
     const getAllAdmins = async () => {
       try {
-        const res = await fetch("/api/auth/getadmin", {
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/getadmin", {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -49,7 +49,7 @@ export default function AdminList() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/auth/admin-delete/${id}`, {
+      const res = await fetch(`https://health-care-server-0t0x.onrender.com/api/auth/admin-delete/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

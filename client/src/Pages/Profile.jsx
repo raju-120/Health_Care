@@ -99,8 +99,8 @@ export default function Profile() {
     const isDoctor = currentUser?.data?.user?.role === "doctor";
     const userId = currentUser?.data?.user?._id;
     const url = isDoctor
-      ? `/api/auth/docupdate/${userId}`
-      : `/api/auth/update/${userId}`;
+      ? `https://health-care-server-0t0x.onrender.com/api/auth/docupdate/${userId}`
+      : `https://health-care-server-0t0x.onrender.com/api/auth/update/${userId}`;
     const accessToken = currentUser?.data?.accessToken;
 
     if (!userId || !accessToken) {
@@ -153,7 +153,7 @@ export default function Profile() {
     if (currentUser?.data?.user?.role === "doctor") {
       try {
         dispatch(signOutUserStart());
-        const res = await fetch("/api/auth/docsignout", {
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/docsignout", {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -175,7 +175,7 @@ export default function Profile() {
     } else if (currentUser?.data?.user?.role === "system-admin") {
       try {
         dispatch(signOutUserStart());
-        const res = await fetch("/api/auth/sysadminlogout", {
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/sysadminlogout", {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -197,7 +197,7 @@ export default function Profile() {
     } else if (currentUser?.data?.user?.role === "admin") {
       try {
         dispatch(signOutUserStart());
-        const res = await fetch("/api/auth/adminlogout", {
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/adminlogout", {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -220,7 +220,7 @@ export default function Profile() {
     else {
       try {
         dispatch(signOutUserStart());
-        const res = await fetch("/api/auth/signout", {
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/signout", {
           method: "POST",
           headers: {
             "Content-type": "application/json",

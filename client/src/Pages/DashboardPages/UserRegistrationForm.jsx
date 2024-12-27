@@ -6,7 +6,7 @@ export default function UserRegistrationForm() {
     const getUserRegisForm = async () => {
       const uId = currentUser?.data?.id;
       try {
-        const res = await fetch(`/api/patient/patient-reg-form/${uId}`, {
+        const res = await fetch(`https://health-care-server-0t0x.onrender.com/api/patient/patient-reg-form/${uId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

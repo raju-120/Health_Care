@@ -29,7 +29,7 @@ export default function UserList() {
   useEffect(() => {
     const getAllAdmins = async () => {
       try {
-        const res = await fetch("/api/auth/users", {
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/users", {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -53,7 +53,9 @@ export default function UserList() {
     setLoading(true);
     setError(null);
     try {
-        const res = await fetch(currentUser?.data?.user?.role === 'admin' ? `/api/auth/admin/delete-user/${id}` : `/api/auth/system-admin/delete-user/${id}`, {
+        const res = await fetch(currentUser?.data?.user?.role === 'admin' ?
+           `https://health-care-server-0t0x.onrender.com/api/auth/admin/delete-user/${id}` 
+           : `https://health-care-server-0t0x.onrender.com/api/auth/system-admin/delete-user/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

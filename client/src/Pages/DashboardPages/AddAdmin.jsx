@@ -35,7 +35,7 @@ export default function AddAdmin() {
         formDataToSend.append("avatar", file);
       }
       console.log('Form data: ', formDataToSend);
-      const res = await fetch('/api/auth/adminsignup', {
+      const res = await fetch('https://health-care-server-0t0x.onrender.com/api/auth/adminsignup', {
         method: 'POST',
         body: formDataToSend,
       });

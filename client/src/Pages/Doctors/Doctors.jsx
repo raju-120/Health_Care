@@ -16,7 +16,7 @@ export default function Doctors() {
   useEffect(() => {
     const getDept = async () => {
       try {
-        const res = await fetch('/api/auth/departments');
+        const res = await fetch('https://health-care-server-0t0x.onrender.com/api/auth/departments');
         const data = await res.json();
         setAllData(data);
         setFilteredData(data);
@@ -30,7 +30,7 @@ export default function Doctors() {
   useEffect(() => {
     const getdoc = async () => {
       try {
-        const res = await fetch('/api/auth/doctors');
+        const res = await fetch('https://health-care-server-0t0x.onrender.com/api/auth/doctors');
         const data = await res.json();
         setDoctors(data);
       } catch (err) {

@@ -23,7 +23,7 @@ export default function DoctorsSignin() {
     e.preventDefault();
     try{
       dispatch(signInStart());
-      const res = await fetch('/api/auth/doctorssignin',{
+      const res = await fetch('https://health-care-server-0t0x.onrender.com/api/auth/doctorssignin',{
         method: 'POST',
         headers:{
           "Content-Type" : 'application/json'

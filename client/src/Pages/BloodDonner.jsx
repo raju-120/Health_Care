@@ -23,7 +23,7 @@ export default function BloodDonner() {
   // Fetch all Blood Donor lists
   const fetchBloodDonors = async () => {
     try {
-      const response = await fetch(`/api/donner/blooddonnerlist`);
+      const response = await fetch(`https://health-care-server-0t0x.onrender.com/api/donner/blooddonnerlist`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -68,7 +68,7 @@ export default function BloodDonner() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch("/api/donner/blooddonner", {
+      const res = await fetch("https://health-care-server-0t0x.onrender.com/api/donner/blooddonner", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

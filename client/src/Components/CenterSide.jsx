@@ -128,7 +128,7 @@ export default function CenterSide() {
 
     try {
       setLoading(true);
-      const res = await fetch("/api/complainbox/complains", {
+      const res = await fetch("https://health-care-server-0t0x.onrender.com/api/complainbox/complains", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

@@ -13,7 +13,7 @@ export default function OAuth() {
             const auth = getAuth(app);
             const result = await signInWithPopup(auth,provider);
             
-            const res = await fetch('/api/auth/google', {
+            const res = await fetch('https://health-care-server-0t0x.onrender.com/api/auth/google', {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',

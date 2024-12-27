@@ -23,7 +23,7 @@ export default function SystemAdminSignIn() {
         e.preventDefault();
         try{
           dispatch(signInStart());
-          const res = await fetch('/api/auth/systemadminsignin',
+          const res = await fetch('https://health-care-server-0t0x.onrender.com/api/auth/systemadminsignin',
           {
             method: 'POST',
             headers: {

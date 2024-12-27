@@ -13,7 +13,7 @@ export default function AppointmentRequestDoctor() {
   useEffect(() => {
     const getAllRequests = async () => {
       try {
-        const res = await fetch("/api/appointment/bookings", {
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/appointment/bookings", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -35,7 +35,7 @@ export default function AppointmentRequestDoctor() {
     try {
       setLoading(true);
       const response = await fetch(
-        `/api/appointment/booking/update/doctor/${id}`,
+        `https://health-care-server-0t0x.onrender.com/api/appointment/booking/update/doctor/${id}`,
         {
           method: "PUT",
           headers: {

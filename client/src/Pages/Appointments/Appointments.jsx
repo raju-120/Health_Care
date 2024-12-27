@@ -32,7 +32,7 @@ function Appointments() {
   useEffect(() => {
     const getDoctors = async () => {
       try {
-        const res = await fetch("/api/auth/doctors");
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/doctors");
         const data = await res.json();
         setDoctors(data);
       } catch (error) {
@@ -42,7 +42,7 @@ function Appointments() {
     };
     const getDepartments = async () => {
       try {
-        const res = await fetch("/api/auth/departments");
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/auth/departments");
         const data = await res.json();
         setDeptData(data);
       } catch (error) {
@@ -91,7 +91,7 @@ function Appointments() {
     setSelectedDate(e.target.value);
     setFormData({ ...formData, date: e.target.value });
 
-    const res = await fetch("/api/appointment/get-date-time", {
+    const res = await fetch("https://health-care-server-0t0x.onrender.com/api/appointment/get-date-time", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -114,7 +114,7 @@ function Appointments() {
     setSelectedDate(e.target.value);
     setFormData({ ...formData, date: e.target.value });
 
-    const res = await fetch("/api/appointment/get-online-date-time", {
+    const res = await fetch("https://health-care-server-0t0x.onrender.com/api/appointment/get-online-date-time", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -210,7 +210,7 @@ function Appointments() {
 
     try {
       setLoading(true);
-      const res = await fetch("/api/appointment/bookings", {
+      const res = await fetch("https://health-care-server-0t0x.onrender.com/api/appointment/bookings", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

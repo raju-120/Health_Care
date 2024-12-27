@@ -38,7 +38,7 @@ const PrescriptionModal = ({ isOpen, onRequestClose, onSubmit,selectedUser }) =>
   useEffect(() => {
     const getAllMedicineList = async () => {
       try {
-        const res = await fetch('/api/medicine/medicineLists');
+        const res = await fetch('https://health-care-server-0t0x.onrender.com/api/medicine/medicineLists');
         const data = await res.json();
         if (data.success === false) {
           console.log("Data has not been fetched yet");

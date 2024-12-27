@@ -61,7 +61,7 @@ export default function PatientRegistrationForm() {
     };
 
     try {
-      const response = await fetch("/api/patient/patient-reg-form", {
+      const response = await fetch("https://health-care-server-0t0x.onrender.com/api/patient/patient-reg-form", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -56,7 +56,7 @@ export default function SelectedPrescribeMedicine({
       };
 
       // Send JSON data to backend
-      const res = await fetch('/api/prescription/sendpdf', {
+      const res = await fetch('https://health-care-server-0t0x.onrender.com/api/prescription/sendpdf', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

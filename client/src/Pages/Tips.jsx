@@ -8,7 +8,7 @@ export default function Tips() {
 
   useEffect(() => {
     const fetchServices = async () => {
-      const result = await fetch('/api/posts/solutions', {
+      const result = await fetch('https://health-care-server-0t0x.onrender.com/api/posts/solutions', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

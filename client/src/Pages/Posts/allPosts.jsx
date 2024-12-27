@@ -10,7 +10,7 @@ export default function AllPosts() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch('/api/posts/all-posts');
+        const res = await fetch('https://health-care-server-0t0x.onrender.com/api/posts/all-posts');
         const data = await res.json();
         if (Array.isArray(data?.data)) {
           // Sort posts by createdAt in descending order
@@ -34,7 +34,7 @@ export default function AllPosts() {
     e.preventDefault();
     try {
       if (newComment.trim() !== "") {
-        const res = await fetch('/api/comments/comments', {
+        const res = await fetch('https://health-care-server-0t0x.onrender.com/api/comments/comments', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

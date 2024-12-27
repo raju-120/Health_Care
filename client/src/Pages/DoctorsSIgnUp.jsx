@@ -99,7 +99,7 @@ export default function DoctorsSIgnUp() {
     e.preventDefault();
     try{
       setLoading(true); 
-      const res = await fetch('/api/auth/doctorsignup' , 
+      const res = await fetch('https://health-care-server-0t0x.onrender.com/api/auth/doctorsignup' , 
       {
         method: 'POST',
         headers: {

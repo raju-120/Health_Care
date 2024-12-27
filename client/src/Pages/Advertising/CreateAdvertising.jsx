@@ -91,7 +91,7 @@ export default function CreateAdvertising() {
       setLoading(true);
       setError(false);
     
-      const res = await fetch('/api/add/advertises',{
+      const res = await fetch('https://health-care-server-0t0x.onrender.com/api/add/advertises',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

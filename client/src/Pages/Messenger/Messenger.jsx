@@ -59,7 +59,7 @@ export default function ChatWindow() {
   useEffect(() => {
     const fetchAppointmentId = async () => {
       try {
-        const res = await fetch(`/api/appointment/booking/${id}`);
+        const res = await fetch(`https://health-care-server-0t0x.onrender.com/api/appointment/booking/${id}`);
         const data = await res.json();
         // console.log("Data : ", data);
         setAppointmentData(data?.data);
@@ -76,9 +76,9 @@ export default function ChatWindow() {
       try {
         let url;
         if (currentUser?.data?.user?.role === "doctor") {
-          url = `/api/auth/user/${appointmentData?.uId}`;
+          url = `https://health-care-server-0t0x.onrender.com/api/auth/user/${appointmentData?.uId}`;
         } else if (appointmentData?.docId) {
-          url = `/api/auth/doctors/${appointmentData?.docId}`;
+          url = `https://health-care-server-0t0x.onrender.com/api/auth/doctors/${appointmentData?.docId}`;
         } else {
           console.warn("Doctor ID is undefined");
           return; // Exit if docId is not available
@@ -130,7 +130,7 @@ export default function ChatWindow() {
     if (selectedUser) {
       const senderId = currentUser?.data?.user?._id;
       const getMessages = async () => {
-        const res = await fetch("/api/message", {
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/message", {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -182,7 +182,7 @@ export default function ChatWindow() {
   useEffect(() => {
     const getPrescriptions = async () => {
       try {
-        const res = await fetch("/api/prescription/getpdf");
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/prescription/getpdf");
         if (!res.ok) {
           console.error("Failed to fetch the PDF data:", res.statusText);
           return;

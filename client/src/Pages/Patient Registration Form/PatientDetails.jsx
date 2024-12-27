@@ -12,7 +12,7 @@ function PatientDetails() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`/api/patient/patient-reg-form`);
+      const res = await fetch(`https://health-care-server-0t0x.onrender.com/api/patient/patient-reg-form`);
       const data = await res.json();
       console.log("Specific Data Fetched: ", data);
       setPatients(data);

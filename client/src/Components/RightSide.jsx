@@ -6,7 +6,7 @@ export default function RightSide() {
   useEffect(() => {
     const getAdvertise = async () => {
       try {
-        const res = await fetch('/api/add/advertises', {
+        const res = await fetch('https://health-care-server-0t0x.onrender.com/api/add/advertises', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

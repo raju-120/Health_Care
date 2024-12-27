@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 export default function TipsDetails() {
   const { id } = useParams();
   const [service, setService] = useState(null);
-  console.log('i am here for service id: ',id)
-  console.log('i am here for service id: ',service)
+  // console.log('i am here for service id: ',id)
+  // console.log('i am here for service id: ',service)
 
   useEffect(() => {
     const fetchService = async () => {
-      const result = await fetch(`/api/posts/solution/${id}`, {
+      const result = await fetch(`https://health-care-server-0t0x.onrender.com/api/posts/solution/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

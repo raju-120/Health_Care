@@ -16,7 +16,7 @@ export default function RequestAppointmentToAdmin() {
   useEffect(() => {
     const getAllAdmins = async () => {
       try {
-        const res = await fetch("/api/appointment/bookings", {
+        const res = await fetch("https://health-care-server-0t0x.onrender.com/api/appointment/bookings", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export default function RequestAppointmentToAdmin() {
   const handleApprove = async (_id, doctor, date, department, email, name) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/appointment/booking/update/${_id}`, {
+      const response = await fetch(`https://health-care-server-0t0x.onrender.com/api/appointment/booking/update/${_id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -16,7 +16,7 @@ export default function MyAppointment() {
     const getAllAdmins = async () => {
       try {
         const res = await fetch(
-          `/api/appointment/bookings?${currentUser?.data?.user?.email}`,
+          `https://health-care-server-0t0x.onrender.com/api/appointment/bookings?${currentUser?.data?.user?.email}`,
           {
             method: "GET",
             headers: {

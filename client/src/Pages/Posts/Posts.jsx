@@ -37,7 +37,7 @@ export default function Posts() {
     }
 
     try {
-      const res = await fetch("/api/posts/droped", {
+      const res = await fetch("https://health-care-server-0t0x.onrender.com/api/posts/droped", {
         method: "POST",
         body: formDataObj,
       });
