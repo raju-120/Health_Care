@@ -8,36 +8,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { cloudinary } from "../utils/cloudinaryConfig.js";
 import fs from "fs";
-import { Appointment } from "../models/appointment.model.js";
 
-// export const generateAccessToken = (userId) => {
-//   if (!process.env.ACCESS_TOKEN_SECRET) {
-//     throw new Error("ACCESS_TOKEN_SECRET is not set in environment variables.");
-//   }
 
-//   return jwt.sign(
-//     { _id: userId }, // Payload: user ID
-//     process.env.ACCESS_TOKEN_SECRET, // Secret key
-//     {
-//       expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "7d", // Expiry (default 15 minutes)
-//     },
-//   );
-// };
-// export const generateRefreshToken = (userId) => {
-//   if (!process.env.REFRESH_TOKEN_SECRET) {
-//     throw new Error(
-//       "REFRESH_TOKEN_SECRET is not set in environment variables.",
-//     );
-//   }
-
-//   return jwt.sign(
-//     { _id: userId }, // Payload: user ID
-//     process.env.REFRESH_TOKEN_SECRET, // Secret key
-//     {
-//       expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "7d", // Expiry (default 7 days)
-//     },
-//   );
-// };
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -171,7 +143,12 @@ const refreshDocAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-/* User Signin & SignUp */
+
+
+
+
+
+/* User SignUp */
 const signup = asyncHandler(async (req, res) => {
   const { username, email, password, role } = req.body;
 
@@ -194,9 +171,7 @@ const signup = asyncHandler(async (req, res) => {
 
   await user.save();
 
-  const createdUser = await User.findById(user._id).select(
-    "-password -refreshToken"
-  );
+  const createdUser = await User.findById(user._id)
 
   if (!createdUser) {
     throw new ApiError(
@@ -217,103 +192,62 @@ const signin = asyncHandler(async (req, res) => {
   console.log("Sign in", req.body);
   const { email, password } = req.body;
 
-  if (!email && !password) {
-    throw new ApiError(400, "Email & Password required!");
+  // Validate request body
+  if (!email || !password) {
+    throw new ApiError(400, "Email and Password are required!");
   }
 
+  // Check if the user exists
   const user = await User.findOne({ email });
   if (!user) {
-    throw new ApiError(401, "User email not found!");
+    throw new ApiError(401, "Invalid email or password!");
   }
 
+  // Verify the password
   const validPassword = await user.isPasswordCorrect(password);
   if (!validPassword) {
-    new ApiError(404, "User password won't matched!");
+    throw new ApiError(401, "Invalid email or password!");
   }
 
-  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-    user._id,
-  );
+  // Generate tokens
+  const accessToken = user.generateAccessToken();
+  const refreshToken = user.generateRefreshToken();
 
-  const userLoggedIn = await User.findById(user._id);
+  // Update user's refresh token in the database
+  user.refreshToken = refreshToken;
+  await user.save();
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
-
+  // Return user data and tokens
   return res
     .status(200)
-    .cookie("accessToken", options)
-    .cookie("refreshToken", options)
+    .cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    })
+    .cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    })
     .json(
       new APIResponse(
         200,
         {
-          user: userLoggedIn,
+          user: {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            avatar: user.avatar,
+          },
           accessToken,
           refreshToken,
         },
-        "Doctor logged in successfully",
-      ),
+        "User logged in successfully."
+      )
     );
-  // const { email, password } = req.body;
-  // console.log("Sign in", req.body);
-
-  // // Validate input
-  // if (!email || !password) {
-  //   throw new ApiError(400, "Email & Password are required!");
-  // }
-
-  // // Find user by email
-  // const user = await User.findOne({ email });
-  // if (!user) {
-  //   throw new ApiError(404, "User email not found!");
-  // }
-
-  // // Compare hashed password with the provided password
-  // const validPassword = await user.isPasswordCorrect(password);
-  // if (!validPassword) {
-  //   throw new ApiError(401, "Invalid password!");
-  // }
-
-  // // Generate access and refresh tokens
-  // const accessToken = user.generateAccessToken();
-  // const refreshToken = user.generateRefreshToken();
-
-  // // Save refresh token to the database
-  // user.refreshToken = refreshToken;
-  // await user.save();
-
-  // // Exclude sensitive fields from the user object
-  // const loggedInUser = await User.findById(user._id).select(
-  //   "-password -refreshToken",
-  // );
-
-  // // Set cookies for access and refresh tokens
-  // const options = {
-  //   httpOnly: true,
-  //   secure: process.env.NODE_ENV === "production", // Ensure secure cookies in production
-  //   sameSite: "Strict",
-  // };
-
-  // return res
-  //   .status(200)
-  //   .cookie("accessToken", accessToken, options)
-  //   .cookie("refreshToken", refreshToken, options)
-  //   .json(
-  //     new APIResponse(
-  //       200,
-  //       {
-  //         user: loggedInUser,
-  //         accessToken,
-  //         refreshToken,
-  //       },
-  //       "User logged in successfully",
-  //     ),
-  //   );
 });
 
+// Specific User
 const specificUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
@@ -323,6 +257,99 @@ const specificUser = asyncHandler(async (req, res) => {
   res
     .status(201)
     .json(new APIResponse(201, result, "Specific user details are Found."));
+});
+
+
+// User Update
+const userUpdate = asyncHandler(async (req, res) => {
+  // console.log("User Update", req.body);
+  try {
+    const { username, email, password, avatar } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user?._id,
+      {
+        $set: {
+          username,
+          email,
+          password,
+          avatar,
+        },
+      },
+      { new: true },
+    );
+
+    return res
+      .status(200)
+      .json(
+        new APIResponse(200, user, "Account details updated successfully."),
+      );
+  } catch (error) {
+    console.log("Something went wrong in update section: ", error.message);
+  }
+});
+
+
+// Get All Users
+const getAllUsers = asyncHandler(async (req, res, next) => {
+  const query = {};
+  const result = await User.find(query);
+  res.status(201).json(new APIResponse(201, result, "All Users provided."));
+});
+
+
+// User Delete
+const userDelete = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log("delete: ", req.params);
+
+  if (!id) {
+    throw new ApiError(400, "Admin or System Admin Id is required");
+  }
+
+  if (req.user.role !== "system-admin" && req.user.role !== "admin") {
+    throw new ApiError(
+      403,
+      "Forbidden: You don't have permission to delete this admin",
+    );
+  }
+
+  const deletedUser = await User.findByIdAndDelete(id);
+
+  if (!deletedUser) {
+    throw new ApiError(404, "Deleted User is not found");
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "User Delete deleted successfully",
+    data: deletedUser,
+  });
+});
+
+
+// User Logout
+const logoutUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $unset: {
+        refreshToken: 1, //this will removes the field from doc
+      },
+    },
+    {
+      new: true,
+    },
+  );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new APIResponse(200, {}, "User logged out"));
 });
 /* User End */
 
@@ -372,54 +399,9 @@ const google = asyncHandler(async (req, res) => {
   }
 });
 
-const logoutUser = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate(
-    req.user._id,
-    {
-      $unset: {
-        refreshToken: 1, //this will removes the field from doc
-      },
-    },
-    {
-      new: true,
-    },
-  );
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
 
-  return res
-    .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
-    .json(new APIResponse(200, {}, "User logged out"));
-});
 
-const docLogoutUser = asyncHandler(async (req, res) => {
-  console.log("here I am");
-  await Doctor.findByIdAndUpdate(
-    req.body.data.user._id,
-    {
-      $unset: {
-        refreshToken: 1, //this will removes the field from doc
-      },
-    },
-    {
-      new: true,
-    },
-  );
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
-  return res
-    .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
-    .json(new APIResponse(200, {}, "Doc User logged out"));
-});
-
+// Doctor Sign up
 const doctorSignUp = asyncHandler(async (req, res) => {
   const {
     username,
@@ -444,7 +426,9 @@ const doctorSignUp = asyncHandler(async (req, res) => {
 
   let slots = [];
   let onlineSlots = [];
+  let avatarUrl = null;
 
+  // Parse JSON strings for slots and onlineSlots
   try {
     if (slotsString) {
       slots = JSON.parse(slotsString);
@@ -457,21 +441,28 @@ const doctorSignUp = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid JSON format for slots or onlineSlots");
   }
 
+  // Check if the email already exists
   const existedUser = await Doctor.findOne({ email });
   if (existedUser) {
-    throw new ApiError(402, "This email id is already used");
+    throw new ApiError(402, "This email ID is already used");
   }
 
-  let avatarUrl = null;
-
   try {
+    // Handle file upload with Cloudinary
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "avatars",
-      });
-      avatarUrl = result.secure_url;
+      console.log("File received:", req.file);
+      try {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "avatars",
+        });
+        avatarUrl = result.secure_url;
+      } catch (error) {
+        console.error("Cloudinary upload error:", error);
+        throw new ApiError(500, "Failed to upload image to Cloudinary");
+      }
     }
 
+    // Create a new doctor
     const newDoctor = new Doctor({
       username,
       email,
@@ -496,140 +487,99 @@ const doctorSignUp = asyncHandler(async (req, res) => {
 
     await newDoctor.save();
 
+    // Find created doctor and exclude sensitive fields
     const createdUser = await Doctor.findById(newDoctor._id).select(
-      "-password -refreshToken",
+      "-password -refreshToken"
     );
 
     if (!createdUser) {
       throw new ApiError(
         500,
-        "Doctor's ID not created. All fields must be filled!",
+        "Doctor's ID not created. All fields must be filled!"
       );
     }
 
+    // Success response
     return res
       .status(201)
       .json(
-        new APIResponse(200, createdUser, "Doctor registered successfully."),
+        new APIResponse(200, createdUser, "Doctor registered successfully.")
       );
   } catch (error) {
-    console.error("Error during image upload:", error);
-    throw new ApiError(500, "Image upload failed");
+    console.error("Error during doctor signup:", error);
+    throw new ApiError(500, error.message || "Image upload failed");
   } finally {
+    // Cleanup the file
     if (req.file) {
-      fs.unlinkSync(req.file.path);
+      try {
+        await fs.unlink(req.file.path);
+        console.log("Temporary file deleted:", req.file.path);
+      } catch (error) {
+        console.error("Error deleting temporary file:", error);
+      }
     }
   }
 });
 
-const seedDepartments = async () => {
-  const departmentCount = await Department.countDocuments();
-  if (departmentCount === 0) {
-    const defaultDepartments = [
-      { deptname: "CARDIOLOGY" },
-      { deptname: "NEUROLOGY" },
-      { deptname: "ORTHOPEDICS" },
-      { deptname: "CHILDREN SPECIALIST" },
-      { deptname: "DIABETES & ENDOCRINOLOGY" },
-      { deptname: "ENT" },
-      { deptname: "DENTISTRY" },
-      { deptname: "DERMATOLOGY" },
-      { deptname: "GENERAL SURGERY" },
-      { deptname: "MEDICINE SPECIALIST" },
-      { deptname: "NEUROSURGERY" },
-    ];
-    await Department.insertMany(defaultDepartments);
-    console.log("Default departments added to the database");
-  } else {
-    console.log("Departments already exist in the database");
-  }
-};
-
-const getDepartments = asyncHandler(async (req, res) => {
-  const departments = await Department.find({});
-  res.status(200).json(departments);
-});
-
-const getDoctorsByDepartment = asyncHandler(async (req, res) => {
-  const { deptname } = req.query;
-  const doctors = await Doctor.find({ department: deptname }).select(
-    "-password -refreshToken",
-  );
-  res.status(200).json(doctors);
-});
-
+// Doctor Sign In
 const doctorSignIn = asyncHandler(async (req, res) => {
+  console.log("Sign in", req.body);
   const { email, password } = req.body;
 
-  if (!email && !password) {
-    throw new ApiError(400, "Email & Password required!");
+  // Validate request body
+  if (!email || !password) {
+    throw new ApiError(400, "Email and Password are required!");
   }
 
-  const docUser = await Doctor.findOne({ email });
-  if (!docUser) {
-    throw new ApiError(401, "Doctor email not found!");
+  // Check if the user exists
+  const user = await Doctor.findOne({ email });
+  if (!user) {
+    throw new ApiError(401, "Invalid email or password!");
   }
 
-  const validPassword = await docUser.isPasswordCorrect(password);
+  // Verify the password
+  const validPassword = await user.isPasswordCorrect(password);
   if (!validPassword) {
-    new ApiError(404, "User password won't matched!");
+    throw new ApiError(401, "Invalid email or password!");
   }
 
-  const { accessToken, refreshToken } = await generateDocAccessAndRefreshTokens(
-    docUser._id,
-  );
+  // Generate tokens
+  const accessToken = user.generateAccessToken();
+  const refreshToken = user.generateRefreshToken();
 
-  const docLoggedIn = await Doctor.findById(docUser._id);
+  // Update user's refresh token in the database
+  user.refreshToken = refreshToken;
+  await user.save();
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
+  // Exclude sensitive fields like password from the response
+  const doctorDetails = await Doctor.findById(user._id).select("-password -refreshToken");
 
+  // Return response with detailed user information
   return res
     .status(200)
-    .cookie("accessToken", options)
-    .cookie("refreshToken", options)
+    .cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    })
+    .cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    })
     .json(
       new APIResponse(
         200,
         {
-          user: docLoggedIn,
+          user: doctorDetails,
           accessToken,
           refreshToken,
         },
-        "Doctor logged in successfully",
-      ),
+        "Doctor logged in successfully."
+      )
     );
 });
 
-const userUpdate = asyncHandler(async (req, res) => {
-  // console.log("User Update", req.body);
-  try {
-    const { username, email, password, avatar } = req.body;
-    const user = await User.findByIdAndUpdate(
-      req.user?._id,
-      {
-        $set: {
-          username,
-          email,
-          password,
-          avatar,
-        },
-      },
-      { new: true },
-    );
 
-    return res
-      .status(200)
-      .json(
-        new APIResponse(200, user, "Account details updated successfully."),
-      );
-  } catch (error) {
-    console.log("Something went wrong in update section: ", error.message);
-  }
-});
-
+// Doctor Update
 const doctorUpdate = asyncHandler(async (req, res, next) => {
   console.log("Doctor id: ", req.body.id);
   const _id = req.body.id;
@@ -716,6 +666,7 @@ const doctorUpdate = asyncHandler(async (req, res, next) => {
   }
 });
 
+// Get All Doctors
 const getAllDoctors = asyncHandler(async (req, res, next) => {
   const query = {};
   const result = await Doctor.find(query);
@@ -724,6 +675,7 @@ const getAllDoctors = asyncHandler(async (req, res, next) => {
     .json(new APIResponse(201, result, "All the doctors a shown."));
 });
 
+// Get Specific Doctor
 const getSpecificDoctor = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   if (!id) {
@@ -735,40 +687,7 @@ const getSpecificDoctor = asyncHandler(async (req, res, next) => {
     .json(new APIResponse(201, result, "Specific doctor details are Found."));
 });
 
-const getAllUsers = asyncHandler(async (req, res, next) => {
-  const query = {};
-  const result = await User.find(query);
-  res.status(201).json(new APIResponse(201, result, "All Users provided."));
-});
-
-const userDelete = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  console.log("delete: ", req.params);
-
-  if (!id) {
-    throw new ApiError(400, "Admin or System Admin Id is required");
-  }
-
-  if (req.user.role !== "system-admin" && req.user.role !== "admin") {
-    throw new ApiError(
-      403,
-      "Forbidden: You don't have permission to delete this admin",
-    );
-  }
-
-  const deletedUser = await User.findByIdAndDelete(id);
-
-  if (!deletedUser) {
-    throw new ApiError(404, "Deleted User is not found");
-  }
-
-  res.status(200).json({
-    success: true,
-    message: "User Delete deleted successfully",
-    data: deletedUser,
-  });
-});
-
+// Doctor Delete
 const doctorDelete = asyncHandler(async (req, res) => {
   const { id } = req.params;
   console.log("delete: ", req.params);
@@ -796,6 +715,76 @@ const doctorDelete = asyncHandler(async (req, res) => {
     data: deletedDoctor,
   });
 });
+
+// Get Departments
+const getDepartments = asyncHandler(async (req, res) => {
+  const departments = await Department.find({});
+  res.status(200).json(departments);
+});
+
+
+// Get Doctors by Department
+const getDoctorsByDepartment = asyncHandler(async (req, res) => {
+  const { deptname } = req.query;
+  const doctors = await Doctor.find({ department: deptname }).select(
+    "-password -refreshToken",
+  );
+  res.status(200).json(doctors);
+});
+
+
+// Doctor Logout
+const docLogoutUser = asyncHandler(async (req, res) => {
+  console.log("here I am");
+  await Doctor.findByIdAndUpdate(
+    req.body.data.user._id,
+    {
+      $unset: {
+        refreshToken: 1, //this will removes the field from doc
+      },
+    },
+    {
+      new: true,
+    },
+  );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new APIResponse(200, {}, "Doc User logged out"));
+});
+
+
+
+const seedDepartments = async () => {
+  const departmentCount = await Department.countDocuments();
+  if (departmentCount === 0) {
+    const defaultDepartments = [
+      { deptname: "CARDIOLOGY" },
+      { deptname: "NEUROLOGY" },
+      { deptname: "ORTHOPEDICS" },
+      { deptname: "CHILDREN SPECIALIST" },
+      { deptname: "DIABETES & ENDOCRINOLOGY" },
+      { deptname: "ENT" },
+      { deptname: "DENTISTRY" },
+      { deptname: "DERMATOLOGY" },
+      { deptname: "GENERAL SURGERY" },
+      { deptname: "MEDICINE SPECIALIST" },
+      { deptname: "NEUROSURGERY" },
+    ];
+    await Department.insertMany(defaultDepartments);
+    console.log("Default departments added to the database");
+  } else {
+    console.log("Departments already exist in the database");
+  }
+};
+
+
+
 
 export {
   signup,

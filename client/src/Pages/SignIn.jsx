@@ -73,7 +73,7 @@ export default function SignIn() {
       const data = await res.json();
       //console.log(data);
       if (data.success === false) {
-        dispatch(signInFailure());
+        dispatch(signInFailure(data.message));
         toast.error("Doctor credential unmatched");
         return;
       }
@@ -82,6 +82,7 @@ export default function SignIn() {
       navigate("/");
     } catch (error) {
       dispatch(signInFailure(error.message));
+      toast.error("Doctor credential did not matched.");
     }
   };
 
@@ -110,6 +111,7 @@ export default function SignIn() {
       navigate("/");
     } catch (error) {
       dispatch(signInFailure(error?.message));
+      toast.error("user credential did not matched.");
     }
   };
 
@@ -248,6 +250,7 @@ export default function SignIn() {
                 <p className="text-red-500 font-lg mt-2">{error?.message}</p>
               )}
             </form>
+            <Toaster position="center-top" />
           </div>
         )}
       </div>
