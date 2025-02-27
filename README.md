@@ -1,17 +1,17 @@
-## I've completed a project called "Hospital management & System." Three roles can interact with the system: System Admin, User, and Doctor.
+## "Hospital Management & System"
 
 
 ## For user Role Features:
-1. User can login & sign up to the system.
-2. After login, user had to fill up the patient form in the home page.
+1. The user can log in & sign up to the system.
+2. After login, the user had to fill out the patient form on the home page.
 3. User can update their profile picture with password & User Name.
-4. User can apply for the appointment to the doctor.
-5. In the appointment form, the doctor's time available based on the selected date.
-6. After submit the appointment form, it will redirect to the user dashboard. In the dashboard user should complete the payment of doctor visit fee.
-7. if the user select the online meet up then, user should pay the full payment of the doctor visit with the help of strip card payment method.
-8. After the complete the payment for online meeting, the admin & doctor accept the user request. If the both admin & doctor accept the appointment of that user, then user can see the option to talk with doctor. It will be real-time message or it can be online video call.
+4. The user can apply for an appointment with the doctor.
+5. In the appointment form, the doctor's time is available based on the selected date.
+6. Submitting the appointment form will redirect to the user dashboard. In the dashboard, user should complete the payment of the doctor visit fee.
+7. if the user selects the online meet-up then, the user should pay the full payment of the doctor's visit with the help of the strip card payment method.
+8. After the complete the payment for the online meeting, the admin & doctor accept the user's request. If the both admin & doctor accept the appointment of that user, then the user can see the option to talk with the doctor. It will be a real-time message or it can be online video call.
 9. The doctor prescribes the user for the medicine & user can see that message.
-10. user can register as a blood doner. Also, a user can search for blood type.
+10. user can register as a blood donor. Also, a user can search for blood type.
 
 
 ## Doctor role features: 
